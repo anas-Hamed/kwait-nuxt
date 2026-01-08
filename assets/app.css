@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind screens;
+
+.nuxt-link-exact-active {
+  position: relative
+}
+.nav-button.nuxt-link-exact-active{
+  @apply bg-primary text-white text-sm;
+}
+.nav-item.nuxt-link-exact-active:after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  border-radius: 50%;
+  @apply bg-primary;
+
+}
+
+
+
+.flex-centred{
+  @apply flex justify-center items-center;
+}
+.ti-input{
+  border: unset !important;
+  @apply  rounded bg-accent;
+}
+.vue-tags-input .ti-input input{
+  @apply bg-accent;
+}
+.vue-tags-input li.ti-tag{
+  background-color: unset;
+  @apply bg-secondary;
+}
+
+.border-error{
+  border: 1px solid red !important;
+}
+.vue-tel-input{
+  @apply bg-accent border-0 focus:outline-own pt-1 mt-1 mb-2;
+}
+input.vti__input{
+  @apply  bg-accent focus:outline-own;
+}
+@layer base{
+  .text-start{
+    text-align: start ;
+  }
+
+}
+.flipped-menu{
+  transform:  rotateZ(180deg) rotateX(180deg);
+}
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.page-enter,
+.page-leave-to {
+  transform: translateY(5%);
+  opacity: 0;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.2s ease;
+}
+
+@font-face {
+  font-family: 'tajawal';
+  src: url('~assets/fonts/tajawal.ttf')
+}
+
+* {
+  font-family: 'tajawal';
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-secondary;
+}
+
+::-webkit-scrollbar-thumb:hover {
+
+  @apply bg-primary;
+}
+
+.card {
+  @apply bg-white rounded shadow-md p-2 md:p-8 ;
+}
+.slide-enter-active {
+  transition: all 0.3s ease;
+}
+
+.slide-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-enter, .slide-leave-to
+  /* .slide-leave-active below version 2.1.8 */ {
+  transform: translateX(-5%);
+  opacity: 0;
+}
+input.vti__input:focus {
+  outline: none !important;
+}
+.primary-btn{
+  @apply rounded bg-primary text-white mt-4 w-24 p-2 ;
+}
+.required::after {
+  content: '*';
+  color: red;
+  width: 20px;
+  height: 20px;
+  font-size: 18px;
+}
