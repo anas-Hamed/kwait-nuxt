@@ -1,6 +1,6 @@
 <script setup>
 import { debounce } from 'lodash-es'
-import { Card, CardContent } from '~/components/ui/card'
+import { Building2 } from 'lucide-vue-next'
 
 const api = useApi()
 const route = useRoute()
@@ -35,18 +35,20 @@ async function loadMore() {
   if (loadingMore.value || allLoaded.value) return
   loadingMore.value = true
   try {
-    const data = await api.get('company', {
+    const res = await api.get('company', {
       offset: offset.value,
       limit: limit.value,
       ...route.query
     })
-    if (data.data.length > 0) {
-      companies.value = [...companies.value, ...data.data]
+    const items = res?.data || res || []
+    if (Array.isArray(items) && items.length > 0) {
+      companies.value = [...companies.value, ...items]
       offset.value += limit.value
     } else {
       allLoaded.value = true
     }
   } catch (e) {
+    console.error('Failed to load companies:', e)
     allLoaded.value = true
   } finally {
     loadingMore.value = false
@@ -92,56 +94,60 @@ watch(() => route.query, debounce(() => {
   nextTick(() => loadMore())
 }, 1000), { deep: true })
 
+let observer = null
+
 onMounted(() => {
-  if (!loadMoreTrigger.value) return
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !loadingMore.value && !allLoaded.value) {
-      loadMore()
-    }
-  })
-  observer.observe(loadMoreTrigger.value)
-  onUnmounted(() => observer.disconnect())
+  // Initial load
+  loadMore()
+})
+
+// Watch for loadMoreTrigger to become available (it's inside <client-only>)
+watch(loadMoreTrigger, (el) => {
+  if (el) {
+    observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !loadingMore.value && !allLoaded.value) {
+        loadMore()
+      }
+    })
+    observer.observe(el)
+  }
+}, { immediate: true })
+
+onUnmounted(() => {
+  if (observer) observer.disconnect()
 })
 </script>
 
 <template>
   <div>
-    <Card v-if="activeCategory != null">
-      <CardContent class="p-6">
-        <div class="flex items-center">
-          <div class="rounded-full border-2 border-secondary relative p-1">
-            <ImagePlaceholder :circle-image="true" :image="activeCategory.image" class="w-24 md:w-32 h-24 md:h-32" />
-          </div>
-          <div class="p-4">
-            <p class="text-2xl md:text-4xl">{{activeCategory.name }}</p>
-            <p v-if="activeCategory.parent" class="text-sm text-muted-foreground">{{activeCategory.parent.name}}</p>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-    <Card v-else>
-      <CardContent class="p-6">
-        <div class="flex items-center">
-          <div class="rounded-full border-2 border-secondary relative p-1">
-            <ImagePlaceholder :circle-image="true" :image="defaultImage" class="w-24 md:w-32 h-24 md:h-32" />
-          </div>
-          <div class="p-4">
-            <p class="text-2xl md:text-4xl">{{$t('app_name')}}</p>
-            <p class="text-sm text-muted-foreground">{{$t('all_companies')}}</p>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-    <div class="flex flex-wrap mt-8">
+    <!-- Header Card -->
+    <div class="co-hero" v-if="activeCategory != null">
+      <div class="co-hero-img">
+        <ImagePlaceholder :circle-image="true" :image="activeCategory.image" class="w-full h-full" />
+      </div>
+      <div>
+        <h1 class="co-hero-title">{{ activeCategory.name }}</h1>
+        <p v-if="activeCategory.parent" class="co-hero-sub">{{ activeCategory.parent.name }}</p>
+      </div>
+    </div>
+    <div class="co-hero" v-else>
+      <div class="co-hero-img">
+        <ImagePlaceholder :circle-image="true" :image="defaultImage" class="w-full h-full" />
+      </div>
+      <div>
+        <h1 class="co-hero-title">{{ $t('app_name') }}</h1>
+        <p class="co-hero-sub">{{ $t('all_companies') }}</p>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="flex flex-wrap mt-6 gap-y-4">
       <FilterMenu :categories="categories" @setCategory="setCategory" />
       <div class="w-full lg:w-3/4">
-        <SearchInput :value="companySearch" class="mx-auto my-2 lg:my-0" :placeholder="$t('search_for_company')"
-                     @input="getSearch" />
-        <div class="flex">
-          <div class="w-4"></div>
-          <div class="py-4 flex flex-wrap flex-auto">
-            <div v-for="company in companies" :key="`company-${company.id}`" class="w-full md:w-2/4 p-1">
-              <CompanyCard :company="company" class="" />
+        <div class="co-companies-wrap">
+          <div class="co-companies-grid">
+            <div v-for="company in companies" :key="`company-${company.id}`" class="p-1">
+              <CompanyCard :company="company" />
             </div>
           </div>
         </div>
@@ -151,10 +157,11 @@ onMounted(() => {
             <div v-if="!allLoaded" ref="loadMoreTrigger" class="py-4 text-center">
               <LoadingCircle :loading="true" />
             </div>
-            <div v-if="allLoaded && companies.length === 0" class="text-center py-8 text-muted-foreground">
-              {{ $t('no_result') }}
+            <div v-if="allLoaded && companies.length === 0" class="co-empty-state">
+              <Building2 :size="52" aria-hidden="true" />
+              <p>{{ $t('no_result') }}</p>
             </div>
-            <div v-if="allLoaded && companies.length > 0" class="text-center py-4 text-muted-foreground">
+            <div v-if="allLoaded && companies.length > 0" class="text-center py-4 text-sm text-muted-foreground">
               {{ $t('no_more') }}
             </div>
           </client-only>
@@ -173,5 +180,69 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+/* ── Hero Header ── */
+.co-hero {
+  background: white;
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-soft);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.co-hero-img {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  padding: 2.5px;
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-secondary), transparent);
+  flex-shrink: 0;
+}
+.co-hero-img > * {
+  border-radius: 50%;
+  overflow: hidden;
+  background: white;
+}
+.co-hero-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.3;
+}
+.co-hero-sub {
+  font-size: 0.8rem;
+  color: var(--color-muted-foreground);
+  margin-top: 0.1rem;
+}
+
+/* ── Companies Grid ── */
+.co-companies-wrap {
+  padding-top: 0.75rem;
+}
+.co-companies-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+}
+@media (min-width: 768px) {
+  .co-companies-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Empty State ── */
+.co-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 1rem;
+  color: var(--color-muted-foreground);
+  opacity: 0.5;
+  text-align: center;
+}
+.co-empty-state p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
 </style>

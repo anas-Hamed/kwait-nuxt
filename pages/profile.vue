@@ -1,5 +1,6 @@
 <script setup>
-import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
+import { LayoutDashboard, User, Building2, Heart, Shield, LogOut, Settings } from 'lucide-vue-next'
+import { Button } from '~/components/ui/button'
 
 definePageMeta({ middleware: ['sidebase-auth'] })
 
@@ -7,6 +8,7 @@ const api = useApi()
 const eventBus = useEventBus()
 const route = useRoute()
 const localePath = useLocalePath()
+const { data: authUser, signOut } = useAuth()
 
 const { data: profileData } = await useAsyncData('profile-data', async () => {
   let favorite = []
@@ -30,18 +32,31 @@ const companies = computed({
   set: (val) => { if (profileData.value) profileData.value.companies = val }
 })
 
-const tabs = [
-  { label: 'profile', to: '/profile' },
-  { label: 'my_companies', to: '/profile/my-companies' },
-  { label: 'favorite', to: '/profile/favorite' },
-  { label: 'trust_company', to: '/profile/trust-company' },
+const navItems = [
+  { label: 'dashboard', to: '/profile', icon: LayoutDashboard },
+  { label: 'settings', to: '/profile/settings', icon: Settings },
+  { label: 'my_companies', to: '/profile/my-companies', icon: Building2 },
+  { label: 'favorite', to: '/profile/favorite', icon: Heart },
+  { label: 'trust_company', to: '/profile/trust-company', icon: Shield },
 ]
 
 const activeTab = computed(() => {
-  const path = route.path
-  const match = tabs.find(t => path.endsWith(t.to.replace('/profile', '')) && t.to !== '/profile')
+  const path = route.path.replace(/\/$/, '')
+  if (path.includes('add-company')) return 'add-company'
+  const match = navItems.find(t => t.to !== '/profile' && path.endsWith(t.to.replace('/profile', '')))
   return match ? match.to : '/profile'
 })
+
+const userInitials = computed(() => {
+  const name = authUser.value?.name || ''
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+})
+
+async function logout() {
+  useCookie('auth:token').value = null
+  await signOut({ redirect: false })
+  await navigateTo(localePath({ name: 'login' }), { external: true })
+}
 
 onMounted(() => {
   eventBus.on('company-un-favorite', (id) => {
@@ -64,20 +79,69 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <Tabs :model-value="activeTab" class="mb-3 md:mb-0">
-      <TabsList class="flex flex-col md:flex-row flex-wrap h-auto bg-transparent gap-1">
-        <TabsTrigger
-          v-for="tab in tabs"
-          :key="tab.to"
-          :value="tab.to"
-          as-child
-        >
-          <LLink :to="tab.to" class="px-4 py-2">{{ $t(tab.label) }}</LLink>
-        </TabsTrigger>
-      </TabsList>
-    </Tabs>
-    <NuxtPage :companies="companies" :favorite="favorite"/>
+  <div class="flex flex-col lg:flex-row gap-6 min-h-[70vh]">
+    <!-- Sidebar -->
+    <aside class="w-full lg:w-64 shrink-0">
+      <div class="bg-white rounded-2xl shadow-soft p-5 lg:sticky lg:top-24">
+        <!-- User Info -->
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
+            {{ userInitials }}
+          </div>
+          <div class="min-w-0">
+            <p class="font-bold text-sm text-primary truncate">{{ authUser?.name }}</p>
+            <p class="text-xs text-muted-foreground truncate">{{ authUser?.email }}</p>
+          </div>
+        </div>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden lg:flex flex-col gap-1">
+          <LLink
+            v-for="item in navItems"
+            :key="item.to"
+            :to="item.to"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+            :class="activeTab === item.to
+              ? 'bg-primary text-white'
+              : 'text-muted-foreground hover:bg-surface hover:text-primary'"
+          >
+            <component :is="item.icon" :size="18" />
+            {{ $t(item.label) }}
+          </LLink>
+
+          <div class="border-t border-border mt-3 pt-3">
+            <button
+              class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/5 transition-all w-full"
+              @click="logout"
+            >
+              <LogOut :size="18" />
+              {{ $t('logout') }}
+            </button>
+          </div>
+        </nav>
+
+        <!-- Mobile Tabs -->
+        <nav class="flex lg:hidden gap-1 overflow-x-auto -mx-2 px-2 pb-1">
+          <LLink
+            v-for="item in navItems"
+            :key="item.to"
+            :to="item.to"
+            class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all"
+            :class="activeTab === item.to
+              ? 'bg-primary text-white'
+              : 'bg-surface text-muted-foreground'"
+          >
+            <component :is="item.icon" :size="16" />
+            {{ $t(item.label) }}
+          </LLink>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <div class="flex-1 min-w-0">
+      <NuxtPage :companies="companies" :favorite="favorite" />
+    </div>
   </div>
 </template>
 
@@ -86,6 +150,3 @@ export default {
   name: 'Profile',
 };
 </script>
-
-<style scoped>
-</style>

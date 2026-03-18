@@ -56,7 +56,7 @@ async function login() {
       appStore.setNotificationsCount(countRes.data)
     } catch (_) {}
     toast.success('تم تسجيل الدخول بنجاح')
-    await navigateTo(localePath({ name: 'index' }), { external: true })
+    await navigateTo(localePath({ name: 'profile' }), { external: true })
   } catch (e) {
     validationStore.setErrors({ 'password': ['تأكد من صحة البيانات'] })
     toast.error('تأكد من صحة البيانات')

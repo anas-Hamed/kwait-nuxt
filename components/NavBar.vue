@@ -17,7 +17,7 @@
         </nav>
 
         <div class="flex items-center gap-2">
-          <LLink :to="{ name: 'company-create' }">
+          <LLink to="/profile/add-company">
             <button class="btn-gold rounded-full px-5 py-2 text-sm flex items-center gap-1.5">
               <Plus :size="16" />
               {{ $t('add_company') }}
@@ -59,8 +59,8 @@
             <DropdownMenuContent align="end" class="w-44 rounded-lg border-none shadow-card p-1">
               <DropdownMenuItem as-child>
                 <LLink :to="{ name: 'profile' }" class="flex items-center gap-2 w-full">
-                  <User :size="16" />
-                  {{ $t('profile') }}
+                  <LayoutDashboard :size="16" />
+                  {{ $t('dashboard') }}
                 </LLink>
               </DropdownMenuItem>
               <DropdownMenuItem class="flex items-center gap-2 text-destructive focus:text-destructive" @click="logout">
@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-import { Heart, Bell, User, Plus, LogOut } from 'lucide-vue-next'
+import { Heart, Bell, User, Plus, LogOut, LayoutDashboard } from 'lucide-vue-next'
 import { Button } from '~/components/ui/button'
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,

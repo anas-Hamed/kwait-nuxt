@@ -13,11 +13,11 @@
           <template v-if="isAuthenticated">
             <LLink :to="{ name: 'profile' }" class="flex items-center gap-3" @click="opened = false">
               <div class="w-12 h-12 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center ring-2 ring-secondary/50">
-                <User :size="22" class="text-white" />
+                <LayoutDashboard :size="22" class="text-white" />
               </div>
               <div>
                 <p class="font-bold text-base">{{ authUser?.name }}</p>
-                <p class="text-xs text-white/60">{{ $t('view_profile') || 'View Profile' }}</p>
+                <p class="text-xs text-white/60">{{ $t('dashboard') }}</p>
               </div>
             </LLink>
             <button @click="logout" class="flex items-center gap-1.5 text-xs text-white/50 mt-3 hover:text-white/80 transition-colors">
@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { Menu, User, LogOut, Heart, Bell, Plus, Home, Grid3X3, Building2, FileText, Info } from 'lucide-vue-next'
+import { Menu, User, LogOut, Heart, Bell, Plus, Home, Grid3X3, Building2, FileText, Info, LayoutDashboard } from 'lucide-vue-next'
 import { Button } from '~/components/ui/button'
 import { Badge } from '~/components/ui/badge'
 import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet'

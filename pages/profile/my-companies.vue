@@ -1,50 +1,41 @@
 <template>
-  <Card>
-    <CardContent class="p-6">
-      <h3 class="text-2xl mb-1">{{$t('my_companies')}}</h3>
-      <p class="text-sm text-muted-foreground">
-        {{$t('hidden_companies')}}
-      </p>
-      <Separator class="my-4" />
-      <div class="flex flex-wrap">
-        <div v-for="company in companies" :key="`company-${company.id}`" class="w-full md:w-2/4 p-1">
-          <CompanyCard :show-control="true" :company="company" class=""  />
-        </div>
+  <div class="bg-white rounded-2xl shadow-soft p-6">
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <h3 class="text-lg font-bold text-primary">{{ $t('my_companies') }}</h3>
+        <p class="text-sm text-muted-foreground mt-0.5">{{ $t('hidden_companies') }}</p>
       </div>
-      <span v-if="companies && companies.length === 0">{{$t('no_companies_added')}}</span>
-      <LLink :to="{name: 'company-create'}" class="mt-8 flex items-center">
-        <Button variant="secondary" size="icon" class="rounded-full h-8 w-8">
+      <LLink :to="{ name: 'company-create' }">
+        <button class="btn-gold rounded-full px-4 py-2 text-sm flex items-center gap-1.5">
           <Plus :size="16" />
-        </Button>
-        <div class="w-1"></div>
-        <b>{{$t('add_company')}}</b>
+          {{ $t('add_company') }}
+        </button>
       </LLink>
-    </CardContent>
-  </Card>
+    </div>
+
+    <div v-if="companies && companies.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <CompanyCard v-for="company in companies" :key="company.id" :show-control="true" :company="company" />
+    </div>
+
+    <div v-else class="text-center py-12">
+      <Building2 :size="48" class="mx-auto text-muted-foreground/30 mb-3" />
+      <p class="text-muted-foreground text-sm">{{ $t('no_companies_added') }}</p>
+      <LLink :to="{ name: 'company-create' }">
+        <Button class="mt-4 rounded-xl">{{ $t('add_company') }}</Button>
+      </LLink>
+    </div>
+  </div>
 </template>
 
 <script>
-import { Card, CardContent } from '~/components/ui/card'
 import { Button } from '~/components/ui/button'
-import { Separator } from '~/components/ui/separator'
-import { Plus } from 'lucide-vue-next'
+import { Plus, Building2 } from 'lucide-vue-next'
 
 export default {
   name: 'MyCompanies',
-  components: { Card, CardContent, Button, Separator, Plus },
+  components: { Button, Plus, Building2 },
   props: {
-    companies: {
-      type: Array,
-      default: () => []
-    }
-  },
-  data() {
-    return {
-      modal: true
-    };
+    companies: { type: Array, default: () => [] }
   },
 };
 </script>
-
-<style scoped>
-</style>

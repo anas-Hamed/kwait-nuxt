@@ -3,7 +3,9 @@ export const useApi = () => {
   const baseURL = config.public.baseUrl;
 
   const getHeaders = (): Record<string, string> => {
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = {
+      Accept: 'application/json',
+    };
 
     // Add locale header
     try {

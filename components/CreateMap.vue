@@ -2,6 +2,7 @@
   <div class="text-center">
     <client-only>
       <GoogleMap
+        :api-key="runtimeConfig.public.mapKey"
         :center="computedValue || center"
         :options="{
          zoomControl: !readOnly,
@@ -36,6 +37,10 @@
 <script>
   export default {
     name: 'CreateMap',
+    setup() {
+      const runtimeConfig = useRuntimeConfig()
+      return { runtimeConfig }
+    },
     props: {
       modelValue: {
         type: Object,
