@@ -1,5 +1,6 @@
 <script setup>
 import { debounce } from 'lodash-es'
+import { Card, CardContent } from '~/components/ui/card'
 
 const api = useApi()
 const route = useRoute()
@@ -105,28 +106,32 @@ onMounted(() => {
 
 <template>
   <div>
-    <div v-if="activeCategory != null" class="card">
-      <div class="flex items-center">
-        <div class="rounded-full border-2 border-secondary relative p-1">
-          <ImagePlaceholder :circle-image="true" :image="activeCategory.image" class="w-24 md:w-32 h-24 md:h-32" />
+    <Card v-if="activeCategory != null">
+      <CardContent class="p-6">
+        <div class="flex items-center">
+          <div class="rounded-full border-2 border-secondary relative p-1">
+            <ImagePlaceholder :circle-image="true" :image="activeCategory.image" class="w-24 md:w-32 h-24 md:h-32" />
+          </div>
+          <div class="p-4">
+            <p class="text-2xl md:text-4xl">{{activeCategory.name }}</p>
+            <p v-if="activeCategory.parent" class="text-sm text-muted-foreground">{{activeCategory.parent.name}}</p>
+          </div>
         </div>
-        <div class="p-4">
-          <p class="text-2xl md:text-4xl">{{activeCategory.name }}</p>
-          <p v-if="activeCategory.parent" class="text-sm text-gray-400">{{activeCategory.parent.name}}</p>
+      </CardContent>
+    </Card>
+    <Card v-else>
+      <CardContent class="p-6">
+        <div class="flex items-center">
+          <div class="rounded-full border-2 border-secondary relative p-1">
+            <ImagePlaceholder :circle-image="true" :image="defaultImage" class="w-24 md:w-32 h-24 md:h-32" />
+          </div>
+          <div class="p-4">
+            <p class="text-2xl md:text-4xl">{{$t('app_name')}}</p>
+            <p class="text-sm text-muted-foreground">{{$t('all_companies')}}</p>
+          </div>
         </div>
-      </div>
-    </div>
-    <div v-else class="card">
-      <div class="flex items-center">
-        <div class="rounded-full border-2 border-secondary relative p-1">
-          <ImagePlaceholder :circle-image="true" :image="defaultImage" class="w-24 md:w-32 h-24 md:h-32" />
-        </div>
-        <div class="p-4">
-          <p class="text-2xl md:text-4xl">{{$t('app_name')}}</p>
-          <p class="text-sm text-gray-400">{{$t('all_companies')}}</p>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
     <div class="flex flex-wrap mt-8">
       <FilterMenu :categories="categories" @setCategory="setCategory" />
       <div class="w-full lg:w-3/4">
@@ -146,10 +151,10 @@ onMounted(() => {
             <div v-if="!allLoaded" ref="loadMoreTrigger" class="py-4 text-center">
               <LoadingCircle :loading="true" />
             </div>
-            <div v-if="allLoaded && companies.length === 0" class="text-center py-8 text-gray-500">
+            <div v-if="allLoaded && companies.length === 0" class="text-center py-8 text-muted-foreground">
               {{ $t('no_result') }}
             </div>
-            <div v-if="allLoaded && companies.length > 0" class="text-center py-4 text-gray-500">
+            <div v-if="allLoaded && companies.length > 0" class="text-center py-4 text-muted-foreground">
               {{ $t('no_more') }}
             </div>
           </client-only>

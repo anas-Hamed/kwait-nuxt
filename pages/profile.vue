@@ -1,8 +1,12 @@
 <script setup>
+import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
+
 definePageMeta({ middleware: ['auth'] })
 
 const api = useApi()
 const eventBus = useEventBus()
+const route = useRoute()
+const localePath = useLocalePath()
 
 const { data: profileData } = await useAsyncData('profile-data', async () => {
   let favorite = []
@@ -24,6 +28,19 @@ const favorite = computed({
 const companies = computed({
   get: () => profileData.value?.companies || [],
   set: (val) => { if (profileData.value) profileData.value.companies = val }
+})
+
+const tabs = [
+  { label: 'profile', to: '/profile' },
+  { label: 'my_companies', to: '/profile/my-companies' },
+  { label: 'favorite', to: '/profile/favorite' },
+  { label: 'trust_company', to: '/profile/trust-company' },
+]
+
+const activeTab = computed(() => {
+  const path = route.path
+  const match = tabs.find(t => path.endsWith(t.to.replace('/profile', '')) && t.to !== '/profile')
+  return match ? match.to : '/profile'
 })
 
 onMounted(() => {
@@ -48,12 +65,18 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="flex flex-col md:flex-row flex-wrap overflow-hidden px-1 gap-x-2 mb-3 md:mb-0">
-      <LLink class="py-2 px-3 profile-link" to="/profile">{{$t('profile')}}</LLink>
-      <LLink class="py-2 px-3 profile-link" to="/profile/my-companies">{{$t('my_companies')}}</LLink>
-      <LLink class="py-2 px-3 profile-link" to="/profile/favorite">{{$t('favorite')}}</LLink>
-      <LLink class="py-2 px-3 profile-link" to="/profile/trust-company">{{$t('trust_company')}}</LLink>
-    </div>
+    <Tabs :model-value="activeTab" class="mb-3 md:mb-0">
+      <TabsList class="flex flex-col md:flex-row flex-wrap h-auto bg-transparent gap-1">
+        <TabsTrigger
+          v-for="tab in tabs"
+          :key="tab.to"
+          :value="tab.to"
+          as-child
+        >
+          <LLink :to="tab.to" class="px-4 py-2">{{ $t(tab.label) }}</LLink>
+        </TabsTrigger>
+      </TabsList>
+    </Tabs>
     <NuxtPage :companies="companies" :favorite="favorite"/>
   </div>
 </template>
@@ -65,10 +88,4 @@ export default {
 </script>
 
 <style scoped>
-.profile-link.router-link-exact-active {
-  background-color: white;
-  border-top-left-radius: var(--radius-sm, 0.25rem);
-  border-top-right-radius: var(--radius-sm, 0.25rem);
-  box-shadow: var(--shadow-md);
-}
 </style>

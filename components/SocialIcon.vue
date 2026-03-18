@@ -1,33 +1,17 @@
 <template>
   <div v-if="url" class="p-1">
-    <a target="_blank" :href="url" class="rounded-full bg-primary text-white w-[2.5rem] h-[2.5rem] flex-centred">
-      <Icon :name="icon"  size-class="w-8"/>
+    <a target="_blank" :href="url"
+       class="rounded-full bg-white/10 hover:bg-secondary text-white w-10 h-10 flex items-center justify-center transition-colors">
+      <span class="w-5 h-5" v-html="socialIcons[icon]" />
     </a>
   </div>
 </template>
 
-<script>
-  export default {
-    name: 'SocialIcon',
-    props: {
-      url: {
-        type: String,
-        default: ''
-      },
-      icon:{
-        type: String,
-        required: true
-      }
-    },
-    data() {
-      return {};
-    },
-    mounted() {
+<script setup>
+import { socialIcons } from '~/helpers/SocialIcons'
 
-    }
-  };
+defineProps({
+  url: { type: String, default: '' },
+  icon: { type: String, required: true },
+})
 </script>
-
-<style scoped>
-
-</style>

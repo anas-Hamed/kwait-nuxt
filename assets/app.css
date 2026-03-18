@@ -9,43 +9,44 @@
   --color-facebook: #3b5998;
   --color-twitter: #1da1f2;
   --color-rate: #ffc909;
+  --color-destructive: #ef4444;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+  --color-border: #e2e8f0;
+  --color-input: #e2e8f0;
+  --color-ring: #1b2c3b;
+  --color-card: #ffffff;
+  --color-card-foreground: #1b2c3b;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1b2c3b;
+  --color-primary-foreground: #ffffff;
+  --color-secondary-foreground: #1b2c3b;
+  --color-accent-foreground: #1b2c3b;
+  --color-destructive-foreground: #ffffff;
+  --radius: 0.5rem;
 }
 
-@utility outline-own {
-  outline: 1px solid #464646;
-}
-
-@utility flex-centred {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@utility border-error {
-  border: 1px solid red !important;
-}
-
-@utility primary-btn {
-  border-radius: var(--radius-sm, 0.25rem);
-  background-color: var(--color-primary);
-  color: white;
-  margin-top: 1rem;
-  width: 6rem;
-  padding: 0.5rem;
-}
-
-@utility card {
-  background-color: white;
-  border-radius: var(--radius-sm, 0.25rem);
-  box-shadow: var(--shadow-md);
-  padding: 0.5rem;
-  @media (min-width: 768px) {
-    padding: 2rem;
-  }
-}
-
-@utility flipped-menu {
-  transform: rotateZ(180deg) rotateX(180deg);
+:root {
+  --background: 0 0% 93%;
+  --foreground: 207 37% 17%;
+  --card: 0 0% 100%;
+  --card-foreground: 207 37% 17%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 207 37% 17%;
+  --primary: 207 37% 17%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 45 100% 52%;
+  --secondary-foreground: 207 37% 17%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 0 0% 93%;
+  --accent-foreground: 207 37% 17%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 207 37% 17%;
+  --radius: 0.5rem;
 }
 
 /* Vue Router 4 uses router-link-exact-active instead of nuxt-link-exact-active */

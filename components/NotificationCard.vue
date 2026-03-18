@@ -1,55 +1,51 @@
 <template>
-  <div class="mx-auto  p-3">
-    <div class="  w-full px-2 border rounded-sm transition duration-200"
-         :class="[(notification.read_at != null || read)?'bg-accent':'bg-blue-100' ]">
-      <div class="flex items-center py-2">
-        <div class="w-12 text-secondary">
-          <Icon name="notification" size-class="w-8" />
+  <div class="mx-auto p-1.5">
+    <Card class="transition-colors"
+          :class="[(notification.read_at != null || read) ? 'bg-accent' : 'bg-blue-50 border-blue-200']">
+      <CardContent class="flex items-center gap-3 p-4">
+        <div class="shrink-0 w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
+          <Bell :size="20" class="text-secondary" />
         </div>
-        <div class="flex-auto">
-          <h4 class="text-2xl font-bold mb-0 text-primary">{{ notification.data.title }}</h4>
-          <div class="px-2 text-accent-secondary">{{ notification.data.body }}</div>
-          <div class="flex justify-end w-full">
+        <div class="flex-auto min-w-0">
+          <h4 class="text-lg font-bold text-primary truncate">{{ notification.data.title }}</h4>
+          <p class="text-sm text-muted-foreground mt-0.5">{{ notification.data.body }}</p>
+          <div class="flex justify-end w-full mt-1">
             <client-only>
-              <small>{{$dayjs(notification.created_at).format('YYYY-MM-DD H:m')}}</small>
+              <small class="text-xs text-muted-foreground">{{ $dayjs(notification.created_at).format('YYYY-MM-DD H:m') }}</small>
             </client-only>
           </div>
         </div>
-        <div class="w-4">
-          <button v-if="notification.read_at == null" class="w-4 h-4 rounded-full bg-gray-400 cursor-pointer" title="Mark as read"
-                  @click="markAsRead"></button>
+        <div class="shrink-0">
+          <button v-if="notification.read_at == null && !read"
+                  class="w-3 h-3 rounded-full bg-blue-500 hover:bg-blue-600 cursor-pointer transition-colors"
+                  title="Mark as read" @click="markAsRead" />
         </div>
-      </div>
-
-
-    </div>
+      </CardContent>
+    </Card>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'NotificationCard',
-    props: {
-      notification: {
-        type: Object,
-        required: true
-      }
-    },
-    data() {
-      return {
-        read: false
-      };
-    },
-    methods: {
-      markAsRead() {
-        const appStore = useAppStore();
-        useApi().post(`notifications/makeAsRead/${this.notification.id}`).then(data => {
-          this.read = true;
-          appStore.decreaseNotificationsCount();
-        });
-      }
-    }
-  };
-</script>
+import { Bell } from 'lucide-vue-next'
+import { Card, CardContent } from '~/components/ui/card'
 
-<style scoped></style>
+export default {
+  name: 'NotificationCard',
+  components: { Bell, Card, CardContent },
+  props: {
+    notification: { type: Object, required: true },
+  },
+  data() {
+    return { read: false }
+  },
+  methods: {
+    markAsRead() {
+      const appStore = useAppStore()
+      useApi().post(`notifications/makeAsRead/${this.notification.id}`).then(data => {
+        this.read = true
+        appStore.decreaseNotificationsCount()
+      })
+    },
+  },
+}
+</script>

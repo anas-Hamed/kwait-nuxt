@@ -1,4 +1,7 @@
 <script setup>
+import { Card, CardContent } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+
 definePageMeta({ middleware: ['auth'] })
 
 const api = useApi()
@@ -55,29 +58,31 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-white shadow p-8 leading-8">
-    <div class="flex justify-end">
-      <button :disabled="notifications.length === 0" class="text-blue-500" @click="readAll">{{$t('read_all')}}</button>
-    </div>
-    <div class="max-w-screen-sm mx-auto">
-      <NotificationCard
-        v-for="(noty, index) in notifications"
-        :key="`notification-${index}`"
-        :notification="noty"
-      />
-    </div>
-    <client-only>
-      <div v-if="!allLoaded" ref="loadMoreTrigger" class="py-4 text-center">
-        <LoadingCircle :loading="true" />
+  <Card>
+    <CardContent class="p-8 leading-8">
+      <div class="flex justify-end">
+        <Button variant="link" :disabled="notifications.length === 0" @click="readAll">{{$t('read_all')}}</Button>
       </div>
-      <div v-if="allLoaded && notifications.length === 0" class="text-center py-8 text-gray-500">
-        {{ $t('no_result') }}
+      <div class="max-w-screen-sm mx-auto">
+        <NotificationCard
+          v-for="(noty, index) in notifications"
+          :key="`notification-${index}`"
+          :notification="noty"
+        />
       </div>
-      <div v-if="allLoaded && notifications.length > 0" class="text-center py-4 text-gray-500">
-        {{ $t('no_more') }}
-      </div>
-    </client-only>
-  </div>
+      <client-only>
+        <div v-if="!allLoaded" ref="loadMoreTrigger" class="py-4 text-center">
+          <LoadingCircle :loading="true" />
+        </div>
+        <div v-if="allLoaded && notifications.length === 0" class="text-center py-8 text-muted-foreground">
+          {{ $t('no_result') }}
+        </div>
+        <div v-if="allLoaded && notifications.length > 0" class="text-center py-4 text-muted-foreground">
+          {{ $t('no_more') }}
+        </div>
+      </client-only>
+    </CardContent>
+  </Card>
 </template>
 
 <script>

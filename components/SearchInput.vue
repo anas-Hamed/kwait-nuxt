@@ -1,44 +1,31 @@
 <template>
-  <div class="relative bg-gray-200 p-1 rounded-full w-full text-center max-w-screen-sm shadow-xs  ">
-    <div class="w-8 flex justify-center items-center  h-8 bg-white rounded-full shadow-xs p-1 absolute right-1 ">
-      <Icon name="search" />
+  <div class="relative w-full max-w-screen-sm">
+    <div class="absolute end-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white">
+      <Search :size="16" />
     </div>
-    <input :value="modelValue" type="text" :placeholder="placeholder" class="border-0 bg-transparent focus:outline-hidden w-full text-center h-8" @input="sendEmit" @focus="$emit('focus')" @blur="$emit('blur')">
-    <div v-if="false" class="w-8 flex justify-center items-center  h-8 text-gray-600 rounded-full shadow-xs p-1 absolute left-1 bottom-1 ">
-      <Icon name="filter" />
-    </div>
+    <Input
+      :value="modelValue"
+      type="text"
+      :placeholder="placeholder"
+      class="h-12 rounded-full bg-accent pe-14 text-center border-0 shadow-sm focus-visible:ring-primary"
+      @input="$emit('update:modelValue', $event.target.value)"
+      @focus="$emit('focus')"
+      @blur="$emit('blur')"
+    />
     <div class="relative">
-      <slot>
-
-      </slot>
+      <slot />
     </div>
   </div>
-
 </template>
 
-<script>
-  export default {
-    name: 'SearchInput',
-    props:{
-      placeholder:{
-       type: String,
-       default: ''
-      },
-      modelValue:{
-        type: String,
-        require: false,
-        default: ''
-      }
-    },
-    emits: ['update:modelValue', 'focus', 'blur'],
-    methods: {
-      sendEmit(v) {
-        this.$emit('update:modelValue',v.target.value);
-      }
-    }
-  }
+<script setup>
+import { Search } from 'lucide-vue-next'
+import { Input } from '~/components/ui/input'
+
+defineProps({
+  placeholder: { type: String, default: '' },
+  modelValue: { type: String, required: false, default: '' },
+})
+
+defineEmits(['update:modelValue', 'focus', 'blur'])
 </script>
-
-<style scoped>
-
-</style>

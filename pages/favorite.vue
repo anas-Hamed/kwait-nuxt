@@ -1,4 +1,6 @@
 <script setup>
+import { Card, CardContent } from '~/components/ui/card'
+
 definePageMeta({ middleware: ['auth'] })
 
 const api = useApi()
@@ -54,35 +56,37 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="card min-h-screen">
-    <div class="flex justify-between items-center">
-      <h4 class="text-xl">{{$t('favorite')}}</h4>
-    </div>
-    <div class="px-8 mx-auto py-8">
-      <div class="flex">
-        <div class="w-4"></div>
-        <div class="py-4 flex flex-wrap flex-auto">
-          <div v-for="company in companies" :key="`company-${company.id}`" class="w-full md:w-2/4 p-1">
-            <CompanyCard :company="company" class="" />
+  <Card class="min-h-screen">
+    <CardContent class="p-6">
+      <div class="flex justify-between items-center">
+        <h4 class="text-xl">{{$t('favorite')}}</h4>
+      </div>
+      <div class="px-8 mx-auto py-8">
+        <div class="flex">
+          <div class="w-4"></div>
+          <div class="py-4 flex flex-wrap flex-auto">
+            <div v-for="company in companies" :key="`company-${company.id}`" class="w-full md:w-2/4 p-1">
+              <CompanyCard :company="company" class="" />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="my-5">
-        <client-only>
-          <div v-if="!allLoaded" ref="loadMoreTrigger" class="py-4 text-center">
-            <LoadingCircle :loading="true" />
-          </div>
-          <div v-if="allLoaded && companies.length === 0" class="text-center py-8 text-gray-500">
-            {{ $t('no_result') }}
-          </div>
-          <div v-if="allLoaded && companies.length > 0" class="text-center py-4 text-gray-500">
-            {{ $t('no_more') }}
-          </div>
-        </client-only>
+        <div class="my-5">
+          <client-only>
+            <div v-if="!allLoaded" ref="loadMoreTrigger" class="py-4 text-center">
+              <LoadingCircle :loading="true" />
+            </div>
+            <div v-if="allLoaded && companies.length === 0" class="text-center py-8 text-muted-foreground">
+              {{ $t('no_result') }}
+            </div>
+            <div v-if="allLoaded && companies.length > 0" class="text-center py-4 text-muted-foreground">
+              {{ $t('no_more') }}
+            </div>
+          </client-only>
+        </div>
       </div>
-    </div>
-  </div>
+    </CardContent>
+  </Card>
 </template>
 
 <script>

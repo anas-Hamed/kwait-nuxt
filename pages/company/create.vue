@@ -1,4 +1,7 @@
 <script setup>
+import { Card, CardContent } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+
 definePageMeta({ middleware: ['auth'] })
 
 const api = useApi()
@@ -12,156 +15,163 @@ const { data: categories } = await useAsyncData('create-company-categories', asy
 <template>
   <div>
     <h3 class="text-primary text-4xl mb-4 font-bold">{{$t('add_company')}}</h3>
-    <div class="card">
-      <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('base_info')}}</h3>
-      <div class="px-2 md:px-12">
-        <Cropper :index="0" :ratio="1" :src="logo_image_init" @cropped="setLogoImage" class="mb-2"
-                 v-if="logo_image_init"/>
-        <div class="rounded-sm w-32 h-32 mb-2 bg-accent flex-centred" v-else>{{$t('logo')}}</div>
-        <input @change="selectLogoImage" accept="image/*" hidden ref="logo_image" type="file">
-        <button @click="$refs.logo_image.click()" class="px-3 py-1 bg-secondary w-32">{{$t('choose_image')}}</button>
-        <InputError name="image"/>
-      </div>
-      <div class="flex flex-wrap px-2 md:px-12">
-        <div class="w-full lg:w-3/6 p-3">
-          <MyInput :label="$t('ar_name')" :placeholder="$t('enter_arabic_name')" :required="true" error="ar_name" id="ar_name"
-                   v-model="form.ar_name"/>
-          <MyInput :label="$t('en_name')" :placeholder="$t('enter_english_name')" :required="true" error="en_name" id="en_name"
-                   v-model="form.en_name"/>
-          <div class="flex flex-wrap mb-3">
-            <div class="w-full md:w-1/2">
-              <label for="parent_id">{{$t('main_category')}}<span class="required"></span></label>
-              <div class="flex">
-                <VueSelect :options="parentsCategories" :placeholder="$t('choose_category')" class="group flex-auto mt-1"
-                          id="parent_id"
-                          v-model="parent_id"/>
-                <div class="w-1"></div>
-              </div>
-            </div>
-            <div class="w-full md:w-1/2">
-              <label for="category_id">{{$t('category')}}<span class="required"></span></label>
-              <div class="flex">
-                <div class="w-1"></div>
-                <VueSelect :class="[(errors && errors['category_id']) ?'border-error' : '']" :options="childrenCategories" :placeholder="$t('choose_category')"
-                          class="group flex-auto mt-1" id="category_id"
-                          v-model="form.category_id"/>
-              </div>
-              <InputError name="category_id"/>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="about">{{$t('about_company')}}</label>
-            <textarea :class="[(errors && errors['about']) ?'border-error' : '']" :placeholder="$t('enter_some_words_about_company')" class="w-full bg-accent rounded-sm focus:outline-own p-2 mt-1"
-                      id="about"
-                      rows="4" v-model="form.about"></textarea>
-            <InputError name="about"/>
-          </div>
+    <Card>
+      <CardContent class="p-6">
+        <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('base_info')}}</h3>
+        <div class="px-2 md:px-12">
+          <Cropper :index="0" :ratio="1" :src="logo_image_init" @cropped="setLogoImage" class="mb-2"
+                   v-if="logo_image_init"/>
+          <div class="rounded-sm w-32 h-32 mb-2 bg-accent flex items-center justify-center" v-else>{{$t('logo')}}</div>
+          <input @change="selectLogoImage" accept="image/*" hidden ref="logo_image" type="file">
+          <Button variant="secondary" @click="$refs.logo_image.click()" class="w-32">{{$t('choose_image')}}</Button>
+          <InputError name="image"/>
         </div>
-        <div class="w-full lg:w-3/6 p-3">
-          <div class="mb-4">
-            <label for="tags">{{$t('tags')}}</label>
-            <VueTagsInput :add-on-key="[13,',']" :class="[(errors && errors['tags']) ?'border-error' : '']" :max-tags="20" :placeholder="$t('enter_about_20_tag')" :tags="tags"
-                          @tags-changed="newTags => tags = newTags"
-                          class="w-full mx-0 mt-1" id="tags" style="max-width: unset"
-                          v-model="tag"/>
-          </div>
-          <div>
-            <div class="flex justify-between pb-1">
-              <h3 class="">{{$t('work_times')}}<span class="required"></span></h3>
-              <button @click="open = true" class="text-sm text-blue-500">{{$t('edit_all')}}</button>
-            </div>
-            <WorkTimes :days="form.work_times"/>
-            <Modal v-model="open">
-              <div class="flex mb-1 shadow-md">
-                <div :class="[$i18n.locale === 'ar' ? 'rounded-tr rounded-br' : 'rounded-tl rounded-bl']"
-                     class="w-24 bg-secondary text-center py-1">
-                  {{$t(`all_days`)}}
-                </div>
-                <div class="flex-auto bg-white flex justify-evenly py-1">
-                  <label :for="`day-start-all-days`" class="px-2">
-                    <span>{{$t('from')}}</span>
-                    <input :id="`day-start-all-days`" class="focus:outline-hidden" type="time"
-                           v-model="all_days.start_time">
-                  </label>
-                  <div class="w-1 border-l"></div>
-                  <label :for="`day-end-all-days`" class="px-2">
-                    <span>{{$t('to')}}</span>
-                    <input :id="`day-end-all-days`" class="focus:outline-hidden" type="time" v-model="all_days.end_time">
-                  </label>
+        <div class="flex flex-wrap px-2 md:px-12">
+          <div class="w-full lg:w-3/6 p-3">
+            <MyInput :label="$t('ar_name')" :placeholder="$t('enter_arabic_name')" :required="true" error="ar_name" id="ar_name"
+                     v-model="form.ar_name"/>
+            <MyInput :label="$t('en_name')" :placeholder="$t('enter_english_name')" :required="true" error="en_name" id="en_name"
+                     v-model="form.en_name"/>
+            <div class="flex flex-wrap mb-3">
+              <div class="w-full md:w-1/2">
+                <label for="parent_id">{{$t('main_category')}}<span class="required"></span></label>
+                <div class="flex">
+                  <VueSelect :options="parentsCategories" :placeholder="$t('choose_category')" class="group flex-auto mt-1"
+                            id="parent_id"
+                            v-model="parent_id"/>
+                  <div class="w-1"></div>
                 </div>
               </div>
-              <div class="text-center p-3 flex justify-start">
-                <button @click="setAllDays" class="bg-primary text-white p-2 rounded-sm">{{$t('accept')}}</button>
-                <div class="w-2"></div>
-                <button @click="open = false" class="bg-accent p-2 rounded-sm">{{$t('cancel')}}</button>
+              <div class="w-full md:w-1/2">
+                <label for="category_id">{{$t('category')}}<span class="required"></span></label>
+                <div class="flex">
+                  <div class="w-1"></div>
+                  <VueSelect :class="[(errors && errors['category_id']) ? 'border border-destructive' : '']" :options="childrenCategories" :placeholder="$t('choose_category')"
+                            class="group flex-auto mt-1" id="category_id"
+                            v-model="form.category_id"/>
+                </div>
+                <InputError name="category_id"/>
               </div>
-            </Modal>
+            </div>
+            <div class="mb-3">
+              <label for="about">{{$t('about_company')}}</label>
+              <textarea :class="[(errors && errors['about']) ? 'border border-destructive' : '']" :placeholder="$t('enter_some_words_about_company')" class="w-full bg-accent rounded-sm focus:outline focus:outline-accent-secondary p-2 mt-1"
+                        id="about"
+                        rows="4" v-model="form.about"></textarea>
+              <InputError name="about"/>
+            </div>
+          </div>
+          <div class="w-full lg:w-3/6 p-3">
+            <div class="mb-4">
+              <label for="tags">{{$t('tags')}}</label>
+              <VueTagsInput :add-on-key="[13,',']" :class="[(errors && errors['tags']) ? 'border border-destructive' : '']" :max-tags="20" :placeholder="$t('enter_about_20_tag')" :tags="tags"
+                            @tags-changed="newTags => tags = newTags"
+                            class="w-full mx-0 mt-1" id="tags" style="max-width: unset"
+                            v-model="tag"/>
+            </div>
+            <div>
+              <div class="flex justify-between pb-1">
+                <h3 class="">{{$t('work_times')}}<span class="required"></span></h3>
+                <Button variant="link" size="sm" @click="open = true" class="text-sm">{{$t('edit_all')}}</Button>
+              </div>
+              <WorkTimes :days="form.work_times"/>
+              <Modal v-model="open">
+                <div class="flex mb-1 shadow-md">
+                  <div :class="[$i18n.locale === 'ar' ? 'rounded-tr rounded-br' : 'rounded-tl rounded-bl']"
+                       class="w-24 bg-secondary text-center py-1">
+                    {{$t(`all_days`)}}
+                  </div>
+                  <div class="flex-auto bg-white flex justify-evenly py-1">
+                    <label :for="`day-start-all-days`" class="px-2">
+                      <span>{{$t('from')}}</span>
+                      <input :id="`day-start-all-days`" class="focus:outline-hidden" type="time"
+                             v-model="all_days.start_time">
+                    </label>
+                    <div class="w-1 border-l"></div>
+                    <label :for="`day-end-all-days`" class="px-2">
+                      <span>{{$t('to')}}</span>
+                      <input :id="`day-end-all-days`" class="focus:outline-hidden" type="time" v-model="all_days.end_time">
+                    </label>
+                  </div>
+                </div>
+                <div class="text-center p-3 flex justify-start gap-2">
+                  <Button @click="setAllDays">{{$t('accept')}}</Button>
+                  <Button variant="outline" @click="open = false">{{$t('cancel')}}</Button>
+                </div>
+              </Modal>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="card mt-2">
-      <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('contacts')}}</h3>
-      <div class="flex flex-wrap px-2 md:px-12">
-        <div class="w-full md:w-2/6 p-3">
-          <MyInput input-dir="ltr" :label="$t('phone')" :required="true" error="phone" id="phone" placeholder="05xxxxxxxx"
-                   v-model="form.phone"/>
+      </CardContent>
+    </Card>
+    <Card class="mt-2">
+      <CardContent class="p-6">
+        <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('contacts')}}</h3>
+        <div class="flex flex-wrap px-2 md:px-12">
+          <div class="w-full md:w-2/6 p-3">
+            <MyInput input-dir="ltr" :label="$t('phone')" :required="true" error="phone" id="phone" placeholder="05xxxxxxxx"
+                     v-model="form.phone"/>
+          </div>
+          <div class="w-full md:w-2/6 p-3">
+            <MyInput input-dir="ltr" :label="$t('whatsapp')" :required="true" error="whatsapp" id="whatsapp" placeholder="05xxxxxxxx"
+                      v-model="form.whatsapp"/>
+          </div>
+          <div class="w-full py-4 border-b"></div>
+          <div class="w-full md:w-2/6 p-3">
+            <MyInput :label="$t('email')" error="email" id="email" input-dir="ltr" placeholder="example@example.com"
+                     v-model="form.email"/>
+          </div>
+          <div class="w-full md:w-2/6 p-3">
+            <MyInput :label="$t('website')" error="website" id="website" input-dir="ltr"
+                     placeholder="https://example.com" v-model="form.website"/>
+          </div>
+          <div class="w-full md:w-2/6 p-3">
+            <MyInput :label="$t('facebook')" error="facebook" id="facebook" input-dir="ltr"
+                     placeholder="https://facebook.com/example" v-model="form.facebook"/>
+          </div>
+          <div class="w-full md:w-2/6 p-3">
+            <MyInput :label="$t('twitter')" error="twitter" id="twitter" input-dir="ltr"
+                     placeholder="https://twitter.com/example" v-model="form.twitter"/>
+          </div>
+          <div class="w-full md:w-2/6 p-3">
+            <MyInput :label="$t('snapchat')" error="snapchat" id="snapchat" input-dir="ltr"
+                     placeholder="https://snapchat.com/example" v-model="form.snapchat"/>
+          </div>
+          <div class="w-full md:w-2/6 p-3">
+            <MyInput :label="$t('instagram')" error="instagram" id="instagram" input-dir="ltr"
+                     placeholder="https://instagram.com/example" v-model="form.instagram"/>
+          </div>
+          <div class="w-full md:w-2/6 p-3">
+            <MyInput :label="$t('linkedin')" error="linkedin" id="linkedin" input-dir="ltr"
+                     placeholder="https://linkedin.com/example" v-model="form.linkedin"/>
+          </div>
         </div>
-        <div class="w-full md:w-2/6 p-3">
-          <MyInput input-dir="ltr" :label="$t('whatsapp')" :required="true" error="whatsapp" id="whatsapp" placeholder="05xxxxxxxx"
-                    v-model="form.whatsapp"/>
-        </div>
-        <div class="w-full py-4 border-b"></div>
-        <div class="w-full md:w-2/6 p-3">
-          <MyInput :label="$t('email')" error="email" id="email" input-dir="ltr" placeholder="example@example.com"
-                   v-model="form.email"/>
-        </div>
-        <div class="w-full md:w-2/6 p-3">
-          <MyInput :label="$t('website')" error="website" id="website" input-dir="ltr"
-                   placeholder="https://example.com" v-model="form.website"/>
-        </div>
-        <div class="w-full md:w-2/6 p-3">
-          <MyInput :label="$t('facebook')" error="facebook" id="facebook" input-dir="ltr"
-                   placeholder="https://facebook.com/example" v-model="form.facebook"/>
-        </div>
-        <div class="w-full md:w-2/6 p-3">
-          <MyInput :label="$t('twitter')" error="twitter" id="twitter" input-dir="ltr"
-                   placeholder="https://twitter.com/example" v-model="form.twitter"/>
-        </div>
-        <div class="w-full md:w-2/6 p-3">
-          <MyInput :label="$t('snapchat')" error="snapchat" id="snapchat" input-dir="ltr"
-                   placeholder="https://snapchat.com/example" v-model="form.snapchat"/>
-        </div>
-        <div class="w-full md:w-2/6 p-3">
-          <MyInput :label="$t('instagram')" error="instagram" id="instagram" input-dir="ltr"
-                   placeholder="https://instagram.com/example" v-model="form.instagram"/>
-        </div>
-        <div class="w-full md:w-2/6 p-3">
-          <MyInput :label="$t('linkedin')" error="linkedin" id="linkedin" input-dir="ltr"
-                   placeholder="https://linkedin.com/example" v-model="form.linkedin"/>
-        </div>
-      </div>
-    </div>
-    <div class="card mt-2">
-      <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('images_and_location')}}</h3>
-      <MultiImageCropper @changed="setImages"/>
-      <InputError name="images"/>
-      <CreateMap v-model="form.location"/>
-    </div>
-    <div class="card my-2">
-      <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('terms')}}</h3>
-      <label for="accept-terms">
-        <input id="accept-terms" type="checkbox" v-model="form.accept_terms">
-        <span class="px-2">{{$t('i_am_approve_on')}} <LLink :to="{name: 'terms'}" class="text-blue-400" target="_blank">{{$t('terms')}}</LLink> {{$t('append_on_website')}}</span>
-      </label>
-    </div>
+      </CardContent>
+    </Card>
+    <Card class="mt-2">
+      <CardContent class="p-6">
+        <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('images_and_location')}}</h3>
+        <MultiImageCropper @changed="setImages"/>
+        <InputError name="images"/>
+        <CreateMap v-model="form.location"/>
+      </CardContent>
+    </Card>
+    <Card class="my-2">
+      <CardContent class="p-6">
+        <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('terms')}}</h3>
+        <label for="accept-terms">
+          <input id="accept-terms" type="checkbox" v-model="form.accept_terms">
+          <span class="px-2">{{$t('i_am_approve_on')}} <LLink :to="{name: 'terms'}" class="text-blue-400" target="_blank">{{$t('terms')}}</LLink> {{$t('append_on_website')}}</span>
+        </label>
+      </CardContent>
+    </Card>
     <div class="text-center py-8">
-      <button :class="{'opacity-50':!form.accept_terms}" :disabled="!form.accept_terms"
-              @click="submit" class="bg-primary text-white py-2 px-8 w-full max-w-screen-sm rounded-sm">
+      <Button :class="{'opacity-50':!form.accept_terms}" :disabled="!form.accept_terms"
+              @click="submit" class="w-full max-w-screen-sm">
         <LoadingCircle :loading="loading">
           {{$t('save')}}
         </LoadingCircle>
-      </button>
+      </Button>
     </div>
   </div>
 </template>

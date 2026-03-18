@@ -1,4 +1,7 @@
 <script setup>
+import { Card, CardContent } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+
 const api = useApi()
 
 const companies = ref([])
@@ -26,31 +29,33 @@ watch(fetchedCompanies, (val) => {
 </script>
 
 <template>
-  <div class="card">
-    <div class="p-2">
+  <Card>
+    <CardContent class="p-6">
       <template v-if="companies.length > 0">
         <div class="pb-2">
           <label for="company">{{$t('company')}}</label>
           <div>
-            <select class="w-full max-w-[350px] bg-accent p-2" id="company" v-model="company_id">
+            <select class="w-full max-w-[350px] bg-accent p-2 rounded-md border" id="company" v-model="company_id">
               <option :value="company.id" :key="company.id" class="p-2" v-for="company in companies">{{$i18n.locale === 'ar' ?
                 company.ar_name : company.en_name}}
               </option>
             </select>
           </div>
         </div>
-        <button @click="sendRequest" class="primary-btn">
+        <Button @click="sendRequest">
           <LoadingCircle :loading="loading">{{$t('trust')}}</LoadingCircle>
-        </button>
+        </Button>
       </template>
       <template v-else>
         <div class="mb-4">{{$t('no_companies_to_trust')}}</div>
-        <NuxtLink class="primary-btn" to="/company/create">
-          {{$t('create_company')}}
-        </NuxtLink>
+        <Button as-child>
+          <NuxtLink to="/company/create">
+            {{$t('create_company')}}
+          </NuxtLink>
+        </Button>
       </template>
-    </div>
-  </div>
+    </CardContent>
+  </Card>
 </template>
 
 <script>

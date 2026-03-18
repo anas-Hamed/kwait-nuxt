@@ -1,45 +1,52 @@
 <template>
   <div>
-    <div class="card">
-      <div>
-        <h3 class="text-2xl font-bold">{{user.name}}</h3>
-        <button @click="logout" class="text-blue-500 flex-centred" title="logout">
-          <Icon name="login"/>
-          <span class="w-1"></span><span>{{$t('logout')}}</span>
-        </button>
-      </div>
-      <div class="h-12"></div>
-      <div class="flex flex-wrap">
-        <div class="w-full md:w-2/6 p-2">
-          <h3 class="text-2xl mb-4">{{$t('update_personal_info')}}</h3>
-          <MyInput :label="$t('name')" error="name" id="name" v-model="user.name"/>
-          <Phone :label="$t('phone')" error="phone" id="phone" input-dir="ltr" v-model="user.phone"/>
-          <MyInput :label="$t('email')" error="email" id="email" input-dir="ltr" v-model="user.email"/>
-          <button @click="updateInfo" class="primary-btn">
-            <LoadingCircle :loading="updateLoading">{{$t('save')}}</LoadingCircle>
-          </button>
+    <Card>
+      <CardContent class="p-6">
+        <div>
+          <h3 class="text-2xl font-bold">{{user.name}}</h3>
+          <Button variant="ghost" @click="logout" class="flex items-center justify-center text-blue-500" title="logout">
+            <LogIn :size="18" />
+            <span class="w-1"></span><span>{{$t('logout')}}</span>
+          </Button>
         </div>
-        <div class="w-full md:w-2/6 p-2">
-          <h3 class="text-2xl mb-4">{{$t('change_password')}}</h3>
-          <MyInput :label="$t('old_password')" error="old_password" id="old_password" type="password"
-                   v-model="form.old_password"/>
-          <MyInput :label="$t('new_password')" error="new_password" id="new_password" type="password"
-                   v-model="form.new_password"/>
-          <MyInput :label="$t('new_password_confirmation')" error="new_password_confirmation"
-                   id="new_password_confirmation" type="password"
-                   v-model="form.new_password_confirmation"/>
-          <button @click="updatePassword" class="primary-btn">
-            <LoadingCircle :loading="passwordLoading">{{$t('save')}}</LoadingCircle>
-          </button>
+        <div class="h-12"></div>
+        <div class="flex flex-wrap">
+          <div class="w-full md:w-2/6 p-2">
+            <h3 class="text-2xl mb-4">{{$t('update_personal_info')}}</h3>
+            <MyInput :label="$t('name')" error="name" id="name" v-model="user.name"/>
+            <Phone :label="$t('phone')" error="phone" id="phone" input-dir="ltr" v-model="user.phone"/>
+            <MyInput :label="$t('email')" error="email" id="email" input-dir="ltr" v-model="user.email"/>
+            <Button @click="updateInfo">
+              <LoadingCircle :loading="updateLoading">{{$t('save')}}</LoadingCircle>
+            </Button>
+          </div>
+          <div class="w-full md:w-2/6 p-2">
+            <h3 class="text-2xl mb-4">{{$t('change_password')}}</h3>
+            <MyInput :label="$t('old_password')" error="old_password" id="old_password" type="password"
+                     v-model="form.old_password"/>
+            <MyInput :label="$t('new_password')" error="new_password" id="new_password" type="password"
+                     v-model="form.new_password"/>
+            <MyInput :label="$t('new_password_confirmation')" error="new_password_confirmation"
+                     id="new_password_confirmation" type="password"
+                     v-model="form.new_password_confirmation"/>
+            <Button @click="updatePassword">
+              <LoadingCircle :loading="passwordLoading">{{$t('save')}}</LoadingCircle>
+            </Button>
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   </div>
 </template>
 
 <script>
+import { Card, CardContent } from '~/components/ui/card'
+import { Button } from '~/components/ui/button'
+import { LogIn } from 'lucide-vue-next'
+
 export default {
   name: 'ProfileIndex',
+  components: { Card, CardContent, Button, LogIn },
   data() {
     return {
       user: {
