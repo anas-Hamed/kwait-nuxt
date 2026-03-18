@@ -35,40 +35,30 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Register',
-  head() {
-    return this.metaBuilder(this.$t('register'));
-  },
-  data() {
-    return {
-      form: {
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        password_confirmation: ''
-      },
-      loading: false
-    };
-  },
-  methods: {
-    async register() {
-      this.loading = true;
-      try {
-        const api = useApi();
-        await api.post('user/register', this.form);
-        const { signIn } = useAuth();
-        await signIn(this.form);
-      } catch (e) {
-        // handled by useApi
-      } finally {
-        this.loading = false;
-      }
-    }
+<script setup>
+const api = useApi()
+const { signIn } = useAuth()
+
+const form = ref({
+  name: '',
+  email: '',
+  phone: '',
+  password: '',
+  password_confirmation: ''
+})
+const loading = ref(false)
+
+async function register() {
+  loading.value = true
+  try {
+    await api.post('user/register', form.value)
+    await signIn(form.value)
+  } catch (e) {
+    // handled by useApi
+  } finally {
+    loading.value = false
   }
-};
+}
 </script>
 
 <style scoped>

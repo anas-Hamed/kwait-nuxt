@@ -1,9 +1,18 @@
 <template>
   <div>
     <label>{{ label }} <span v-if="required" class="required"></span></label>
-    <vue-tel-input :model-value="modelValue"  class="rounded-sides " dir="ltr" :class="[(errors && errors[error]) ?'border-error' : '']"
-                   placeholder=""
-                   @update:model-value="setPhone" />
+    <vue-tel-input
+      v-model="phone"
+      dir="ltr"
+      class="rounded-sides"
+      :class="[(errors && errors[error]) ? 'border-error' : '']"
+      default-country="KW"
+      :only-countries="['KW']"
+      :auto-default-country="false"
+      :input-options="{ placeholder: '', type: 'tel' }"
+      mode="international"
+      @on-input="onInput"
+    />
     <InputError v-if="error" :name="error" />
   </div>
 </template>
@@ -30,15 +39,22 @@
     emits: ['update:modelValue'],
     data() {
       return {
-        countries: [
-          'KW'
-        ]
+        phone: this.modelValue || ''
       };
     },
+    watch: {
+      modelValue(val) {
+        if (val !== this.phone) {
+          this.phone = val || '';
+        }
+      }
+    },
     methods: {
-      setPhone(phone, phoneObject) {
-        if (phoneObject && phoneObject.number) {
-          this.$emit('update:modelValue', phoneObject.number);
+      onInput(formattedNumber, phoneObject) {
+        if (phoneObject && phoneObject.formatted) {
+          this.$emit('update:modelValue', phoneObject.formatted);
+        } else {
+          this.$emit('update:modelValue', formattedNumber);
         }
       }
     }
@@ -46,6 +62,5 @@
 </script>
 
 <style>
-
 
 </style>

@@ -29,43 +29,33 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Login',
-  data() {
-    return {
-      form: {
-        email: '',
-        password: ''
-      },
-      loading: false
-    };
-  },
-  head() {
-    return this.metaBuilder(this.$t('login'));
-  },
-  methods: {
-    async login() {
-      this.loading = true;
-      try {
-        const { signIn } = useAuth();
-        await signIn(this.form);
-        const api = useApi();
-        const countRes = await api.get('notifications/numberUnread');
-        const appStore = useAppStore();
-        appStore.setNotificationsCount(countRes.data);
-      } catch (e) {
-        const response = e?.response || e?.data;
-        if (response?.status === 401 || e?.statusCode === 401) {
-          const validationStore = useValidationStore();
-          validationStore.setErrors({'password': ['\u062A\u0623\u0643\u062F \u0645\u0646 \u0635\u062D\u0629 \u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A']});
-        }
-      } finally {
-        this.loading = false;
-      }
+<script setup>
+const { signIn } = useAuth()
+const api = useApi()
+const appStore = useAppStore()
+const validationStore = useValidationStore()
+
+const form = ref({
+  email: '',
+  password: ''
+})
+const loading = ref(false)
+
+async function login() {
+  loading.value = true
+  try {
+    await signIn(form.value)
+    const countRes = await api.get('notifications/numberUnread')
+    appStore.setNotificationsCount(countRes.data)
+  } catch (e) {
+    const status = e?.response?.status || e?.statusCode
+    if (status === 401) {
+      validationStore.setErrors({'password': ['\u062A\u0623\u0643\u062F \u0645\u0646 \u0635\u062D\u0629 \u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A']})
     }
+  } finally {
+    loading.value = false
   }
-};
+}
 </script>
 
 <style scoped>

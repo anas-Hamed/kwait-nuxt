@@ -59,6 +59,7 @@ export default defineNuxtConfig({
       { code: 'ar', file: 'ar.js', dir: 'rtl', language: 'ar-SA' },
     ],
     defaultLocale: 'ar',
+    strategy: 'prefix_and_default',
     langDir: '../lang/',
   },
 
