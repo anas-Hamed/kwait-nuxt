@@ -3,7 +3,7 @@
     <AppDownload />
     <div class="bg-primary px-3 pt-12 text-white">
       <div class="max-w-screen-xl mx-auto">
-        <ContactIcons />
+        <ContactsIcons />
         <div class="flex flex-wrap gap-2  py-4 mb-8 justify-center">
           <div class="w-full sm:w-1/3 text-center  sm:text-start">
             <h3 class="text-2xl">{{$t('support')}}</h3>
@@ -38,13 +38,8 @@
 </template>
 
 <script>
-  import LLink from './l-link';
-  import AppDownload from './AppDownload';
-  import ContactIcons from './ContactsIcons';
-
   export default {
     name: 'BFooter',
-    components: { ContactIcons, AppDownload, LLink }
   };
 </script>
 

@@ -1,10 +1,25 @@
+<script setup>
+const api = useApi()
+const router = useRouter()
+const localePath = useLocalePath()
+
+const { data: mainData } = await useAsyncData('main', async () => {
+  const res = await api.get('main', { limit: 10 })
+  return res.data
+})
+
+const ads = computed(() => mainData.value?.ads || [])
+const categories = computed(() => mainData.value?.categories || [])
+const blogs = computed(() => mainData.value?.blogs || [])
+</script>
+
 <template>
   <div class="max-w-screen-lg mx-auto">
     <div>
       <Ads :ads="ads" :loading="adsLoading" />
     </div>
     <div class="bg-white rounded shadow-md p-2 md:p-8 mt-8">
-      <img class="max-w-sm w-8/12 mx-auto my-12" src="~assets/images/h_logo.png" alt="">
+      <img class="max-w-sm w-8/12 mx-auto my-12" src="~/assets/images/h_logo.png" alt="">
       <form @submit.prevent="searchForResult">
         <SearchInput class="mx-auto" :placeholder="$t('search_for_category_company')" v-model="search" />
       </form>
@@ -30,78 +45,33 @@
 </template>
 
 <script>
-  import _ from 'lodash';
-  import LLink from '~/components/l-link';
-  import SearchInput from '~/components/SearchInput';
-  import Ads from '~/components/Ads';
-  import CategoryCard from '~/components/CategoryCard';
-
-  export default {
-    name: 'Index',
-    components: { LLink, CategoryCard, Ads, SearchInput },
-    async asyncData(ctx) {
-      let ads = [];
-      let categories = [];
-      let blogs = [];
-      try {
-        const { data } = (await ctx.$axios.get('main?limit=10')).data;
-        ads = data.ads;
-        categories = data.categories;
-        blogs = data.blogs;
-        return { ads, categories,blogs };
-      } catch ({ response }) {
-        ctx.error({
-          statusCode: response?.status,
-          message: response?.message
-        });
+export default {
+  name: 'Index',
+  data() {
+    return {
+      search: '',
+      searchResult: [],
+      loading: false,
+      noResults: false,
+      showResults: false,
+      adsLoading: true
+    };
+  },
+  head() {
+    return this.metaBuilder();
+  },
+  mounted() {
+    this.adsLoading = false;
+  },
+  methods: {
+    searchForResult() {
+      if (this.search.length > 0) {
+        this.$router.push(this.localePath({ name: 'search', query: { keyword: this.search } }));
       }
-      return { ads, categories };
     },
-    data() {
-      return {
-        search: '',
-        searchResult: [],
-        loading: false,
-        noResults: false,
-        showResults: false,
-        adsLoading: true
-      };
-    },
-    head() {
-      return this.metaBuilder();
-    },
-    mounted() {
-      this.adsLoading = false
-    },
-    methods: {
-      searchForResult() {
-        if (this.search.length > 0) {
-          this.$router.push(this.localePath({ name: 'search', query: { keyword: this.search } }));
-        }
-      },
-      getSearch: _.debounce(async function(v) {
-        this.search = v;
-        if (v.length >= 3) {
-          try {
-            this.loading = true;
-            const { data } = await this.$axios.get('search', {
-              params: {
-                search_term: v
-              }
-            });
-            this.searchResult = data.data;
-          } catch (e) {
-            ;
-          } finally {
-
-            this.loading = false;
-
-          }
-        }
-      }, 500),
-    }
-  };
+  }
+};
 </script>
-<style>
 
+<style>
 </style>

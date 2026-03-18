@@ -8,7 +8,7 @@
   import Cropper from 'cropperjs';
   import 'cropperjs/dist/cropper.css';
   export default {
-    name: 'Cropper',
+    name: 'CropperComponent',
     props: {
       src: {
         type: String,

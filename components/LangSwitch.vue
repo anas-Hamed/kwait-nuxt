@@ -1,40 +1,31 @@
 <template>
-  <div class=" flex-centred  py-1 mx-1 ">
-    <nuxt-link v-if="$i18n.locale === 'en'" class=" text-sm"
-               :to="switchLocalePath('ar')">
+  <div class="flex-centred py-1 mx-1">
+    <NuxtLink v-if="locale === 'en'" class="text-sm" :to="switchLocalePath('ar')">
       <div class="flex-centred">
-        <icon name="world" size-class="w-4"></icon>
-        <div class="-mb-1 md:mb-0" >AR</div>
+        <Icon name="world" size-class="w-4" />
+        <div class="-mb-1 md:mb-0">AR</div>
       </div>
-
-    </nuxt-link>
-    <nuxt-link v-else class="text-sm"
-               :to="switchLocalePath('en')">
+    </NuxtLink>
+    <NuxtLink v-else class="text-sm" :to="switchLocalePath('en')">
       <div class="flex-centred">
-        <icon name="world" size-class="w-4"></icon>
-        <div  class="-mb-1 md:mb-0">EN</div>
+        <Icon name="world" size-class="w-4" />
+        <div class="-mb-1 md:mb-0">EN</div>
       </div>
-    </nuxt-link>
+    </NuxtLink>
   </div>
 </template>
 
-<script>
-  import Icon from './Icon';
+<script setup>
+const { locale } = useI18n();
+const switchLocalePath = useSwitchLocalePath();
+const appStore = useAppStore();
+const { $dayjs } = useNuxtApp();
+const api = useApi();
 
-  export default {
-    name: 'LangSwitch',
-    components: { Icon },
-    mounted() {
-      this.$i18n.onLanguageSwitched = (oldLocale, newLocale) => {
-        this.$moment.locale(newLocale);
-        this.$axios.get('setting').then(data => {
-          this.$store.dispatch('setSetting', data.data.data);
-        });
-      };
-    }
-  };
+watch(locale, (newLocale) => {
+  $dayjs.locale(newLocale);
+  api.get('setting').then((data) => {
+    appStore.setSetting(data.data);
+  });
+});
 </script>
-
-<style scoped>
-
-</style>

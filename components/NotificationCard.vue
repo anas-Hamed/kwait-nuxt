@@ -11,12 +11,12 @@
           <div class="px-2 text-accentSecondary">{{ notification.data.body }}</div>
           <div class="flex justify-end w-full">
             <client-only>
-              <small>{{$moment(notification.created_at).format('yyyy-MM-DD H:m')}}</small>
+              <small>{{$dayjs(notification.created_at).format('YYYY-MM-DD H:m')}}</small>
             </client-only>
           </div>
         </div>
         <div class="w-4">
-          <button v-if="notification.read_at == null" class="w-4 h-4 rounded-full bg-gray-400 cursor-pointer" title="تعيين كمقروء"
+          <button v-if="notification.read_at == null" class="w-4 h-4 rounded-full bg-gray-400 cursor-pointer" title="Mark as read"
                   @click="markAsRead"></button>
         </div>
       </div>
@@ -27,11 +27,8 @@
 </template>
 
 <script>
-  import Icon from './Icon';
-
   export default {
     name: 'NotificationCard',
-    components: { Icon },
     props: {
       notification: {
         type: Object,
@@ -45,9 +42,10 @@
     },
     methods: {
       markAsRead() {
-        this.$axios.post(`notifications/makeAsRead/${this.notification.id}`).then(data => {
+        const appStore = useAppStore();
+        useApi().post(`notifications/makeAsRead/${this.notification.id}`).then(data => {
           this.read = true;
-          this.$store.dispatch('decreaseNotificationsCount')
+          appStore.decreaseNotificationsCount();
         });
       }
     }

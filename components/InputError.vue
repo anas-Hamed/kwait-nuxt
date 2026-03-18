@@ -8,7 +8,7 @@
 
 <script>
   export default {
-    'name': 'InputError',
+    name: 'InputError',
     props:{
       name:{
         type: String,

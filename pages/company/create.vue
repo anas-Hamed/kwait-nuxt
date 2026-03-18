@@ -1,3 +1,14 @@
+<script setup>
+definePageMeta({ middleware: ['auth'] })
+
+const api = useApi()
+
+const { data: categories } = await useAsyncData('create-company-categories', async () => {
+  const res = await api.get('category', { all: true, has_children: true })
+  return res.data || []
+})
+</script>
+
 <template>
   <div>
     <h3 class="text-primary text-4xl mb-4 font-bold">{{$t('add_company')}}</h3>
@@ -8,8 +19,7 @@
                  v-if="logo_image_init"/>
         <div class="rounded w-32 h-32 mb-2 bg-accent flex-centred" v-else>{{$t('logo')}}</div>
         <input @change="selectLogoImage" accept="image/*" hidden ref="logo_image" type="file">
-        <button @click="$refs.logo_image.click()" class="px-3 py-1 bg-secondary w-32 ">{{$t('choose_image')}}</button>
-
+        <button @click="$refs.logo_image.click()" class="px-3 py-1 bg-secondary w-32">{{$t('choose_image')}}</button>
         <InputError name="image"/>
       </div>
       <div class="flex flex-wrap px-2 md:px-12">
@@ -49,7 +59,6 @@
           </div>
         </div>
         <div class="w-full lg:w-3/6 p-3">
-
           <div class="mb-4">
             <label for="tags">{{$t('tags')}}</label>
             <VueTagsInput :add-on-key="[13,',']" :class="[(errors && errors['tags']) ?'border-error' : '']" :max-tags="20" :placeholder="$t('enter_about_20_tag')" :tags="tags"
@@ -59,19 +68,17 @@
           </div>
           <div>
             <div class="flex justify-between pb-1">
-              <h3 class="  ">{{$t('work_times')}}<span class="required"></span></h3>
+              <h3 class="">{{$t('work_times')}}<span class="required"></span></h3>
               <button @click="open = true" class="text-sm text-blue-500">{{$t('edit_all')}}</button>
-
             </div>
             <WorkTimes :days="form.work_times"/>
             <Modal v-model="open">
-
               <div class="flex mb-1 shadow-md">
                 <div :class="[$i18n.locale === 'ar' ? 'rounded-tr rounded-br' : 'rounded-tl rounded-bl']"
-                     class="w-24 bg-secondary text-center   py-1">
+                     class="w-24 bg-secondary text-center py-1">
                   {{$t(`all_days`)}}
                 </div>
-                <div class="flex-auto bg-white flex justify-evenly py-1 ">
+                <div class="flex-auto bg-white flex justify-evenly py-1">
                   <label :for="`day-start-all-days`" class="px-2">
                     <span>{{$t('from')}}</span>
                     <input :id="`day-start-all-days`" class="focus:outline-none" type="time"
@@ -98,12 +105,11 @@
       <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('contacts')}}</h3>
       <div class="flex flex-wrap px-2 md:px-12">
         <div class="w-full md:w-2/6 p-3">
-          <MyInput  input-dir="ltr" :label="$t('phone')"  :required="true" error="phone" id="phone" placeholder="05xxxxxxxx"
+          <MyInput input-dir="ltr" :label="$t('phone')" :required="true" error="phone" id="phone" placeholder="05xxxxxxxx"
                    v-model="form.phone"/>
-
         </div>
         <div class="w-full md:w-2/6 p-3">
-          <MyInput  input-dir="ltr" :label="$t('whatsapp')"  :required="true" error="whatsapp" id="whatsapp" placeholder="05xxxxxxxx"
+          <MyInput input-dir="ltr" :label="$t('whatsapp')" :required="true" error="whatsapp" id="whatsapp" placeholder="05xxxxxxxx"
                     v-model="form.whatsapp"/>
         </div>
         <div class="w-full py-4 border-b"></div>
@@ -139,7 +145,6 @@
     </div>
     <div class="card mt-2">
       <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('images_and_location')}}</h3>
-
       <MultiImageCropper @changed="setImages"/>
       <InputError name="images"/>
       <CreateMap v-model="form.location"/>
@@ -149,7 +154,6 @@
       <label for="accept-terms">
         <input id="accept-terms" type="checkbox" v-model="form.accept_terms">
         <span class="px-2">{{$t('i_am_approve_on')}} <LLink :to="{name: 'terms'}" class="text-blue-400" target="_blank">{{$t('terms')}}</LLink> {{$t('append_on_website')}}</span>
-
       </label>
     </div>
     <div class="text-center py-8">
@@ -164,196 +168,161 @@
 </template>
 
 <script>
-  import vSelect from 'vue-select';
-  import Phone from '../../components/Phone';
-  import Modal from '../../components/Modal';
-  import LLink from '~/components/l-link';
-  import 'vue-select/dist/vue-select.css';
-  import MyInput from '~/components/MyInput';
-  import InputError from '~/components/InputError';
-  import WorkTimes from '~/components/WorkTimes';
-  import MultiImageCropper from '~/components/MultiImageCropper';
-  import CreateMap from '~/components/CreateMap';
-  import LoadingCircle from '~/components/loading-circle';
-  import Cropper from '~/components/Cropper';
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
-  export default {
-    name: 'CompanyCreate',
-    components: {
-      Phone,
-      Modal,
-      LLink,
-      Cropper,
-      LoadingCircle,
-      CreateMap,
-      MultiImageCropper,
-      WorkTimes,
-      InputError,
-      MyInput,
-      vSelect
-    },
-    middleware: 'auth',
-    async asyncData(ctx) {
-      let categories = [];
-      try {
-        const { data } = (await ctx.$axios.get(`category?all=true&has_children=true`)).data;
-        categories = data;
-      } catch ({ response }) {
-        ctx.error({
-          statusCode: response?.status,
-          message: response?.message
-        });
-      }
-      return { categories };
-    },
-    data() {
-      return {
-        open: false,
-        loading: false,
-        tag: '',
-        logo_image_init: '',
-        logo_image: '',
+export default {
+  name: 'CompanyCreate',
+  components: {
+    vSelect
+  },
+  data() {
+    return {
+      open: false,
+      loading: false,
+      tag: '',
+      logo_image_init: '',
+      logo_image: '',
+      tags: [],
+      all_days: { start_time: '08:00', end_time: '16:00' },
+      location: { lat: 29.3, lng: 47.6 },
+      form: {
+        accept_terms: false,
+        ar_name: '',
+        en_name: '',
+        email: '',
+        phone: '',
+        whatsapp: '',
+        about: '',
+        category_id: '',
+        phones: [],
         tags: [],
-        all_days: { start_time: '08:00', end_time: '16:00' },
-        location: { lat: 29.3, lng: 47.6 },
-        form: {
-          accept_terms: false,
-          ar_name: '',
-          en_name: '',
-          email: '',
-          phone: '',
-          whatsapp: '',
-          about: '',
-          category_id: '',
-          phones: [],
-          tags: [],
-          website: '',
-          facebook: '',
-          instagram: '',
-          twitter: '',
-          snapchat: '',
-          linkedin: '',
-          location: null,
-          work_times: [
-            { day: 1, start_time: '08:00', end_time: '16:00', active: true },
-            { day: 2, start_time: '08:00', end_time: '16:00', active: true },
-            { day: 3, start_time: '08:00', end_time: '16:00', active: true },
-            { day: 4, start_time: '08:00', end_time: '16:00', active: true },
-            { day: 5, start_time: '08:00', end_time: '16:00', active: true },
-            { day: 6, start_time: '08:00', end_time: '16:00', active: true },
-            { day: 7, start_time: '08:00', end_time: '16:00', active: false }
-          ]
-        },
-        parent_id: null,
-        images: []
-      };
-    },
-    head() {
-      return this.metaBuilder(this.$t('create_company'));
-    },
-    computed: {
-      parentsCategories() {
-        return this.categories.filter(el => el.parent_id == null);
+        website: '',
+        facebook: '',
+        instagram: '',
+        twitter: '',
+        snapchat: '',
+        linkedin: '',
+        location: null,
+        work_times: [
+          { day: 1, start_time: '08:00', end_time: '16:00', active: true },
+          { day: 2, start_time: '08:00', end_time: '16:00', active: true },
+          { day: 3, start_time: '08:00', end_time: '16:00', active: true },
+          { day: 4, start_time: '08:00', end_time: '16:00', active: true },
+          { day: 5, start_time: '08:00', end_time: '16:00', active: true },
+          { day: 6, start_time: '08:00', end_time: '16:00', active: true },
+          { day: 7, start_time: '08:00', end_time: '16:00', active: false }
+        ]
       },
-      childrenCategories() {
-        return this.parent_id ? this.categories.filter(el => el.parent_id === this.parent_id) : [];
-      }
+      parent_id: null,
+      images: []
+    };
+  },
+  head() {
+    return this.metaBuilder(this.$t('create_company'));
+  },
+  computed: {
+    parentsCategories() {
+      return this.categories?.filter(el => el.parent_id == null) || [];
     },
-    watch: {
-      parent_id() {
-        this.form.category_id = null;
-      }
-    },
-    mounted() {
-
-    },
-    methods: {
-      async submit() {
-        this.loading = true;
-        try {
-          this.form.tags = this.tags.map(el => el.text);
-          const formData = new FormData();
-          this.images.forEach(el => {
-            formData.append('images[]', el);
-          });
-          formData.append('image', this.logo_image);
-          this.form.phones.forEach(el => {
-            formData.append('phones[]', JSON.stringify(el));
-          });
-          this.form.work_times.forEach(el => {
-            formData.append('work_times[]', JSON.stringify(el));
-          });
-          this.form.tags.forEach(el => {
-            formData.append('tags[]', el);
-          });
-          if (this.form.location) {
-            formData.append('location', JSON.stringify(this.form.location));
-          }
-
-          for (const key in this.form) {
-            let value = this.form[key];
-            if (typeof value === 'string' || typeof value === 'number') formData.append(key, value);
-          }
-          await this.$axios.post('company', formData);
-          this.$router.push(this.localePath({ name: 'profile' }));
-          this.$toast.success(this.$t('operation_success')).goAway(3000);
-
-        } catch ({ response }) {
-          if (response.status === 422) {
-            this.setErrors(response.data.errors);
-            this.$toast.error(this.$t('entries_error')).goAway(3000);
-            for (const k in response.data.errors) {
-              this.$toast.error(this.$t(response.data.errors[k].join('\n'))).goAway(3000);
-            }
-          } else if (response.status === 409) {
-            this.$swal({
-              icon: 'error',
-              title: 'خطأ',
-              text: response.data.message,
-              showConfirmButton: false,
-              timer: 3000
-            });
-          }
-        } finally {
-          this.loading = false;
-        }
-      },
-      setImages(images) {
-        this.images = images;
-      },
-      selectLogoImage(v) {
-        const self = this;
-        const reader = new FileReader();
-        reader.onload = e => {
-          self.logo_image_init = (e.target.result);
-        };
-        reader.readAsDataURL(this.$refs.logo_image.files[0]);
-      },
-      setLogoImage(cropped) {
-        this.logo_image = cropped.image;
-      },
-      setAllDays() {
-        this.form.work_times.forEach(el => {
-          el.start_time = this.all_days.start_time;
-          el.end_time = this.all_days.end_time;
-          el.active = true;
-          this.open = false;
-        });
-      }
+    childrenCategories() {
+      return this.parent_id ? (this.categories?.filter(el => el.parent_id === this.parent_id) || []) : [];
     }
-  };
+  },
+  watch: {
+    parent_id() {
+      this.form.category_id = null;
+    }
+  },
+  methods: {
+    async submit() {
+      this.loading = true;
+      try {
+        this.form.tags = this.tags.map(el => el.text);
+        const formData = new FormData();
+        this.images.forEach(el => {
+          formData.append('images[]', el);
+        });
+        formData.append('image', this.logo_image);
+        this.form.phones.forEach(el => {
+          formData.append('phones[]', JSON.stringify(el));
+        });
+        this.form.work_times.forEach(el => {
+          formData.append('work_times[]', JSON.stringify(el));
+        });
+        this.form.tags.forEach(el => {
+          formData.append('tags[]', el);
+        });
+        if (this.form.location) {
+          formData.append('location', JSON.stringify(this.form.location));
+        }
+
+        for (const key in this.form) {
+          let value = this.form[key];
+          if (typeof value === 'string' || typeof value === 'number') formData.append(key, value);
+        }
+        const api = useApi();
+        await api.post('company', formData);
+        this.$router.push(this.localePath({ name: 'profile' }));
+        this.$toast.success(this.$t('operation_success'));
+      } catch (e) {
+        const response = e?.response?._data || e?.data;
+        const status = e?.response?.status || e?.statusCode;
+        if (status === 422) {
+          this.setErrors(response?.errors);
+          this.$toast.error(this.$t('entries_error'));
+          for (const k in response?.errors) {
+            this.$toast.error(this.$t(response.errors[k].join('\n')));
+          }
+        } else if (status === 409) {
+          this.$swal({
+            icon: 'error',
+            title: '\u062E\u0637\u0623',
+            text: response?.message,
+            showConfirmButton: false,
+            timer: 3000
+          });
+        }
+      } finally {
+        this.loading = false;
+      }
+    },
+    setImages(images) {
+      this.images = images;
+    },
+    selectLogoImage(v) {
+      const self = this;
+      const reader = new FileReader();
+      reader.onload = e => {
+        self.logo_image_init = (e.target.result);
+      };
+      reader.readAsDataURL(this.$refs.logo_image.files[0]);
+    },
+    setLogoImage(cropped) {
+      this.logo_image = cropped.image;
+    },
+    setAllDays() {
+      this.form.work_times.forEach(el => {
+        el.start_time = this.all_days.start_time;
+        el.end_time = this.all_days.end_time;
+        el.active = true;
+        this.open = false;
+      });
+    }
+  }
+};
 </script>
 
 <style>
-  .v-select {
-    @apply bg-accent cursor-pointer ;
-  }
+.v-select {
+  @apply bg-accent cursor-pointer ;
+}
 
-  .vs__selected-options {
-    @apply p-1 cursor-pointer ;
-  }
+.vs__selected-options {
+  @apply p-1 cursor-pointer ;
+}
 
-  .vs__dropdown-toggle {
-    @apply border-0 cursor-pointer ;
-  }
+.vs__dropdown-toggle {
+  @apply border-0 cursor-pointer ;
+}
 </style>

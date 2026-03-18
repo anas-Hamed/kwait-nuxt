@@ -6,7 +6,7 @@
 
       <div class="flex justify-end w-full text-gray-500 p-2">
         <client-only>
-          <small>{{$moment(blog.created_at).format('yyyy-MM-DD H:m')}}</small>
+          <small>{{$dayjs(blog.created_at).format('YYYY-MM-DD H:m')}}</small>
         </client-only>
       </div>
     </div>
@@ -14,10 +14,8 @@
 </template>
 
 <script>
-  import LLink from './l-link';
   export default {
     name: 'BlogCard',
-    components: { LLink },
     props: {
       blog: {
         type: Object,

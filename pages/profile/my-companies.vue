@@ -1,6 +1,6 @@
 <template>
-  <div class="card ">
-    <h3 class="text-2xl mb-1 ">{{$t('my_companies')}}</h3>
+  <div class="card">
+    <h3 class="text-2xl mb-1">{{$t('my_companies')}}</h3>
     <p class="text-sm text-accentSecondary">
       {{$t('hidden_companies')}}
     </p>
@@ -20,27 +20,21 @@
 </template>
 
 <script>
-  import Modal from '../../components/Modal';
-  export default {
-    name: 'MyCompanies',
-    components: { Modal },
-    props: {
-      companies: {
-        type: Array,
-        default: () => []
-      }
-    },
-    data() {
-      return {
-        modal:true
-      };
-    },
-    mounted() {
-
+export default {
+  name: 'MyCompanies',
+  props: {
+    companies: {
+      type: Array,
+      default: () => []
     }
-  };
+  },
+  data() {
+    return {
+      modal: true
+    };
+  },
+};
 </script>
 
 <style scoped>
-
 </style>

@@ -1,7 +1,7 @@
 <template>
   <LoadingPlaceHolder :top="40" :loading="loading">
-    <hooper   :rtl="$i18n.locale === 'ar'" :infinite-scroll="ads.length > 1" :auto-play="ads.length > 1" :play-speed="4000" :wheel-control="false" style="height: fit-content">
-      <slide
+    <Carousel :items-to-show="1" :wrap-around="ads.length > 1" :autoplay="ads.length > 1 ? 4000 : 0" :dir="$i18n.locale === 'ar' ? 'rtl' : 'ltr'">
+      <Slide
         v-for="ad in ads" :key="ad.id">
         <ImagePlaceholder
           class="rounded-xl  overflow-hidden  border"
@@ -9,21 +9,21 @@
           :top="40"
           alt=""
         />
-      </slide>
-      <hooper-pagination slot="hooper-addons"></hooper-pagination>
-    </hooper>
+      </Slide>
+      <template #addons>
+        <Pagination />
+      </template>
+    </Carousel>
   </LoadingPlaceHolder>
 </template>
 
 <script>
-  import { Hooper, Slide, Pagination as HooperPagination } from 'hooper';
-  import LoadingPlaceHolder from './LoadingPlaceholder';
-  import 'hooper/dist/hooper.css';
-  import ImagePlaceholder from '~/components/ImagePlaceholder';
+  import { Carousel, Slide, Pagination } from 'vue3-carousel';
+  import 'vue3-carousel/dist/carousel.css';
 
   export default {
-    'name': 'Ads',
-    components: { LoadingPlaceHolder, ImagePlaceholder, Hooper, Slide, HooperPagination },
+    name: 'Ads',
+    components: { Carousel, Slide, Pagination },
     props: {
       ads: {
         type: Array,

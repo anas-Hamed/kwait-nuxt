@@ -25,7 +25,7 @@
     <div class="block lg:hidden">
       <button @click="opened = true" class="flex items-center  text-blue-400 gap-1 ">
         <b>التصنيفات</b>
-        <icon name="filter"></icon>
+        <Icon name="filter" />
       </button>
       <transition name="slide">
         <div @click.self="opened = false" class="fixed w-full h-full bg-black bg-opacity-50 z-50 inset-0" v-if="opened">

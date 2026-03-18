@@ -12,11 +12,8 @@
 </template>
 
 <script>
-import ImagePlaceholder from '~/components/ImagePlaceholder';
-import LLink from '~/components/l-link';
 export default {
   name: 'CategoryCard',
-  components: { LLink, ImagePlaceholder },
   props: {
     category:{
       type: Object,

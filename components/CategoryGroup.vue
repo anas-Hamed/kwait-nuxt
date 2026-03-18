@@ -11,17 +11,16 @@
 </template>
 
 <script>
-  import Icon from './Icon';
   export default {
     name: 'CategoryGroup',
-    components: { Icon },
     props: {
       category: {
         type: Object,
         required: true
       },
-      value: {}
+      modelValue: {}
     },
+    emits: ['update:modelValue', 'setCategory'],
     data() {
       return {
         category_id: '',

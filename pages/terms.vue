@@ -5,14 +5,13 @@
 </template>
 
 <script>
-  export default {
-    name: 'Terms',
-    head() {
-      return this.metaBuilder(this.$t('terms'));
-    },
-  };
+export default {
+  name: 'Terms',
+  head() {
+    return this.metaBuilder(this.$t('terms'));
+  },
+};
 </script>
 
 <style scoped>
-
 </style>

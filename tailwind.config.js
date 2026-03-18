@@ -1,5 +1,4 @@
 module.exports = {
-  mode: 'jit',
   content: [
     `components/**/*.{vue,js}`,
     `layouts/**/*.vue`,
@@ -7,7 +6,6 @@ module.exports = {
     `plugins/**/*.{js,ts}`,
     `nuxt.config.{js,ts}`
   ],
-  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       colors: {
@@ -19,14 +17,6 @@ module.exports = {
         twitter: '#1da1f2',
         rate: '#ffc909',
       },
-      outline: {
-        own: '1px solid #464646',
-      },
-    },
-  },
-  variants: {
-    extend: {
-
     },
   },
   plugins: [

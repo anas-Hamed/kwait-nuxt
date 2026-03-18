@@ -62,14 +62,8 @@
 </template>
 
 <script>
-
-  import ImagePlaceholder from './ImagePlaceholder';
-  import Icon from './Icon';
-  import LLink from './l-link';
-
   export default {
     name: 'CompanyCard',
-    components: { LLink, Icon, ImagePlaceholder },
     props: {
       company: {
         type: Object,
@@ -90,11 +84,11 @@
     methods: {
       toggleFavorite() {
         if (this.checkAuth()) {
-          this.$axios.post(`company/${this.company.id}/toggle-favorite`).then(({ data }) => {
+          useApi().post(`company/${this.company.id}/toggle-favorite`).then(({ data }) => {
             // eslint-disable-next-line vue/no-mutating-props
             this.company.has_favorite = data.data;
             if (!data.data) {
-              this.$nuxt.$emit('company-un-favorite', this.company.id);
+              useEventBus().emit('company-un-favorite', this.company.id);
             }
           });
         }
@@ -117,7 +111,7 @@
           cancelButtonText: self.$t('no')
         }).then((result) => {
           if (result.value) {
-            this.$axios.delete(`company/${self.company.id}`).then(data => {
+            useApi().delete(`company/${self.company.id}`).then(data => {
               this.$swal({
                 icon: 'success',
                 text: self.$t('operation_success'),
@@ -132,7 +126,7 @@
                   toast.addEventListener('mouseleave', self.$swal.resumeTimer);
                 }
               });
-              this.$nuxt.$emit('company-deleted', self.company.id);
+              useEventBus().emit('company-deleted', self.company.id);
             }).catch(e => {
               this.$swal({
                 icon: 'error',

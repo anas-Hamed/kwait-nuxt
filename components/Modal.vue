@@ -1,5 +1,5 @@
 <template>
-  <div v-if="value"
+  <div v-if="modelValue"
        class="fixed w-full h-full bg-black bg-opacity-50 top-0 left-0 flex justify-center items-center z-30">
     <button type="button" class="absolute left-1 top-0 p-2 text-white text-4xl" aria-label="Close" @click="close">
       <span aria-hidden="true">&times;</span>
@@ -18,11 +18,12 @@
   export default {
     name: 'Modal',
     props: {
-      value: {
+      modelValue: {
         type: Boolean,
         default: false
       }
     },
+    emits: ['update:modelValue'],
     mounted() {
       const self = this;
       document.addEventListener('keyup', function(evt) {
@@ -33,7 +34,7 @@
     },
     methods: {
       close() {
-        this.$emit('input', false);
+        this.$emit('update:modelValue', false);
       }
     }
   };

@@ -1,13 +1,13 @@
 <template>
-  <div class=" flex flex-col justify-center items-center py-2 ">
+  <div class="flex flex-col justify-center items-center py-2">
     <div class="rounded bg-white shadow border px-4 py-2 max-w-screen-md w-full">
-      <div class="flex  px-2">
-        <LLink class=" my-1 nav-item mx-3" :to="{name: 'login'}"> {{$t('login')}}</LLink>
-        <LLink class=" my-1 nav-item mx-3" :to="{name: 'register'}"> {{$t('register')}}</LLink>
+      <div class="flex px-2">
+        <LLink class="my-1 nav-item mx-3" :to="{name: 'login'}"> {{$t('login')}}</LLink>
+        <LLink class="my-1 nav-item mx-3" :to="{name: 'register'}"> {{$t('register')}}</LLink>
       </div>
       <div class="flex flex-row-reverse flex-wrap p-8">
         <div class="w-full md:w-2/4 flex items-center justify-center">
-          <img src="~assets/images/h_logo.png" class="w-64" />
+          <img src="~/assets/images/h_logo.png" class="w-64" />
         </div>
         <div class="w-full md:w-2/4">
           <form @submit.prevent="register">
@@ -25,58 +25,51 @@
             <MyInput id="password_confirmation" v-model="form.password_confirmation"
                      :label="$t('password_confirmation')" input-dir="ltr"
                      placeholder="******" type="password" error="password_confirmation" />
-            <button class="rounded bg-primary text-white mt-4 w-full p-2 ">
+            <button class="rounded bg-primary text-white mt-4 w-full p-2">
               <LoadingCircle :loading="loading">{{$t('register')}}</LoadingCircle>
             </button>
           </form>
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import LLink from '~/components/l-link';
-  import MyInput from '~/components/MyInput';
-  import LoadingCircle from '~/components/loading-circle';
-
-  export default {
-    name: 'Register',
-    components: { LoadingCircle, MyInput, LLink },
-    middleware: 'auth',
-    auth: 'guest',
-    head() {
-      return this.metaBuilder(this.$t('register'));
-    },
-    data() {
-      return {
-        form: {
-          name: '',
-          email: '',
-          phone: '',
-          password: '',
-          password_confirmation: ''
-        },
-        loading: false
-      };
-    },
-    methods: {
-      async register() {
-        this.loading = true;
-        try {
-          await this.$axios.post('user/register', this.form);
-          await this.$auth.loginWith('local', { data: this.form });
-        } catch ({ response }) {
-
-        } finally {
-          this.loading = false;
-        }
+export default {
+  name: 'Register',
+  head() {
+    return this.metaBuilder(this.$t('register'));
+  },
+  data() {
+    return {
+      form: {
+        name: '',
+        email: '',
+        phone: '',
+        password: '',
+        password_confirmation: ''
+      },
+      loading: false
+    };
+  },
+  methods: {
+    async register() {
+      this.loading = true;
+      try {
+        const api = useApi();
+        await api.post('user/register', this.form);
+        const { signIn } = useAuth();
+        await signIn(this.form);
+      } catch (e) {
+        // handled by useApi
+      } finally {
+        this.loading = false;
       }
     }
-  };
+  }
+};
 </script>
 
 <style scoped>
-
 </style>

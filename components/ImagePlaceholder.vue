@@ -8,7 +8,6 @@
       :alt="alt"
       :class="{'rounded-full': circleImage}"
       :src="image"
-      :v-lazy-load="lazy"
       class="absolute inset-0 w-full h-full object-cover object-center flex justify-center items-center "
     />
     <slot></slot>
@@ -19,10 +18,6 @@
   export default {
     name: 'ImagePlaceholder',
     props: {
-      lazy: {
-        default: false,
-        type: Boolean
-      },
       image: {
         type: String,
         required: true

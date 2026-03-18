@@ -3,31 +3,22 @@
     <TopBar />
     <NavBar />
     <div class="max-w-screen-xl min-h-screen mx-auto py-12 px-2">
-      <Nuxt />
+      <slot />
     </div>
     <BFooter />
   </div>
 </template>
 
-<script>
-  import TopBar from '../components/TopBar';
-  import NavBar from '~/components/NavBar';
-  import BFooter from '~/components/BFooter';
+<script setup>
+const head = useLocaleHead({ addSeoAttributes: true, addDirAttribute: true });
+useHead(head);
 
-  export default {
-    name: 'DefaultLayout',
-    components: { TopBar, BFooter, NavBar },
-    head() {
-      return this.$nuxtI18nHead({ addSeoAttributes: true, addDirAttribute: true });
-    },
-    watch: {
-      $route(newValue, oldValue) {
-        this.clearErrors();
-      }
-    }
-  };
+const validationStore = useValidationStore();
+const route = useRoute();
+watch(
+  () => route.fullPath,
+  () => {
+    validationStore.clearErrors();
+  }
+);
 </script>
-
-<style>
-
-</style>

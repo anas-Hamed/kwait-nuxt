@@ -1,5 +1,5 @@
 <template>
-  <div class="card ">
+  <div class="card">
     <h3 class="text-2xl mb-4">{{$t('favorite')}}</h3>
     <div class="flex flex-wrap">
       <div :key="`company-${company.id}`" class="w-full md:w-2/4 p-1" v-for="company in favorite">
@@ -22,23 +22,16 @@
 </template>
 
 <script>
-  export default {
-    name: 'Favorite',
-    props: {
-      favorite: {
-        type: Array,
-        default: () => []
-      }
-    },
-    data() {
-      return {};
-    },
-    mounted() {
-
+export default {
+  name: 'Favorite',
+  props: {
+    favorite: {
+      type: Array,
+      default: () => []
     }
-  };
+  },
+};
 </script>
 
 <style scoped>
-
 </style>

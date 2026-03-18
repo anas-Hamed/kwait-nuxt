@@ -5,20 +5,19 @@
       <div v-if="prefix" class="h-full px-2 flex-centred font-bold">
         {{prefix}}
       </div>
-      <input v-bind="$attrs" :value="value" :type="type" :placeholder="placeholder"
+      <input v-bind="$attrs" :value="modelValue" :type="type" :placeholder="placeholder"
              class="focus:outline-own flex-auto p-2   bg-accent mt-1 w-full rounded border-gray-300"
               :class="[(errors && errors[error]) ?'border-error' : '']"
-             @input="$emit('input', $event.target.value)">
+             @input="$emit('update:modelValue', $event.target.value)">
     </div>
     <InputError v-if="error" :name="error" />
   </div>
 </template>
 
 <script>
-  import InputError from '~/components/InputError';
   export default {
-    'name': 'MyInput',
-    components: { InputError },
+    name: 'MyInput',
+    inheritAttrs: false,
     props:{
       id:{
         required: true,
@@ -53,13 +52,13 @@
         type:Boolean,
         required: false
       },
-      value:{
+      modelValue:{
         required: false,
         default: null,
-        // eslint-disable-next-line vue/require-prop-type-constructor
-        type: String|Number|Object
+        type: [String, Number, Object]
       },
     },
+    emits: ['update:modelValue'],
     mounted() {
 
     }

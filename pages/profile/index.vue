@@ -2,11 +2,11 @@
   <div>
     <div class="card">
       <div>
-
         <h3 class="text-2xl font-bold">{{user.name}}</h3>
-        <button @click="$auth.logout()" class="text-blue-500 flex-centred" title="logout">
-          <icon name="login"/>
-          <span class="w-1"></span><span>{{$t('logout')}}</span></button>
+        <button @click="logout" class="text-blue-500 flex-centred" title="logout">
+          <Icon name="login"/>
+          <span class="w-1"></span><span>{{$t('logout')}}</span>
+        </button>
       </div>
       <div class="h-12"></div>
       <div class="flex flex-wrap">
@@ -38,62 +38,75 @@
 </template>
 
 <script>
-  export default {
-    name: 'ProfileIndex',
-    data() {
-      return {
-        user: {
-          name: '',
-          email: '',
-          phone: ''
-        },
-        form: {
+export default {
+  name: 'ProfileIndex',
+  data() {
+    return {
+      user: {
+        name: '',
+        email: '',
+        phone: ''
+      },
+      form: {
+        old_password: '',
+        new_password: '',
+        new_password_confirmation: ''
+      },
+      updateLoading: false,
+      passwordLoading: false
+    };
+  },
+  mounted() {
+    const { data } = useAuth();
+    this.user = { ...data.value };
+  },
+  methods: {
+    async logout() {
+      const { signOut } = useAuth();
+      await signOut();
+    },
+    async updateInfo() {
+      this.clearErrors();
+      this.updateLoading = true;
+      try {
+        const api = useApi();
+        await api.put('user', this.user);
+        this.$toast.success(this.$t('operation_success'));
+        const { getSession } = useAuth();
+        await getSession();
+      } catch (e) {
+        const response = e?.response?._data || e?.data;
+        if (response?.errors) {
+          this.setErrors(response.errors);
+        }
+      } finally {
+        this.updateLoading = false;
+      }
+    },
+    async updatePassword() {
+      this.clearErrors();
+      this.passwordLoading = true;
+      try {
+        const api = useApi();
+        await api.put('user/update-password', this.form);
+        this.$toast.success(this.$t('operation_success'));
+        this.form = {
           old_password: '',
           new_password: '',
           new_password_confirmation: ''
-        },
-        updateLoading: false,
-        passwordLoading: false
-      };
-    },
-    mounted() {
-      this.user = { ...this.$auth.user };
-    },
-    methods: {
-      async updateInfo() {
-        this.clearErrors();
-        this.updateLoading = true;
-        try {
-          await this.$axios.put('user', this.user);
-          this.$toast.success(this.$t('operation_success')).goAway(1000);
-          this.$auth.fetchUser();
-        } catch ({ response }) {
-          this.setErrors(response.data.errors);
-        } finally {
-          this.updateLoading = false;
+        };
+      } catch (e) {
+        const response = e?.response?._data || e?.data;
+        if (response?.errors) {
+          this.setErrors(response.errors);
         }
-      },
-      async updatePassword() {
-        this.clearErrors();
-        this.passwordLoading = true;
-        try {
-          await this.$axios.put('user/update-password', this.form);
-          this.$toast.success(this.$t('operation_success')).goAway(1000);
-          this.form = {
-            old_password: '',
-            new_password: '',
-            new_password_confirmation: ''
-          };
-        } catch ({ response }) {
-          this.setErrors(response.data.errors);
-        } finally {
-          this.passwordLoading = false;
-        }
+      } finally {
+        this.passwordLoading = false;
       }
     }
-  };
+  }
+};
 </script>
 
 <style scoped>
-
 </style>

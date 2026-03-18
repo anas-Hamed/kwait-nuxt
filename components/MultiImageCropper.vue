@@ -2,8 +2,8 @@
   <div>
     <div class="my-4 rounded bg-accent w-full py-8 flex flex-wrap p-2" :class="[(errors && errors['images']) ?'border-error' : '']">
       <div class="w-full md:w-2/6 flex-centred p-1">
-        <template v-for="(src,index) in initialImages">
-          <Cropper v-if="index === active" :key="`Image___${index}`" :index="index" :src="src" class="w-4/6 mx-auto"
+        <template v-for="(src,index) in initialImages" :key="`Image___${index}`">
+          <Cropper v-if="index === active" :index="index" :src="src" class="w-4/6 mx-auto"
                    :ratio="10/3"
                    @cropped="setCroppedData" />
         </template>
@@ -18,7 +18,7 @@
         <HorizontalSlider v-if="thumbs.length > 0">
           <div v-for="(img,index) in thumbs" :key="index" class="relative p-1 cursor-pointer h-24">
             <button type="button" class="absolute left-0 -top-2  rounded-full bg-red-500 w-6 h-6    flex-centred" aria-label="Close" @click="dropImage(index)">
-              <icon name="close" />
+              <Icon name="close" />
             </button>
             <img :id="index" class="w-full" :src="img" @click="active = index" />
           </div>
@@ -39,7 +39,7 @@
       <HorizontalSlider v-if="currentImages.length > 0" >
         <div v-for="(img,index) in currentImages" :key="index" class="relative p-1  h-24">
           <button type="button" class="absolute  left-0 -top-2  rounded-full bg-red-500 w-6 h-6 flex-centred" aria-label="Close" @click="dropCurrentImage(img.id)">
-            <icon name="close" />
+            <Icon name="close" />
           </button>
           <img :id="index" class="w-full" :src="img.path" />
         </div>
@@ -53,13 +53,8 @@
 </template>
 
 <script>
-  import Cropper from './Cropper';
-  import Icon from './Icon';
-  import HorizontalSlider from './horizontalSlider';
-
   export default {
     name: 'MultiImageCropper',
-    components: { HorizontalSlider, Icon, Cropper },
     props: {
       currentImages: {
         type: Array,
@@ -103,7 +98,7 @@
               if (--count >= 0) myLoop(count);
             }, 500);
           } else {
-            self.$toast.error(self.$t('file_size_ignored')).goAway(1000);
+            self.$toast.error(self.$t('file_size_ignored'));
             if (--count >= 0) myLoop(count);
           }
 

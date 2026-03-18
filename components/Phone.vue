@@ -1,18 +1,16 @@
 <template>
   <div>
     <label>{{ label }} <span v-if="required" class="required"></span></label>
-    <vue-tel-input :value="value"  class="rounded-sides " dir="ltr" :class="[(errors && errors[error]) ?'border-error' : '']"
+    <vue-tel-input :model-value="modelValue"  class="rounded-sides " dir="ltr" :class="[(errors && errors[error]) ?'border-error' : '']"
                    placeholder=""
-                   @input="setPhone" />
+                   @update:model-value="setPhone" />
     <InputError v-if="error" :name="error" />
   </div>
 </template>
 
 <script>
-  import InputError from './InputError';
   export default {
     name: 'Phone',
-    components: { InputError },
     props: {
       label: {
         type: String,
@@ -21,7 +19,7 @@
       error: {
         type: String
       },
-      value: {
+      modelValue: {
         type: String
       },
       required: {
@@ -29,6 +27,7 @@
         default: false
       }
     },
+    emits: ['update:modelValue'],
     data() {
       return {
         countries: [
@@ -37,8 +36,10 @@
       };
     },
     methods: {
-      setPhone(formattedNumber, { number, valid, country }) {
-        this.$emit('input', number);
+      setPhone(phone, phoneObject) {
+        if (phoneObject && phoneObject.number) {
+          this.$emit('update:modelValue', phoneObject.number);
+        }
       }
     }
   };

@@ -1,8 +1,8 @@
 <template>
   <div class="text-center">
     <client-only>
-      <GmapMap
-        :center="computedValue || center "
+      <GoogleMap
+        :center="computedValue || center"
         :options="{
          zoomControl: !readOnly,
          scaleControl: !readOnly,
@@ -13,20 +13,21 @@
         :zoom="15"
         ref="placeMap"
         style="width: 100%; height: 300px"
+        @ready="onMapReady"
       >
-        <gmap-marker :draggable="!readOnly"
+        <GMapMarker :draggable="!readOnly"
                      :position="computedValue"
                      @dragend="updateCenter"
                      v-if="computedValue"
 
         >
-        </gmap-marker>
-      </GmapMap>
+        </GMapMarker>
+      </GoogleMap>
 
     </client-only>
     <template v-if="!readOnly">
-      <button @click="getCurrentPosition" class="my-3 text-blue-500" v-if="!value">إضافة موقعي</button>
-      <button @click="removePosition" class="my-3 text-blue-500" v-else>إزالة موقعي</button>
+      <button @click="getCurrentPosition" class="my-3 text-blue-500" v-if="!modelValue">Add my location</button>
+      <button @click="removePosition" class="my-3 text-blue-500" v-else>Remove my location</button>
     </template>
   </div>
 
@@ -36,7 +37,7 @@
   export default {
     name: 'CreateMap',
     props: {
-      value: {
+      modelValue: {
         type: Object,
         required: false
       },
@@ -45,43 +46,48 @@
         default: false
       }
     },
+    emits: ['update:modelValue'],
     data() {
       return {
         center: {
           lat: 29.3, lng: 47.6
-        }
+        },
+        mapInstance: null
       };
     },
     mounted() {
 
     },
     methods: {
+      onMapReady(map) {
+        this.mapInstance = map;
+      },
       updateCenter({ latLng }) {
         this.setPosition(latLng.lat(), latLng.lng());
       },
       setPosition(lat, lng) {
         this.emitInput(Number(lat), Number(lng));
-        this.$refs.placeMap.$mapPromise.then(map => {
-          map.panTo(this.value);
-        });
+        if (this.mapInstance) {
+          this.mapInstance.panTo({ lat: Number(lat), lng: Number(lng) });
+        }
       },
       getCurrentPosition() {
         navigator.geolocation.getCurrentPosition(({ coords }) => {
           this.setPosition(coords.latitude, coords.longitude);
         }, (e) => {
-          this.$toast.error('ERROR WHILE GET POSITION').goAway(2000);
+          this.$toast.error('ERROR WHILE GET POSITION');
         });
       },
       removePosition() {
-        this.$emit('input', null);
+        this.$emit('update:modelValue', null);
       },
       emitInput(lat, lng) {
-        this.$emit('input', { lat, lng });
+        this.$emit('update:modelValue', { lat, lng });
       }
     },
     computed: {
       computedValue() {
-        return this.value != null ? {lat:Number(this.value.lat),lng:Number(this.value.lng),} : null;
+        return this.modelValue != null ? {lat:Number(this.modelValue.lat),lng:Number(this.modelValue.lng),} : null;
       }
     }
   };

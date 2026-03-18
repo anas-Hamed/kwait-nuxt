@@ -11,33 +11,33 @@
           <div class="flex flex-col">
             <div class="w-full flex justify-end">
               <button @click="opened = false" class="rounded-full ">
-                <icon name="close" size-class="w-8"/>
+                <Icon name="close" size-class="w-8"/>
               </button>
             </div>
             <div class="my-2">
-              <LLink :to="{name:'login'}" class="flex items-center    p-2 rounded mx-2" v-if="!$auth.loggedIn">
+              <LLink :to="{name:'login'}" class="flex items-center    p-2 rounded mx-2" v-if="!isAuthenticated">
                 <span class=" text-blue-500 flex-centred">{{$t('login')}}</span>
                 <div class="w-1"></div>
-                <Icon name="account"></Icon>
+                <Icon name="account" />
               </LLink>
               <template v-else>
                 <LLink :to="{name:'profile'}" class="flex items-center    p-2 rounded mx-2">
-                  <span class="text-2xl font-bold">{{$auth.user.name}}</span>
+                  <span class="text-2xl font-bold">{{authUser?.name}}</span>
                   <div class="w-1"></div>
-                  <icon name="account"></icon>
+                  <Icon name="account" />
                 </LLink>
-                <button @click="$auth.logout()" class="text-blue-500 flex-centred" title="logout">
-                  <icon name="login"/>
+                <button @click="logout" class="text-blue-500 flex-centred" title="logout">
+                  <Icon name="login"/>
                   <span class="w-1"></span><span>{{$t('logout')}}</span></button>
               </template>
 
             </div>
             <div class="w-full border-t border-accentSecondary opacity-50 mb-4"></div>
-            <l-link :to="{name: 'index'}" class=" mb-3 font-bold">{{$t('home')}}</l-link>
-            <l-link :to="{name: 'category'}" class=" mb-3 font-bold">{{$t('categories')}}</l-link>
-            <l-link :to="{name: 'company'}" class=" mb-3 font-bold">{{$t('companies')}}</l-link>
-            <l-link :to="{name: 'blog'}" class=" mb-3 font-bold">{{$t('blog')}}</l-link>
-            <l-link :to="{name: 'about-us'}" class=" mb-3 font-bold">{{$t('about_us')}}</l-link>
+            <LLink :to="{name: 'index'}" class=" mb-3 font-bold">{{$t('home')}}</LLink>
+            <LLink :to="{name: 'category'}" class=" mb-3 font-bold">{{$t('categories')}}</LLink>
+            <LLink :to="{name: 'company'}" class=" mb-3 font-bold">{{$t('companies')}}</LLink>
+            <LLink :to="{name: 'blog'}" class=" mb-3 font-bold">{{$t('blog')}}</LLink>
+            <LLink :to="{name: 'about-us'}" class=" mb-3 font-bold">{{$t('about_us')}}</LLink>
             <LLink :to="{name:'favorite'}" class=" mb-3 font-bold">{{$t('favorite')}}</LLink>
             <LLink :to="{name:'notification'}" class=" mb-3 font-bold">
               <span>{{$t('notifications')}}    </span>
@@ -58,15 +58,20 @@
 </template>
 
 <script>
-  import Icon from './Icon';
-
   export default {
     name: 'NavBarMenu',
-    components: { Icon },
     data() {
       return {
         opened: false
       };
+    },
+    computed: {
+      isAuthenticated() {
+        return useAuth().status.value === 'authenticated';
+      },
+      authUser() {
+        return useAuth().data.value;
+      }
     },
     mounted() {
       this.opened = false;
@@ -76,6 +81,11 @@
         handler() {
           this.opened = false;
         }
+      }
+    },
+    methods: {
+      logout() {
+        useAuth().signOut();
       }
     }
   };

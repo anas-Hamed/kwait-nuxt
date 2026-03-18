@@ -9,60 +9,53 @@
       <textarea id="message" v-model="form.message" class="w-full bg-accent rounded border p-2 mt-1" :class="[(errors && errors['message']) ?'border-error' : '']"
                 placeholder="-----"
                 rows="4" ></textarea>
-      <Error name="message" />
+      <InputError name="message" />
     </div>
-    <button class="rounded bg-primary text-white mt-4 w-full p-2 " @click="sendMessage">
+    <button class="rounded bg-primary text-white mt-4 w-full p-2" @click="sendMessage">
       <LoadingCircle :loading="loading">{{$t('send')}}</LoadingCircle>
     </button>
   </div>
 </template>
 
 <script>
-  import MyInput from '../components/MyInput';
-  import Error from '../components/InputError';
-  import LoadingCircle from '../components/loading-circle';
-  import Phone from '../components/Phone';
-
-  export default {
-    name: 'ContactUs',
-    components: { Phone, LoadingCircle, Error, MyInput },
-    data() {
-      return {
-        loading: false,
-        form: {
+export default {
+  name: 'ContactUs',
+  data() {
+    return {
+      loading: false,
+      form: {
+        name: '',
+        email: '',
+        phone: '',
+        message: ''
+      }
+    };
+  },
+  head() {
+    return this.metaBuilder(this.$t('contact_us'));
+  },
+  methods: {
+    async sendMessage() {
+      this.loading = true;
+      try {
+        const api = useApi();
+        await api.post('contact-us', this.form);
+        this.form = {
           name: '',
           email: '',
           phone: '',
           message: ''
-        }
-      };
-    },
-    head() {
-      return this.metaBuilder(this.$t('contact_us'));
-    },
-    methods: {
-      async sendMessage() {
-        this.loading = true;
-        try {
-          await this.$axios.post('contact-us', this.form);
-          this.form = {
-            name: '',
-            email: '',
-            phone: '',
-            message: ''
-          };
-          this.$toast.success(this.$t('operation_success')).goAway(1000);
-        } catch ({ response }) {
-
-        } finally {
-          this.loading = false;
-        }
-
+        };
+        this.$toast.success(this.$t('operation_success'));
+      } catch (e) {
+        // handled by useApi
+      } finally {
+        this.loading = false;
       }
     }
-  };
+  }
+};
 </script>
 
 <style scoped>
-
 </style>

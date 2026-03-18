@@ -6,7 +6,15 @@
     </button>
     <div class="dialog overflow-hidden bg-white rounded  z-50 p-2 -mt-12 text-center">
       <h3 class="w-full">{{$t('rate_company')}}</h3>
-      <Rate v-model="rate" :length="5" :min="1" class="mx-auto mb-2" />
+      <div class="flex justify-center mb-2 space-x-1">
+        <button v-for="star in 5" :key="star" type="button" @click="rate = star" class="focus:outline-none">
+          <Icon
+            :name="star <= rate ? 'filledStar' : 'star'"
+            size-class="w-8 h-8"
+            :class="star <= rate ? 'text-yellow-400' : 'text-gray-300'"
+          />
+        </button>
+      </div>
       <button class="mx-auto py-1 px-3 bg-primary text-white rounded " @click="rateCompany">
         <LoadingCircle :loading="rating">
           {{$t('rate')}}
@@ -17,13 +25,8 @@
 </template>
 
 <script>
-  import { Rate } from 'vue-rate';
-  import 'vue-rate/dist/vue-rate.css';
-  import LoadingCircle from './loading-circle';
-
   export default {
     name: 'RateModal',
-    components: { LoadingCircle, Rate },
     props: {
       open: {
         type: Boolean,
@@ -43,20 +46,20 @@
     mounted() {
 
     },
-    destroyed() {
+    unmounted() {
 
     },
     methods: {
       rateCompany() {
         this.rating = true;
-        this.$axios.post('company/rate', {
+        useApi().post('company/rate', {
           company_id: this.companyId,
           rate: this.rate
         }).then(data => {
           this.close(data.data.data);
-          this.$toast.success('تم تقييم الشركة بنجاح').goAway(1000);
+          this.$toast.success('Rating submitted successfully');
         }).catch(e => {
-          this.$toast.error('خطأ في التقييم يرجى المحاولة لاحقا').goAway(1000);
+          this.$toast.error('Rating failed, please try again later');
         })
           .finally(() => {
             this.rating = false;
