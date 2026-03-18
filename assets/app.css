@@ -6,6 +6,7 @@
   --color-secondary: #ffc909;
   --color-accent: #ececec;
   --color-accent-secondary: #464646;
+  --color-surface: #f5f6f8;
   --color-facebook: #3b5998;
   --color-twitter: #1da1f2;
   --color-rate: #ffc909;
@@ -23,11 +24,20 @@
   --color-secondary-foreground: #1b2c3b;
   --color-accent-foreground: #1b2c3b;
   --color-destructive-foreground: #ffffff;
-  --radius: 0.5rem;
+  --radius: 0.75rem;
+
+  --shadow-soft: 0 2px 12px 0 rgba(27, 44, 59, 0.06);
+  --shadow-card: 0 4px 24px 0 rgba(27, 44, 59, 0.08);
+  --shadow-card-hover: 0 8px 32px 0 rgba(27, 44, 59, 0.12);
+  --shadow-navbar: 0 1px 12px 0 rgba(27, 44, 59, 0.08);
+
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-slide-up: slide-up 0.5s ease-out;
+  --animate-pulse-soft: pulse-soft 2s ease-in-out infinite;
 }
 
 :root {
-  --background: 0 0% 93%;
+  --background: 220 14% 96%;
   --foreground: 207 37% 17%;
   --card: 0 0% 100%;
   --card-foreground: 207 37% 17%;
@@ -39,25 +49,202 @@
   --secondary-foreground: 207 37% 17%;
   --muted: 210 40% 96%;
   --muted-foreground: 215 16% 47%;
-  --accent: 0 0% 93%;
+  --accent: 220 14% 96%;
   --accent-foreground: 207 37% 17%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
   --border: 214 32% 91%;
   --input: 214 32% 91%;
   --ring: 207 37% 17%;
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 }
 
-/* Vue Router 4 uses router-link-exact-active instead of nuxt-link-exact-active */
+/* ===== Keyframe Animations ===== */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
+
+/* ===== Hero Gradient ===== */
+.hero-gradient {
+  background: linear-gradient(160deg, #1e3448 0%, #0f1c27 50%, #152332 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+/* Decorative corner accents */
+.hero-corner-tl,
+.hero-corner-br {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+  opacity: 0.06;
+}
+
+.hero-corner-tl {
+  top: 24px;
+  left: 24px;
+  border-top: 2px solid #ffc909;
+  border-left: 2px solid #ffc909;
+  border-top-left-radius: 20px;
+}
+
+.hero-corner-br {
+  bottom: 24px;
+  right: 24px;
+  border-bottom: 2px solid #ffc909;
+  border-right: 2px solid #ffc909;
+  border-bottom-right-radius: 20px;
+}
+
+/* Floating orb decoration */
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float-orb 8s ease-in-out infinite;
+}
+
+@keyframes float-orb {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-12px) scale(1.05); }
+}
+
+/* Gold divider line */
+.hero-divider {
+  width: 48px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #ffc909, transparent);
+  margin: 0 auto;
+}
+
+/* ===== Gold Gradient Button ===== */
+.btn-gold {
+  background: linear-gradient(135deg, #ffc909 0%, #f0b800 100%);
+  color: #1b2c3b;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(255, 201, 9, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-gold:hover {
+  box-shadow: 0 4px 16px rgba(255, 201, 9, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ===== Glassmorphism NavBar ===== */
+.navbar-glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-navbar);
+}
+
+.navbar-solid {
+  background: white;
+  box-shadow: none;
+}
+
+/* ===== Nav Link Active Pill ===== */
+.nav-pill {
+  padding: 0.375rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-pill:hover {
+  background-color: var(--color-surface);
+}
+
+.nav-pill.router-link-exact-active {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.nav-pill.router-link-exact-active:after {
+  display: none;
+}
+
+/* ===== Mobile Nav Active Indicator ===== */
+.mobile-nav-link {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.mobile-nav-link.router-link-exact-active {
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.mobile-nav-link.router-link-exact-active::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  inset-inline-start: 0;
+  width: 3px;
+  height: 60%;
+  border-radius: 0 4px 4px 0;
+  background-color: var(--color-secondary);
+}
+
+/* ===== Section Title Accent ===== */
+.section-title {
+  position: relative;
+  display: inline-block;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  inset-inline-start: 0;
+  width: 40px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-secondary), transparent);
+}
+
+/* ===== Card Hover Lift ===== */
+.card-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ===== Legacy router active (keep for non-pill nav items) ===== */
 .router-link-exact-active {
   position: relative;
 }
+
 .nav-button.router-link-exact-active {
   background-color: var(--color-primary);
   color: white;
   font-size: 0.875rem;
 }
+
 .nav-item.router-link-exact-active:after {
   content: '';
   position: absolute;
@@ -70,29 +257,44 @@
   background-color: var(--color-primary);
 }
 
-/* Tags input */
+/* ===== Carousel Pagination ===== */
+.carousel__pagination-button::after {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background-color: #cbd5e1 !important;
+  transition: all 0.3s ease !important;
+}
+
+.carousel__pagination-button--active::after {
+  background-color: var(--color-secondary) !important;
+  width: 24px !important;
+  border-radius: 4px !important;
+}
+
+/* ===== Tags input ===== */
 .ti-input {
   border: unset !important;
   border-radius: var(--radius-sm, 0.25rem);
-  background-color: var(--color-accent);
+  background-color: var(--color-surface);
 }
 .vue-tags-input .ti-input input {
-  background-color: var(--color-accent);
+  background-color: var(--color-surface);
 }
 .vue-tags-input li.ti-tag {
   background-color: var(--color-secondary);
 }
 
-/* Phone input */
+/* ===== Phone input ===== */
 .vue-tel-input {
-  background-color: var(--color-accent);
+  background-color: var(--color-surface);
   border: 0;
   padding-top: 0.25rem;
   margin-top: 0.25rem;
   margin-bottom: 0.5rem;
 }
 input.vti__input {
-  background-color: var(--color-accent);
+  background-color: var(--color-surface);
 }
 input.vti__input:focus {
   outline: none !important;
@@ -102,15 +304,15 @@ input.vti__input:focus {
   text-align: start;
 }
 
-/* Vue 3 transition classes use -from instead of -enter */
+/* ===== Page Transitions ===== */
 .page-enter-active,
 .page-leave-active {
-  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .page-enter-from,
 .page-leave-to {
-  transform: translateY(5%);
+  transform: translateY(8px);
   opacity: 0;
 }
 
@@ -132,6 +334,7 @@ input.vti__input:focus {
   opacity: 0;
 }
 
+/* ===== Typography ===== */
 @font-face {
   font-family: 'tajawal';
   src: url('~/assets/fonts/tajawal.ttf');
@@ -141,6 +344,19 @@ input.vti__input:focus {
   font-family: 'tajawal';
 }
 
+button,
+[role="button"],
+a,
+.btn-gold,
+.nav-pill,
+.mobile-nav-link,
+input[type="radio"],
+input[type="checkbox"],
+label[for] {
+  cursor: pointer !important;
+}
+
+/* ===== Scrollbar ===== */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -148,12 +364,14 @@ input.vti__input:focus {
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--color-secondary);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-primary);
 }
 
+/* ===== Required Field ===== */
 .required::after {
   content: '*';
   color: red;

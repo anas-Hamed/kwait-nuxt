@@ -1,26 +1,26 @@
 <template>
-  <LLink :to="{ name: 'blog-slug', params: { slug: blog.slug } }" class="p-2">
-    <Card class="overflow-hidden transition-shadow hover:shadow-lg group">
-      <div class="overflow-hidden">
-        <img class="w-full object-cover transition-transform duration-300 group-hover:scale-105"
+  <LLink :to="{ name: 'blog-slug', params: { slug: blog.slug } }" class="p-2 block group">
+    <div class="bg-white rounded-2xl overflow-hidden shadow-soft card-lift">
+      <div class="relative overflow-hidden">
+        <img class="w-full object-cover transition-transform duration-500 group-hover:scale-110"
              :src="blog.image" alt="" style="aspect-ratio: 16/9">
-      </div>
-      <CardContent class="p-4">
-        <p class="font-bold text-base line-clamp-2">{{ blog.title }}</p>
-        <div class="flex justify-end w-full mt-2">
-          <client-only>
-            <Badge variant="secondary" class="text-xs font-normal">
-              {{ $dayjs(blog.created_at).format('YYYY-MM-DD H:m') }}
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <client-only>
+          <div class="absolute top-3 end-3">
+            <Badge class="bg-white/90 text-primary backdrop-blur-sm border-0 text-xs font-medium rounded-full px-3 py-1 shadow-sm">
+              {{ $dayjs(blog.created_at).format('YYYY-MM-DD') }}
             </Badge>
-          </client-only>
-        </div>
-      </CardContent>
-    </Card>
+          </div>
+        </client-only>
+      </div>
+      <div class="p-4">
+        <p class="font-bold text-base line-clamp-2 text-primary group-hover:text-secondary transition-colors duration-200">{{ blog.title }}</p>
+      </div>
+    </div>
   </LLink>
 </template>
 
 <script setup>
-import { Card, CardContent } from '~/components/ui/card'
 import { Badge } from '~/components/ui/badge'
 
 defineProps({

@@ -1,10 +1,10 @@
 <template>
   <LLink :to="!company.has_paid || !company.is_active ? {} : { name: 'company-id', params: { id: company.slug } }">
-    <Card class="flex m-1 relative overflow-hidden transition-shadow hover:shadow-lg"
+    <Card class="flex m-1 relative overflow-hidden rounded-2xl shadow-soft card-lift border-0"
           :class="{ 'opacity-50': !company.has_paid || !company.is_active }">
       <div class="relative shrink-0">
         <ImagePlaceholder class="w-24 md:w-40 md:h-40 h-32" :image="company.image">
-          <Badge class="absolute top-0 bg-primary text-secondary border-0 rounded-none text-xs px-3 py-1"
+          <Badge class="absolute top-0 bg-secondary text-primary border-0 rounded-none text-xs font-bold px-3 py-1"
                  :class="[$i18n.locale === 'ar' ? 'right-0 rounded-bl-xl' : 'left-0 rounded-br-xl']">
             {{ company.category.name }}
           </Badge>
@@ -21,32 +21,32 @@
 
         <div class="flex items-center justify-between pt-1">
           <div class="flex items-center gap-0.5 text-sm">
-            <span class="font-medium">{{ company.average_rate }}</span>
+            <span class="font-semibold">{{ company.average_rate }}</span>
             <Star :size="14" class="text-secondary fill-secondary" />
           </div>
           <client-only>
-            <div v-if="!showControl" class="flex items-center gap-1">
-              <Button variant="ghost" size="icon-sm" @click.prevent="callPhone">
-                <Phone :size="18" />
+            <div v-if="!showControl" class="flex items-center gap-0.5">
+              <Button variant="ghost" size="icon-sm" class="rounded-full hover:bg-surface" @click.prevent="callPhone">
+                <Phone :size="16" />
               </Button>
-              <Button variant="ghost" size="icon-sm" class="text-green-600" @click.prevent="chatWhatsapp">
+              <Button variant="ghost" size="icon-sm" class="rounded-full text-green-600 hover:bg-green-50" @click.prevent="chatWhatsapp">
                 <span class="w-4 h-4" v-html="socialIcons.whatsapp" />
               </Button>
-              <Button variant="ghost" size="icon-sm" @click.prevent="toggleFavorite"
-                      :class="{ 'text-red-500': company.has_favorite }">
-                <Heart :size="18" :fill="company.has_favorite ? 'currentColor' : 'none'" />
+              <Button variant="ghost" size="icon-sm" class="rounded-full" @click.prevent="toggleFavorite"
+                      :class="company.has_favorite ? 'text-red-500 hover:bg-red-50' : 'hover:bg-surface'">
+                <Heart :size="16" :fill="company.has_favorite ? 'currentColor' : 'none'" />
               </Button>
             </div>
-            <div v-else class="flex items-center gap-1">
-              <Button variant="ghost" size="icon-sm" class="text-destructive"
+            <div v-else class="flex items-center gap-0.5">
+              <Button variant="ghost" size="icon-sm" class="rounded-full text-destructive hover:bg-red-50"
                       :disabled="!company.has_paid || !company.is_active"
                       @click.prevent="deleteCompany">
-                <Trash2 :size="18" />
+                <Trash2 :size="16" />
               </Button>
-              <Button variant="ghost" size="icon-sm"
+              <Button variant="ghost" size="icon-sm" class="rounded-full hover:bg-surface"
                       :disabled="!company.has_paid || !company.is_active"
                       @click.prevent="updateCompany">
-                <Pencil :size="18" />
+                <Pencil :size="16" />
               </Button>
             </div>
           </client-only>

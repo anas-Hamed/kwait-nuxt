@@ -1,10 +1,11 @@
 <template>
-  <div class="min-h-screen bg-accent">
+  <div class="min-h-screen bg-surface">
     <TopBar />
     <NavBar />
-    <div class="max-w-screen-xl min-h-screen mx-auto py-12 px-2">
+    <main class="max-w-screen-xl min-h-screen mx-auto py-8 px-3 md:px-4">
       <slot />
-    </div>
+    </main>
+    <AppDownload />
     <BFooter />
   </div>
 </template>

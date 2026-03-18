@@ -1,11 +1,20 @@
 <template>
   <LLink :replace="replace"
          :to="category.parent_id ? { name: 'company', query: { category_id: category.id } } : { name: 'category-id', params: { id: category.id } }"
-         class="flex flex-col items-center p-2 group">
-    <div class="rounded-full border-2 border-secondary p-1 w-24 md:w-28 h-24 md:h-28 mx-auto transition-transform duration-200 group-hover:scale-105">
-      <ImagePlaceholder :circle-image="true" :image="category.image" class="w-full h-full" />
+         class="block p-1.5 group">
+    <div class="text-center py-5 px-3 rounded-2xl bg-white border border-border/50
+                hover:border-secondary hover:shadow-card transition-all duration-300 cursor-pointer">
+      <!-- Circular image with gold ring on hover -->
+      <div class="w-[72px] h-[72px] md:w-[88px] md:h-[88px] mx-auto rounded-full p-[3px]
+                  bg-gradient-to-br from-border to-border
+                  group-hover:from-secondary group-hover:to-secondary/60
+                  transition-all duration-300">
+        <div class="w-full h-full rounded-full overflow-hidden bg-white">
+          <ImagePlaceholder :circle-image="true" :image="category.image" class="w-full h-full" />
+        </div>
+      </div>
+      <p class="mt-3 text-sm font-bold text-primary truncate">{{ category.name }}</p>
     </div>
-    <p class="py-2 px-2 text-center text-sm font-medium">{{ category.name }}</p>
   </LLink>
 </template>
 

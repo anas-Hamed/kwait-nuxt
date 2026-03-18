@@ -81,6 +81,7 @@ export default {
   append_on_website: 'الواردة في سياسة استخدام الموقع',
   from: 'من',
   to: 'إلى',
+  search: 'بحث',
   search_for_category_company: 'ابحث عن تصنيف أو شركة',
   search_for_company: 'ابحث عن شركة',
   delete_confirm: 'تأكيد الحذف',

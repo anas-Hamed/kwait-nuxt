@@ -81,6 +81,7 @@ export default {
   append_on_website: 'appended in website',
   from: 'From',
   to: 'To',
+  search: 'Search',
   search_for_category_company: 'Search about category or company',
   search_for_company: 'Search about Company',
   delete_confirm: 'Delete Confirmation',

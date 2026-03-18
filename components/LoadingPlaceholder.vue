@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Skeleton v-if="loading" :style="`padding-left: ${left}%; padding-top: ${top}%; height: 100%`" class="rounded-md" />
+    <Skeleton v-if="loading" :style="`padding-left: ${left}%; padding-top: ${top}%; height: 100%`" class="rounded-2xl" />
     <template v-else>
       <slot />
     </template>
