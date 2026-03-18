@@ -14,26 +14,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         const store = useAppStore();
         return store.unread_notifications;
       },
-      media() {
-        // Provide basic breakpoint info for SSR safety
-        if (typeof window === 'undefined') {
-          return {
-            isPhone: false,
-            isTablet: false,
-            isDesktop: true,
-            canTouch: false,
-            breakpoint: 'xl',
-          };
-        }
-        const w = window.innerWidth;
-        return {
-          isPhone: w < 640,
-          isTablet: w >= 640 && w < 1024,
-          isDesktop: w >= 1024,
-          canTouch: 'ontouchstart' in window,
-          breakpoint: w < 640 ? 'sm' : w < 768 ? 'md' : w < 1024 ? 'lg' : 'xl',
-        };
-      },
     },
     methods: {
       setErrors(errors: Record<string, string[]>) {

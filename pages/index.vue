@@ -40,17 +40,15 @@ const blogs = computed(() => mainData.value?.blogs || [])
 
     <!-- Hero Section -->
     <section class="hero-gradient rounded-3xl px-6 md:px-10 py-12 md:py-16 mb-14 relative z-0 shadow-card flex items-center justify-center">
-      <div class="max-w-screen-sm w-full mx-auto text-center relative z-10 flex flex-col items-center justify-center gap-1">
+      <div class="max-w-screen-sm w-full mx-auto text-center relative z-10 flex flex-col items-center justify-center gap-0">
         <img class="max-w-[320px] md:max-w-[400px] w-10/12"
              src="~/assets/images/logo-white.svg" alt="Kuwait Explorer">
 
-        <div class="hero-divider" />
-
-        <p class="text-white/55 text-xs md:text-sm max-w-sm leading-6 tracking-wide">
+        <p class="text-white/55 text-xs md:text-sm max-w-sm leading-6 tracking-wide -mt-7">
           {{ $t('kuwait_explorer_description') || 'Discover the best companies and services in Kuwait' }}
         </p>
 
-        <form @submit.prevent="searchForResult" class="max-w-md w-full mt-4">
+        <form @submit.prevent="searchForResult" class="max-w-md w-full mt-10">
           <SearchInput class="mx-auto" :placeholder="$t('search_for_category_company')" v-model="search" />
         </form>
       </div>

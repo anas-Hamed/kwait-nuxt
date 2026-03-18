@@ -1,75 +1,62 @@
 <template>
-  <div class="flex justify-center items-center py-4">
-    <Card class="w-full max-w-md">
-      <CardHeader>
-        <CardTitle class="text-center text-xl">{{ $t('reset_password') }}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form @submit.prevent="restPass">
-          <MyInput id="email" readonly :label="$t('email')" v-model="email" type="text"
-                   placeholder="example@example.com" inputDir="ltr" />
-          <MyInput id="password" :label="$t('password')" v-model="form.password" type="password" error="password" />
-          <MyInput id="password_confirmation" :label="$t('')" v-model="form.password_confirmation"
-                   type="password" error="password_confirmation" />
-          <Button variant="secondary" class="w-full mt-3" size="lg" type="submit">
-            <LoadingCircle :loading="loading">{{ $t('send') }}</LoadingCircle>
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+  <div>
+    <h1 class="text-2xl font-bold text-primary mb-1">{{ $t('reset_password') }}</h1>
+    <p class="text-muted-foreground text-sm mb-8">{{ $t('new_password_subtitle') }}</p>
+
+    <form @submit.prevent="resetPassword">
+      <MyInput id="email" readonly :label="$t('email')" v-model="email" type="text"
+               placeholder="example@example.com" input-dir="ltr" />
+      <MyInput id="password" :label="$t('new_password')" v-model="form.password" type="password"
+               placeholder="••••••••" error="password" input-dir="ltr" />
+      <MyInput id="password_confirmation" :label="$t('new_password_confirmation')" v-model="form.password_confirmation"
+               type="password" placeholder="••••••••" error="password_confirmation" input-dir="ltr" />
+
+      <Button type="submit" class="w-full h-11 rounded-xl mt-4" size="lg">
+        <LoadingCircle :loading="loading">{{ $t('reset_password') }}</LoadingCircle>
+      </Button>
+    </form>
   </div>
 </template>
 
-<script>
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+<script setup>
 import { Button } from '~/components/ui/button'
 
-export default {
-  name: 'ResetPassword',
-  components: { Card, CardContent, CardHeader, CardTitle, Button },
-  data() {
-    return {
-      token: this.$route.query.token,
-      email: this.$route.query.email,
-      form: { password: '', password_confirmation: '' },
-      loading: false,
+definePageMeta({ layout: 'auth' })
+
+import { toast } from 'vue-sonner'
+
+const api = useApi()
+const route = useRoute()
+const { getSession } = useAuth()
+
+const token = route.query.token
+const email = ref(route.query.email || '')
+const form = ref({ password: '', password_confirmation: '' })
+const loading = ref(false)
+
+async function resetPassword() {
+  loading.value = true
+  try {
+    const data = await api.post('password/reset', {
+      token,
+      email: email.value,
+      password: form.value.password,
+      password_confirmation: form.value.password_confirmation,
+    })
+    if (data.success === true) {
+      const tokenCookie = useCookie('auth:token')
+      tokenCookie.value = data.data.token
+      getSession()
     }
-  },
-  methods: {
-    restPass() {
-      this.loading = true
-      const api = useApi()
-      api.post('password/reset', {
-        token: this.token,
-        email: this.email,
-        password: this.form.password,
-        password_confirmation: this.form.password_confirmation,
-      }).then((data) => {
-        if (data.success === true) {
-          this.loading = false
-          const tokenCookie = useCookie('auth:token')
-          tokenCookie.value = data.data.token
-          const { getSession } = useAuth()
-          getSession()
-        } else {
-          this.loading = false
-        }
-      }).catch((err) => {
-        this.loading = false
-        const status = err?.response?.status || err?.statusCode
-        if (status === 411) {
-          this.$swal({
-            icon: 'error',
-            title: 'فشل',
-            text: 'يرجى المحاولة لاحقا',
-            showConfirmButton: false,
-            timer: 3000,
-          })
-          const validationStore = useValidationStore()
-          validationStore.setErrors({ token: ['انتهت صلاحية الرابط'] })
-        }
-      })
-    },
-  },
+  } catch (err) {
+    const status = err?.response?.status || err?.statusCode
+    if (status === 411) {
+      toast.error('يرجى المحاولة لاحقا')
+      const validationStore = useValidationStore()
+      validationStore.setErrors({ token: ['انتهت صلاحية الرابط'] })
+    }
+  } finally {
+    loading.value = false
+  }
 }
 </script>

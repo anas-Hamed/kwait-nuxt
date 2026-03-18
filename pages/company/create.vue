@@ -2,7 +2,7 @@
 import { Card, CardContent } from '~/components/ui/card'
 import { Button } from '~/components/ui/button'
 
-definePageMeta({ middleware: ['auth'] })
+definePageMeta({ middleware: ['sidebase-auth'] })
 
 const api = useApi()
 

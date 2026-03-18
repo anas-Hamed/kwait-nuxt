@@ -130,6 +130,13 @@ export default {
   trust_company: "توثيق شركة",
   request_send:'تم ارسال الطلب',
   request_fail: 'فشل ارسال الطلب',
-  update_company: 'تعديل الشركة'
+  update_company: 'تعديل الشركة',
+  welcome_back: 'مرحباً بعودتك',
+  login_subtitle: 'سجل دخولك للمتابعة',
+  register_subtitle: 'أنشئ حسابك للبدء',
+  no_account: 'ليس لديك حساب؟',
+  have_account: 'لديك حساب بالفعل؟',
+  reset_password_subtitle: 'أدخل بريدك الإلكتروني وسنرسل لك رابط الاستعادة',
+  new_password_subtitle: 'أدخل كلمة المرور الجديدة أدناه'
 
 }

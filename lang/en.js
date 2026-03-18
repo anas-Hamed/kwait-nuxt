@@ -130,6 +130,13 @@ export default {
   trust_company: "Trust Company",
   request_send:'Request Send',
   request_fail: 'Request Fail',
-  update_company: 'Update Company'
+  update_company: 'Update Company',
+  welcome_back: 'Welcome Back',
+  login_subtitle: 'Sign in to your account to continue',
+  register_subtitle: 'Create your account to get started',
+  no_account: "Don't have an account?",
+  have_account: 'Already have an account?',
+  reset_password_subtitle: 'Enter your email and we will send you a reset link',
+  new_password_subtitle: 'Enter your new password below'
 
 }

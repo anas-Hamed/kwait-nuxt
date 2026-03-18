@@ -7,11 +7,11 @@
       </button>
     </div>
     <Input
-      :value="modelValue"
+      :model-value="modelValue"
       type="text"
       :placeholder="placeholder"
       class="h-12 rounded-full bg-white/10 backdrop-blur-sm text-white pe-26 ps-5 border border-white/15 shadow-none focus-visible:ring-1 focus-visible:ring-secondary/40 focus-visible:bg-white/15 transition-all duration-300 placeholder:text-white/35 text-sm"
-      @input="$emit('update:modelValue', $event.target.value)"
+      @update:model-value="$emit('update:modelValue', $event)"
       @focus="$emit('focus')"
       @blur="$emit('blur')"
     />

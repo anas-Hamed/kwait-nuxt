@@ -2,7 +2,9 @@
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <Toaster position="top-center" :rich-colors="true" />
+  <ClientOnly>
+    <Toaster position="top-center" :rich-colors="true" />
+  </ClientOnly>
 </template>
 
 <script setup>

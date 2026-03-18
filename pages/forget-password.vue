@@ -1,56 +1,47 @@
 <template>
-  <div class="flex flex-col justify-center items-center py-4">
-    <Card class="w-full max-w-md">
-      <CardHeader>
-        <CardTitle class="text-center text-2xl text-primary">{{ $t('reset_password') }}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <MyInput :label="$t('email')" name="email" error="email" v-model="email" input-dir="ltr" placeholder="example@example.com" type="text" />
-        <Button variant="secondary" class="w-full mt-3" size="lg" @click="sendResetEmail">
-          <LoadingCircle :loading="loading">{{ $t('send') }}</LoadingCircle>
-        </Button>
-      </CardContent>
-    </Card>
+  <div>
+    <h1 class="text-2xl font-bold text-primary mb-1">{{ $t('reset_password') }}</h1>
+    <p class="text-muted-foreground text-sm mb-8">{{ $t('reset_password_subtitle') }}</p>
+
+    <form @submit.prevent="sendResetEmail">
+      <MyInput id="email" v-model="email" :label="$t('email')" error="email" input-dir="ltr" placeholder="example@example.com" type="text" />
+
+      <Button type="submit" class="w-full h-11 rounded-xl mt-4" size="lg">
+        <LoadingCircle :loading="loading">{{ $t('send') }}</LoadingCircle>
+      </Button>
+    </form>
+
+    <div class="text-center mt-6">
+      <LLink :to="{ name: 'login' }" class="text-sm text-muted-foreground hover:text-primary transition-colors">
+        {{ $t('login') }}
+      </LLink>
+    </div>
   </div>
 </template>
 
-<script>
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
+<script setup>
 import { Button } from '~/components/ui/button'
 
-export default {
-  name: 'ForgetPassword',
-  components: { Card, CardContent, CardHeader, CardTitle, Button },
-  data() {
-    return { loading: false, email: '' }
-  },
-  methods: {
-    sendResetEmail() {
-      this.loading = true
-      const api = useApi()
-      api.post('password/send-reset-email', { email: this.email }).then(() => {
-        this.$swal({
-          icon: 'success',
-          title: 'نجاح',
-          text: 'تم ارسال رابط الاستعادة ، تفقد البريد الوارد و الرسائل غير المرغوب بها',
-          showConfirmButton: false,
-          timer: 3000,
-        })
-      }).catch(e => {
-        const status = e?.response?.status || e?.statusCode
-        if (status !== 422) {
-          this.$swal({
-            icon: 'error',
-            title: 'فشل',
-            text: 'يرجى المحاولة لاحقا',
-            showConfirmButton: false,
-            timer: 3000,
-          })
-        }
-      }).finally(() => {
-        this.loading = false
-      })
-    },
-  },
+definePageMeta({ layout: 'auth' })
+
+import { toast } from 'vue-sonner'
+
+const api = useApi()
+const email = ref('')
+const loading = ref(false)
+
+async function sendResetEmail() {
+  loading.value = true
+  try {
+    await api.post('password/send-reset-email', { email: email.value })
+    toast.success('تم ارسال رابط الاستعادة ، تفقد البريد الوارد و الرسائل غير المرغوب بها')
+  } catch (e) {
+    const status = e?.response?.status || e?.statusCode
+    if (status !== 422) {
+      toast.error('يرجى المحاولة لاحقا')
+    }
+  } finally {
+    loading.value = false
+  }
 }
 </script>

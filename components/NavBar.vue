@@ -47,14 +47,28 @@
             </Button>
           </LLink>
 
-          <LLink v-else :to="{ name: 'profile' }">
-            <Button variant="ghost" class="gap-1.5 rounded-full hover:bg-surface">
-              <span class="text-sm font-bold">{{ authUser?.name }}</span>
-              <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <User :size="16" class="text-primary" />
-              </div>
-            </Button>
-          </LLink>
+          <DropdownMenu v-else>
+            <DropdownMenuTrigger as-child>
+              <Button variant="ghost" class="gap-1.5 rounded-full hover:bg-surface">
+                <span class="text-sm font-bold">{{ authUser?.name }}</span>
+                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <User :size="16" class="text-primary" />
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" class="w-44 rounded-lg border-none shadow-card p-1">
+              <DropdownMenuItem as-child>
+                <LLink :to="{ name: 'profile' }" class="flex items-center gap-2 w-full">
+                  <User :size="16" />
+                  {{ $t('profile') }}
+                </LLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem class="flex items-center gap-2 text-destructive focus:text-destructive" @click="logout">
+                <LogOut :size="16" />
+                {{ $t('logout') }}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
@@ -80,13 +94,24 @@
 </template>
 
 <script setup>
-import { Heart, Bell, User, Plus } from 'lucide-vue-next'
+import { Heart, Bell, User, Plus, LogOut } from 'lucide-vue-next'
 import { Button } from '~/components/ui/button'
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
+  DropdownMenuItem
+} from '~/components/ui/dropdown-menu'
 
-const { status, data } = useAuth()
+const { status, data, signOut } = useAuth()
+const localePath = useLocalePath()
 
 const isAuthenticated = computed(() => status.value === 'authenticated')
 const authUser = computed(() => data.value)
+
+async function logout() {
+  useCookie('auth:token').value = null
+  await signOut({ redirect: false })
+  await navigateTo(localePath({ name: 'login' }), { external: true })
+}
 
 const scrolled = ref(false)
 

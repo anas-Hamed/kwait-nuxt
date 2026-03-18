@@ -1,7 +1,7 @@
 <script setup>
 import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
 
-definePageMeta({ middleware: ['auth'] })
+definePageMeta({ middleware: ['sidebase-auth'] })
 
 const api = useApi()
 const eventBus = useEventBus()

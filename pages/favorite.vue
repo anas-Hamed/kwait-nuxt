@@ -1,7 +1,7 @@
 <script setup>
 import { Card, CardContent } from '~/components/ui/card'
 
-definePageMeta({ middleware: ['auth'] })
+definePageMeta({ middleware: ['sidebase-auth'] })
 
 const api = useApi()
 const eventBus = useEventBus()

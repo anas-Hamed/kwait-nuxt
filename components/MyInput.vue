@@ -10,7 +10,7 @@
       <Input
         v-bind="$attrs"
         :id="id"
-        :value="modelValue"
+        :model-value="modelValue"
         :type="type"
         :placeholder="placeholder"
         :class="[
@@ -18,7 +18,7 @@
           (errors && errors[error]) ? 'border-destructive focus-visible:ring-destructive' : ''
         ]"
         class="bg-accent"
-        @input="$emit('update:modelValue', $event.target.value)"
+        @update:model-value="$emit('update:modelValue', $event)"
       />
     </div>
     <InputError v-if="error" :name="error" />
