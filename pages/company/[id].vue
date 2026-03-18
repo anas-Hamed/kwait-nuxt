@@ -18,13 +18,13 @@ const { data: company } = await useAsyncData(`company-${route.params.id}`, async
 <template>
   <div class="max-w-screen-lg mx-auto">
     <Ads :ads="company?.images" :loading="adsLoading" attribute="path" class="mb-4" v-if="company?.images?.length > 0"/>
-    <div class="bg-white rounded border overflow-hidden shadow flex flex-wrap px-0 relative">
+    <div class="bg-white rounded-sm border overflow-hidden shadow flex flex-wrap px-0 relative">
       <div
         class="absolute bg-primary -translate-y-2/4 shadow-md border -left-16 top-16 py-3 w-64 text-center text-white transform -rotate-45 z-30">
         {{company?.category?.name}}
       </div>
       <div class="w-72 mx-auto">
-        <ImagePlaceholder :image="company?.image" :top="100" class="rounded border"/>
+        <ImagePlaceholder :image="company?.image" :top="100" class="rounded-sm border"/>
       </div>
       <div class="flex-1 p-12">
         <div class="flex-1 flex justify-start items-center">
@@ -59,7 +59,7 @@ const { data: company } = await useAsyncData(`company-${route.params.id}`, async
           {{company?.about || '__'}}
         </p>
         <div class="flex flex-wrap py-2">
-          <span :key="tag" class="bg-accent px-2 rounded mx-1" v-for="tag in company?.tags">{{tag}}</span>
+          <span :key="tag" class="bg-accent px-2 rounded-sm mx-1" v-for="tag in company?.tags">{{tag}}</span>
         </div>
       </div>
     </div>
@@ -74,7 +74,7 @@ const { data: company } = await useAsyncData(`company-${route.params.id}`, async
               <div class="w-2"></div>
               <div class="text-xl" dir="ltr">{{company?.phone}}</div>
               <div class="py-1 px-2">
-                <div class="h-full border-l border-accentSecondary"></div>
+                <div class="h-full border-l border-accent-secondary"></div>
               </div>
               <div class="w-2"></div>
               <a :href="`tel:${company?.phone}`" class="underline">{{$t('call')}}</a>
@@ -86,7 +86,7 @@ const { data: company } = await useAsyncData(`company-${route.params.id}`, async
                 <div class="w-2"></div>
                 <div class="text-xl" dir="ltr">{{company.whatsapp}}</div>
                 <div class="py-1 px-2">
-                  <div class="h-full border-l border-accentSecondary"></div>
+                  <div class="h-full border-l border-accent-secondary"></div>
                 </div>
                 <div class="w-2"></div>
                 <a :href="`https://wa.me/${company.whatsapp}`" class="underline" target="_blank">{{$t('messaging')}}</a>
@@ -99,7 +99,7 @@ const { data: company } = await useAsyncData(`company-${route.params.id}`, async
                 <div class="w-2"></div>
                 <div class="text-xl" dir="ltr">{{company.email}}</div>
                 <div class="py-1 px-2">
-                  <div class="h-full border-l border-accentSecondary"></div>
+                  <div class="h-full border-l border-accent-secondary"></div>
                 </div>
                 <div class="w-2"></div>
                 <a :href="`mailto:${company.email}`" class="underline" target="_blank">{{$t('messaging')}}</a>

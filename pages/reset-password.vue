@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center items-center">
     <form @submit.prevent="restPass" style="width: 100%; max-width: 500px">
-      <div class="bg-white rounded shadow-md py-6 px-12">
+      <div class="bg-white rounded-sm shadow-md py-6 px-12">
         <h3 class="text-xl text-center">{{$t('reset_password')}}</h3>
         <div class="py-3">
           <MyInput
@@ -28,7 +28,7 @@
             error="password_confirmation"
           />
         </div>
-        <button class="w-full bg-secondary text-white p-2 focus:outline-none mt-3">
+        <button class="w-full bg-secondary text-white p-2 focus:outline-hidden mt-3">
           <LoadingCircle :loading="loading">{{$t('send')}}</LoadingCircle>
         </button>
       </div>

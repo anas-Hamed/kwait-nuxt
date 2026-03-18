@@ -1,6 +1,6 @@
 <template>
   <LLink :to="!company.has_paid || !company.is_active ? {}:{name: 'company-id',params:{id: company.slug}}">
-    <div class="bg-white rounded md:rounded-xl shadow  border flex m-1 relative overflow-hidden"
+    <div class="bg-white rounded-sm md:rounded-xl shadow  border flex m-1 relative overflow-hidden"
          :class="{'opacity-50': !company.has_paid || !company.is_active}">
       <div class="px-1 relative">
         <ImagePlaceholder class="w-24 md:w-40 md:h-40 h-32 rounded-0 " :image="company.image" >

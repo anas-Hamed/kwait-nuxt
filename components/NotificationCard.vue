@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto  p-3">
-    <div class="  w-full px-2 border rounded transition duration-200"
+    <div class="  w-full px-2 border rounded-sm transition duration-200"
          :class="[(notification.read_at != null || read)?'bg-accent':'bg-blue-100' ]">
       <div class="flex items-center py-2">
         <div class="w-12 text-secondary">
@@ -8,7 +8,7 @@
         </div>
         <div class="flex-auto">
           <h4 class="text-2xl font-bold mb-0 text-primary">{{ notification.data.title }}</h4>
-          <div class="px-2 text-accentSecondary">{{ notification.data.body }}</div>
+          <div class="px-2 text-accent-secondary">{{ notification.data.body }}</div>
           <div class="flex justify-end w-full">
             <client-only>
               <small>{{$dayjs(notification.created_at).format('YYYY-MM-DD H:m')}}</small>

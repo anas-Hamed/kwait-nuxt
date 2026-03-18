@@ -17,21 +17,21 @@
                class="flex items-center space-x-1   py-2 px-4 rounded-full bg-secondary text-white mx-2">
           <span class="text-sm font-bold">{{$t('add_company')}}</span>
         </LLink>
-        <LLink :to="{name:'favorite'}" class="flex items-center  nav-item  p-2 rounded mx-2">
+        <LLink :to="{name:'favorite'}" class="flex items-center  nav-item  p-2 rounded-sm mx-2">
           <Icon name="filledHeart" />
         </LLink>
-        <LLink :to="{name:'notification'}" class="flex items-center  nav-item  p-2 rounded mx-2 relative">
+        <LLink :to="{name:'notification'}" class="flex items-center  nav-item  p-2 rounded-sm mx-2 relative">
           <Icon name="notification" />
           <span class="w-4 h-4 bg-red-700 absolute top-1 left-1 rounded-full flex-centred text-white text-xs"
                 v-if="unread_notifications">{{unread_notifications}}</span>
         </LLink>
         <div>
-          <LLink :to="{name:'login'}" class="flex items-center  nav-item  p-2 rounded mx-2" v-if="!isAuthenticated">
+          <LLink :to="{name:'login'}" class="flex items-center  nav-item  p-2 rounded-sm mx-2" v-if="!isAuthenticated">
             <span class="text-sm font-bold">{{$t('login')}}</span>
             <div class="w-1"></div>
             <Icon name="account" />
           </LLink>
-          <LLink :to="{name:'profile'}" class="flex items-center space-x-1 nav-item  p-2 rounded mx-2" v-else>
+          <LLink :to="{name:'profile'}" class="flex items-center space-x-1 nav-item  p-2 rounded-sm mx-2" v-else>
             <span class="text-sm font-bold">{{authUser?.name}}</span>
             <div class="w-1"></div>
             <Icon name="account" />

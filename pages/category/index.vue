@@ -9,7 +9,7 @@ const { data: categories } = await useAsyncData('categories', async () => {
 
 <template>
   <div class="">
-    <div class="bg-white rounded shadow-md p-8">
+    <div class="bg-white rounded-sm shadow-md p-8">
       <div class="flex flex-wrap py-4 px-2 md:px-24">
         <div v-for="category in categories" :key="`category-${category.id}`" class="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5">
           <CategoryCard :replace="true" :category="category" />

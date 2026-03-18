@@ -18,7 +18,7 @@ const blogs = computed(() => mainData.value?.blogs || [])
     <div>
       <Ads :ads="ads" :loading="adsLoading" />
     </div>
-    <div class="bg-white rounded shadow-md p-2 md:p-8 mt-8">
+    <div class="bg-white rounded-sm shadow-md p-2 md:p-8 mt-8">
       <img class="max-w-sm w-8/12 mx-auto my-12" src="~/assets/images/h_logo.png" alt="">
       <form @submit.prevent="searchForResult">
         <SearchInput class="mx-auto" :placeholder="$t('search_for_category_company')" v-model="search" />

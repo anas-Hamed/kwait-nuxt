@@ -46,7 +46,7 @@ onMounted(() => {
 <template>
   <div>
     <div>
-      <div class="bg-white rounded shadow-md p-8 w-full">
+      <div class="bg-white rounded-sm shadow-md p-8 w-full">
         <div v-if="searchResult.length > 0">
           <div v-for="item in searchResult" class="hover:bg-secondary bg-opacity-50 p-2 border-b" :key="item.type + '---' + item.id">
             <LLink

@@ -17,7 +17,7 @@ const { data: categories } = await useAsyncData('create-company-categories', asy
       <div class="px-2 md:px-12">
         <Cropper :index="0" :ratio="1" :src="logo_image_init" @cropped="setLogoImage" class="mb-2"
                  v-if="logo_image_init"/>
-        <div class="rounded w-32 h-32 mb-2 bg-accent flex-centred" v-else>{{$t('logo')}}</div>
+        <div class="rounded-sm w-32 h-32 mb-2 bg-accent flex-centred" v-else>{{$t('logo')}}</div>
         <input @change="selectLogoImage" accept="image/*" hidden ref="logo_image" type="file">
         <button @click="$refs.logo_image.click()" class="px-3 py-1 bg-secondary w-32">{{$t('choose_image')}}</button>
         <InputError name="image"/>
@@ -32,8 +32,8 @@ const { data: categories } = await useAsyncData('create-company-categories', asy
             <div class="w-full md:w-1/2">
               <label for="parent_id">{{$t('main_category')}}<span class="required"></span></label>
               <div class="flex">
-                <v-select :options="parentsCategories" :placeholder="$t('choose_category')" :reduce="item => item.id" class="group flex-auto mt-1"
-                          id="parent_id" label="name"
+                <VueSelect :options="parentsCategories" :placeholder="$t('choose_category')" class="group flex-auto mt-1"
+                          id="parent_id"
                           v-model="parent_id"/>
                 <div class="w-1"></div>
               </div>
@@ -42,9 +42,8 @@ const { data: categories } = await useAsyncData('create-company-categories', asy
               <label for="category_id">{{$t('category')}}<span class="required"></span></label>
               <div class="flex">
                 <div class="w-1"></div>
-                <v-select :class="[(errors && errors['category_id']) ?'border-error' : '']" :options="childrenCategories" :placeholder="$t('choose_category')" :reduce="item => item.id"
+                <VueSelect :class="[(errors && errors['category_id']) ?'border-error' : '']" :options="childrenCategories" :placeholder="$t('choose_category')"
                           class="group flex-auto mt-1" id="category_id"
-                          label="name"
                           v-model="form.category_id"/>
               </div>
               <InputError name="category_id"/>
@@ -52,7 +51,7 @@ const { data: categories } = await useAsyncData('create-company-categories', asy
           </div>
           <div class="mb-3">
             <label for="about">{{$t('about_company')}}</label>
-            <textarea :class="[(errors && errors['about']) ?'border-error' : '']" :placeholder="$t('enter_some_words_about_company')" class="w-full bg-accent rounded focus:outline-own p-2 mt-1"
+            <textarea :class="[(errors && errors['about']) ?'border-error' : '']" :placeholder="$t('enter_some_words_about_company')" class="w-full bg-accent rounded-sm focus:outline-own p-2 mt-1"
                       id="about"
                       rows="4" v-model="form.about"></textarea>
             <InputError name="about"/>
@@ -81,20 +80,20 @@ const { data: categories } = await useAsyncData('create-company-categories', asy
                 <div class="flex-auto bg-white flex justify-evenly py-1">
                   <label :for="`day-start-all-days`" class="px-2">
                     <span>{{$t('from')}}</span>
-                    <input :id="`day-start-all-days`" class="focus:outline-none" type="time"
+                    <input :id="`day-start-all-days`" class="focus:outline-hidden" type="time"
                            v-model="all_days.start_time">
                   </label>
                   <div class="w-1 border-l"></div>
                   <label :for="`day-end-all-days`" class="px-2">
                     <span>{{$t('to')}}</span>
-                    <input :id="`day-end-all-days`" class="focus:outline-none" type="time" v-model="all_days.end_time">
+                    <input :id="`day-end-all-days`" class="focus:outline-hidden" type="time" v-model="all_days.end_time">
                   </label>
                 </div>
               </div>
               <div class="text-center p-3 flex justify-start">
-                <button @click="setAllDays" class="bg-primary text-white p-2 rounded">{{$t('accept')}}</button>
+                <button @click="setAllDays" class="bg-primary text-white p-2 rounded-sm">{{$t('accept')}}</button>
                 <div class="w-2"></div>
-                <button @click="open = false" class="bg-accent p-2 rounded">{{$t('cancel')}}</button>
+                <button @click="open = false" class="bg-accent p-2 rounded-sm">{{$t('cancel')}}</button>
               </div>
             </Modal>
           </div>
@@ -158,7 +157,7 @@ const { data: categories } = await useAsyncData('create-company-categories', asy
     </div>
     <div class="text-center py-8">
       <button :class="{'opacity-50':!form.accept_terms}" :disabled="!form.accept_terms"
-              @click="submit" class="bg-primary text-white py-2 px-8 w-full max-w-screen-sm rounded">
+              @click="submit" class="bg-primary text-white py-2 px-8 w-full max-w-screen-sm rounded-sm">
         <LoadingCircle :loading="loading">
           {{$t('save')}}
         </LoadingCircle>
@@ -168,13 +167,13 @@ const { data: categories } = await useAsyncData('create-company-categories', asy
 </template>
 
 <script>
-import vSelect from 'vue-select'
-import 'vue-select/dist/vue-select.css'
+import VueSelect from 'vue3-select-component'
+import 'vue3-select-component/styles'
 
 export default {
   name: 'CompanyCreate',
   components: {
-    vSelect
+    VueSelect
   },
   data() {
     return {
@@ -223,10 +222,10 @@ export default {
   },
   computed: {
     parentsCategories() {
-      return this.categories?.filter(el => el.parent_id == null) || [];
+      return (this.categories?.filter(el => el.parent_id == null) || []).map(el => ({ label: el.name, value: el.id }));
     },
     childrenCategories() {
-      return this.parent_id ? (this.categories?.filter(el => el.parent_id === this.parent_id) || []) : [];
+      return this.parent_id ? (this.categories?.filter(el => el.parent_id === this.parent_id) || []).map(el => ({ label: el.name, value: el.id })) : [];
     }
   },
   watch: {
@@ -314,15 +313,14 @@ export default {
 </script>
 
 <style>
-.v-select {
-  @apply bg-accent cursor-pointer ;
+.vue-select {
+  background-color: var(--color-accent);
+  cursor: pointer;
 }
 
-.vs__selected-options {
-  @apply p-1 cursor-pointer ;
-}
-
-.vs__dropdown-toggle {
-  @apply border-0 cursor-pointer ;
+.vue-select .vue-select-header {
+  padding: 0.25rem;
+  cursor: pointer;
+  border: 0;
 }
 </style>

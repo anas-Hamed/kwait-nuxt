@@ -1,5 +1,5 @@
 <script setup>
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 
 const api = useApi()
 const route = useRoute()

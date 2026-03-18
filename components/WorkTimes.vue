@@ -36,12 +36,12 @@
         <div class="flex-auto bg-white flex justify-evenly py-1 ">
           <label :for="`day-start-${day.day}`" class="px-2">
             <span>{{$t('from')}}</span>
-            <input :id="`day-start-${day.day}`" v-model="day.start_time" type="time" class="focus:outline-none">
+            <input :id="`day-start-${day.day}`" v-model="day.start_time" type="time" class="focus:outline-hidden">
           </label>
           <div class="w-1 border-l"></div>
           <label :for="`day-end-${day.day}`"  class="px-2">
             <span>{{$t('to')}}</span>
-            <input :id="`day-end-${day.day}`" v-model="day.end_time" type="time" class="focus:outline-none">
+            <input :id="`day-end-${day.day}`" v-model="day.end_time" type="time" class="focus:outline-hidden">
           </label>
         </div>
         <div class="w-24 bg-white text-center   py-1 flex " :class="[$i18n.locale === 'ar' ? 'rounded-tl rounded-bl' : 'rounded-tr rounded-br']">

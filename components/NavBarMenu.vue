@@ -15,13 +15,13 @@
               </button>
             </div>
             <div class="my-2">
-              <LLink :to="{name:'login'}" class="flex items-center    p-2 rounded mx-2" v-if="!isAuthenticated">
+              <LLink :to="{name:'login'}" class="flex items-center    p-2 rounded-sm mx-2" v-if="!isAuthenticated">
                 <span class=" text-blue-500 flex-centred">{{$t('login')}}</span>
                 <div class="w-1"></div>
                 <Icon name="account" />
               </LLink>
               <template v-else>
-                <LLink :to="{name:'profile'}" class="flex items-center    p-2 rounded mx-2">
+                <LLink :to="{name:'profile'}" class="flex items-center    p-2 rounded-sm mx-2">
                   <span class="text-2xl font-bold">{{authUser?.name}}</span>
                   <div class="w-1"></div>
                   <Icon name="account" />
@@ -32,7 +32,7 @@
               </template>
 
             </div>
-            <div class="w-full border-t border-accentSecondary opacity-50 mb-4"></div>
+            <div class="w-full border-t border-accent-secondary opacity-50 mb-4"></div>
             <LLink :to="{name: 'index'}" class=" mb-3 font-bold">{{$t('home')}}</LLink>
             <LLink :to="{name: 'category'}" class=" mb-3 font-bold">{{$t('categories')}}</LLink>
             <LLink :to="{name: 'company'}" class=" mb-3 font-bold">{{$t('companies')}}</LLink>

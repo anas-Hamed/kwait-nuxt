@@ -4,7 +4,7 @@
     <button type="button" class="absolute left-1 top-0 p-2 text-white text-4xl" aria-label="Close" @click="close">
       <span aria-hidden="true">&times;</span>
     </button>
-    <div class="dialog overflow-hidden bg-white rounded  z-50  -mt-12 text-center px-4 py-6 w-max-content">
+    <div class="dialog overflow-hidden bg-white rounded-sm  z-50  -mt-12 text-center px-4 py-6 w-max-content">
       <slot>
 
       </slot>

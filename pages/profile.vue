@@ -66,6 +66,9 @@ export default {
 
 <style scoped>
 .profile-link.router-link-exact-active {
-  @apply bg-white rounded-t shadow-md
+  background-color: white;
+  border-top-left-radius: var(--radius-sm, 0.25rem);
+  border-top-right-radius: var(--radius-sm, 0.25rem);
+  box-shadow: var(--shadow-md);
 }
 </style>

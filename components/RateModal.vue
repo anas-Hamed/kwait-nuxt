@@ -4,10 +4,10 @@
     <button type="button" class="absolute left-0 top-0 p-2 text-white text-2xl" aria-label="Close" @click="close(null)">
       <span aria-hidden="true">&times;</span>
     </button>
-    <div class="dialog overflow-hidden bg-white rounded  z-50 p-2 -mt-12 text-center">
+    <div class="dialog overflow-hidden bg-white rounded-sm  z-50 p-2 -mt-12 text-center">
       <h3 class="w-full">{{$t('rate_company')}}</h3>
       <div class="flex justify-center mb-2 space-x-1">
-        <button v-for="star in 5" :key="star" type="button" @click="rate = star" class="focus:outline-none">
+        <button v-for="star in 5" :key="star" type="button" @click="rate = star" class="focus:outline-hidden">
           <Icon
             :name="star <= rate ? 'filledStar' : 'star'"
             size-class="w-8 h-8"
@@ -15,7 +15,7 @@
           />
         </button>
       </div>
-      <button class="mx-auto py-1 px-3 bg-primary text-white rounded " @click="rateCompany">
+      <button class="mx-auto py-1 px-3 bg-primary text-white rounded-sm " @click="rateCompany">
         <LoadingCircle :loading="rating">
           {{$t('rate')}}
         </LoadingCircle>

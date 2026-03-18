@@ -6,12 +6,12 @@
     <Phone id="phone" v-model="form.phone" :label="$t('phone')" error="phone" />
     <div class="mb-3">
       <label for="message">{{$t('message')}}</label>
-      <textarea id="message" v-model="form.message" class="w-full bg-accent rounded border p-2 mt-1" :class="[(errors && errors['message']) ?'border-error' : '']"
+      <textarea id="message" v-model="form.message" class="w-full bg-accent rounded-sm border p-2 mt-1" :class="[(errors && errors['message']) ?'border-error' : '']"
                 placeholder="-----"
                 rows="4" ></textarea>
       <InputError name="message" />
     </div>
-    <button class="rounded bg-primary text-white mt-4 w-full p-2" @click="sendMessage">
+    <button class="rounded-sm bg-primary text-white mt-4 w-full p-2" @click="sendMessage">
       <LoadingCircle :loading="loading">{{$t('send')}}</LoadingCircle>
     </button>
   </div>

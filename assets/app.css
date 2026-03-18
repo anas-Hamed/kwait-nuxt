@@ -1,11 +1,51 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-@layer utilities {
-  .outline-own {
-    outline: 1px solid #464646;
+@theme {
+  --color-primary: #1b2c3b;
+  --color-secondary: #ffc909;
+  --color-accent: #ececec;
+  --color-accent-secondary: #464646;
+  --color-facebook: #3b5998;
+  --color-twitter: #1da1f2;
+  --color-rate: #ffc909;
+}
+
+@utility outline-own {
+  outline: 1px solid #464646;
+}
+
+@utility flex-centred {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@utility border-error {
+  border: 1px solid red !important;
+}
+
+@utility primary-btn {
+  border-radius: var(--radius-sm, 0.25rem);
+  background-color: var(--color-primary);
+  color: white;
+  margin-top: 1rem;
+  width: 6rem;
+  padding: 0.5rem;
+}
+
+@utility card {
+  background-color: white;
+  border-radius: var(--radius-sm, 0.25rem);
+  box-shadow: var(--shadow-md);
+  padding: 0.5rem;
+  @media (min-width: 768px) {
+    padding: 2rem;
   }
+}
+
+@utility flipped-menu {
+  transform: rotateZ(180deg) rotateX(180deg);
 }
 
 /* Vue Router 4 uses router-link-exact-active instead of nuxt-link-exact-active */
@@ -13,7 +53,9 @@
   position: relative;
 }
 .nav-button.router-link-exact-active {
-  @apply bg-primary text-white text-sm;
+  background-color: var(--color-primary);
+  color: white;
+  font-size: 0.875rem;
 }
 .nav-item.router-link-exact-active:after {
   content: '';
@@ -24,40 +66,39 @@
   width: 20px;
   height: 2px;
   border-radius: 50%;
-  @apply bg-primary;
+  background-color: var(--color-primary);
 }
 
-.flex-centred {
-  @apply flex justify-center items-center;
-}
+/* Tags input */
 .ti-input {
   border: unset !important;
-  @apply rounded bg-accent;
+  border-radius: var(--radius-sm, 0.25rem);
+  background-color: var(--color-accent);
 }
 .vue-tags-input .ti-input input {
-  @apply bg-accent;
+  background-color: var(--color-accent);
 }
 .vue-tags-input li.ti-tag {
-  background-color: unset;
-  @apply bg-secondary;
+  background-color: var(--color-secondary);
 }
 
-.border-error {
-  border: 1px solid red !important;
-}
+/* Phone input */
 .vue-tel-input {
-  @apply bg-accent border-0 pt-1 mt-1 mb-2;
+  background-color: var(--color-accent);
+  border: 0;
+  padding-top: 0.25rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 input.vti__input {
-  @apply bg-accent;
+  background-color: var(--color-accent);
 }
-@layer base {
-  .text-start {
-    text-align: start;
-  }
+input.vti__input:focus {
+  outline: none !important;
 }
-.flipped-menu {
-  transform: rotateZ(180deg) rotateX(180deg);
+
+.text-start {
+  text-align: start;
 }
 
 /* Vue 3 transition classes use -from instead of -enter */
@@ -76,6 +117,20 @@ input.vti__input {
   transition: all 0.2s ease;
 }
 
+.slide-enter-active {
+  transition: all 0.3s ease;
+}
+
+.slide-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-5%);
+  opacity: 0;
+}
+
 @font-face {
   font-family: 'tajawal';
   src: url('~/assets/fonts/tajawal.ttf');
@@ -91,35 +146,13 @@ input.vti__input {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-secondary;
+  background-color: var(--color-secondary);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-primary;
+  background-color: var(--color-primary);
 }
 
-.card {
-  @apply bg-white rounded shadow-md p-2 md:p-8;
-}
-.slide-enter-active {
-  transition: all 0.3s ease;
-}
-
-.slide-leave-active {
-  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(-5%);
-  opacity: 0;
-}
-input.vti__input:focus {
-  outline: none !important;
-}
-.primary-btn {
-  @apply rounded bg-primary text-white mt-4 w-24 p-2;
-}
 .required::after {
   content: '*';
   color: red;

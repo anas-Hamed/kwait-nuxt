@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from '@tailwindcss/vite';
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
 
@@ -6,10 +8,13 @@ export default defineNuxtConfig({
 
   modules: [
     '@pinia/nuxt',
-    '@nuxtjs/tailwindcss',
     '@nuxtjs/i18n',
     '@sidebase/nuxt-auth',
   ],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
 
   runtimeConfig: {
     public: {
@@ -50,8 +55,8 @@ export default defineNuxtConfig({
 
   i18n: {
     locales: [
-      { code: 'en', file: 'en.js', dir: 'ltr', iso: 'en-US' },
-      { code: 'ar', file: 'ar.js', dir: 'rtl', iso: 'ar-SA' },
+      { code: 'en', file: 'en.js', dir: 'ltr', language: 'en-US' },
+      { code: 'ar', file: 'ar.js', dir: 'rtl', language: 'ar-SA' },
     ],
     defaultLocale: 'ar',
     langDir: '../lang/',
@@ -83,9 +88,5 @@ export default defineNuxtConfig({
       },
     },
     globalAppMiddleware: false,
-  },
-
-  tailwindcss: {
-    configPath: 'tailwind.config.js',
   },
 });

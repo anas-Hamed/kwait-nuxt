@@ -1,10 +1,10 @@
 <template>
-  <div class="relative bg-gray-200 p-1 rounded-full w-full text-center max-w-screen-sm shadow-sm  ">
-    <div class="w-8 flex justify-center items-center  h-8 bg-white rounded-full shadow-sm p-1 absolute right-1 ">
+  <div class="relative bg-gray-200 p-1 rounded-full w-full text-center max-w-screen-sm shadow-xs  ">
+    <div class="w-8 flex justify-center items-center  h-8 bg-white rounded-full shadow-xs p-1 absolute right-1 ">
       <Icon name="search" />
     </div>
-    <input :value="modelValue" type="text" :placeholder="placeholder" class="border-0 bg-transparent focus:outline-none w-full text-center h-8" @input="sendEmit" @focus="$emit('focus')" @blur="$emit('blur')">
-    <div v-if="false" class="w-8 flex justify-center items-center  h-8 text-gray-600 rounded-full shadow-sm p-1 absolute left-1 bottom-1 ">
+    <input :value="modelValue" type="text" :placeholder="placeholder" class="border-0 bg-transparent focus:outline-hidden w-full text-center h-8" @input="sendEmit" @focus="$emit('focus')" @blur="$emit('blur')">
+    <div v-if="false" class="w-8 flex justify-center items-center  h-8 text-gray-600 rounded-full shadow-xs p-1 absolute left-1 bottom-1 ">
       <Icon name="filter" />
     </div>
     <div class="relative">

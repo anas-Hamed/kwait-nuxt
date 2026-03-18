@@ -1,10 +1,13 @@
-import VueGtag from 'vue-gtag-next';
+import { createGtag } from 'vue-gtag';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
-  nuxtApp.vueApp.use(VueGtag, {
-    property: {
-      id: config.public.gtagId,
-    },
-  });
+  nuxtApp.vueApp.use(
+    createGtag({
+      tagId: config.public.gtagId,
+      pageTracker: {
+        router: nuxtApp.$router,
+      },
+    })
+  );
 });

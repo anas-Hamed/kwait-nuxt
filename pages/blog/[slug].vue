@@ -11,7 +11,7 @@ const { data: blog } = await useAsyncData(`blog-${route.params.slug}`, async () 
 <template>
   <div class="max-w-screen-lg mx-auto">
     <div class="">
-      <img alt="" :src="blog?.image" class="mx-auto rounded shadow" style="aspect-ratio:16/9">
+      <img alt="" :src="blog?.image" class="mx-auto rounded-sm shadow" style="aspect-ratio:16/9">
     </div>
     <div class="card mt-8">
       <p class="px-2 mt-3 font-bold text-4xl">{{blog?.title}}</p>

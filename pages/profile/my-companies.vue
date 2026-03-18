@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <h3 class="text-2xl mb-1">{{$t('my_companies')}}</h3>
-    <p class="text-sm text-accentSecondary">
+    <p class="text-sm text-accent-secondary">
       {{$t('hidden_companies')}}
     </p>
     <div class="w-full border-b my-4"></div>

@@ -6,7 +6,7 @@
         {{prefix}}
       </div>
       <input v-bind="$attrs" :value="modelValue" :type="type" :placeholder="placeholder"
-             class="focus:outline-own flex-auto p-2   bg-accent mt-1 w-full rounded border-gray-300"
+             class="focus:outline-own flex-auto p-2   bg-accent mt-1 w-full rounded-sm border-gray-300"
               :class="[(errors && errors[error]) ?'border-error' : '']"
              @input="$emit('update:modelValue', $event.target.value)">
     </div>
