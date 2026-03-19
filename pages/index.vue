@@ -30,10 +30,10 @@ const features = [
     <svg width="0" height="0" class="absolute">
       <defs>
         <clipPath id="heroClipMobile" clipPathUnits="objectBoundingBox">
-          <path d="M 0.000, 0.000 L 0.170, 0.000 C 0.210, 0.000 0.230, 0.000 0.270, 0.080 C 0.295, 0.135 0.315, 0.150 0.360, 0.150 L 0.640, 0.150 C 0.685, 0.150 0.705, 0.135 0.730, 0.080 C 0.770, 0.000 0.790, 0.000 0.830, 0.000 L 1.000, 0.000 L 1.000, 1.000 L 0.000, 1.000 Z" />
+          <path d="M 0.000, 0.000 L 0.120, 0.000 C 0.160, 0.000 0.180, 0.000 0.220, 0.080 C 0.245, 0.135 0.265, 0.150 0.310, 0.150 L 0.690, 0.150 C 0.735, 0.150 0.755, 0.135 0.780, 0.080 C 0.820, 0.000 0.840, 0.000 0.880, 0.000 L 1.000, 0.000 L 1.000, 1.000 L 0.000, 1.000 Z" />
         </clipPath>
         <clipPath id="heroClipDesktop" clipPathUnits="objectBoundingBox">
-          <path d="M 0.000, 0.000 L 0.340, 0.000 Q 0.360, 0.000 0.370, 0.027 L 0.415, 0.135 Q 0.425, 0.167 0.445, 0.167 L 0.555, 0.167 Q 0.575, 0.167 0.585, 0.135 L 0.630, 0.027 Q 0.640, 0.000 0.660, 0.000 L 1.000, 0.000 L 1.000, 1.000 L 0.000, 1.000 Z" />
+          <path d="M 0.000, 0.000 L 0.340, 0.000 Q 0.370, 0.000 0.390, 0.100 Q 0.410, 0.200 0.440, 0.200 L 0.560, 0.200 Q 0.590, 0.200 0.610, 0.100 Q 0.630, 0.000 0.660, 0.000 L 1.000, 0.000 L 1.000, 1.000 L 0.000, 1.000 Z" />
         </clipPath>
       </defs>
     </svg>
@@ -95,22 +95,22 @@ const features = [
         <p class="text-muted-foreground text-xs sm:text-sm mt-3 max-w-md mx-auto">{{ $t('why_kuwait_explorer_desc') }}</p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
         <div v-for="(feature, idx) in features" :key="idx" class="feature-card group">
           <svg class="feature-card-bg" viewBox="0 0 300 200" fill="none" preserveAspectRatio="none">
             <path d="M16,0 L170,0 Q175,0 175,5 L175,25 Q175,42 192,42 L294,42 Q300,42 300,48 L300,184 Q300,200 284,200 L72,200 Q56,200 56,184 L56,174 Q56,148 30,148 L6,148 Q0,148 0,140 L0,16 Q0,0 16,0 Z" fill="currentColor"/>
           </svg>
           <div class="feature-card-content">
-            <p class="text-white/55 text-xs sm:text-sm leading-relaxed">{{ $t(feature.desc) }}</p>
+            <p class="text-white/55 text-[10px] sm:text-xs md:text-sm leading-relaxed">{{ $t(feature.desc) }}</p>
           </div>
           <div class="feature-card-title">
-            <div class="bg-secondary rounded-xl px-3 py-2 w-full h-full flex items-center justify-center shadow-sm">
-              <h3 class="font-bold text-xs sm:text-sm text-primary truncate">{{ $t(feature.title) }}</h3>
+            <div class="bg-secondary rounded-lg sm:rounded-xl px-1.5 sm:px-3 py-1 sm:py-2 w-full h-full flex items-center justify-center shadow-sm">
+              <h3 class="font-bold text-[9px] sm:text-xs md:text-sm text-primary truncate">{{ $t(feature.title) }}</h3>
             </div>
           </div>
           <div class="feature-card-icon">
             <div class="w-full h-full rounded-full bg-secondary flex items-center justify-center">
-              <component :is="feature.icon" :size="22" class="text-primary" />
+              <component :is="feature.icon" :size="14" class="text-primary sm:!w-5 sm:!h-5" />
             </div>
           </div>
         </div>
@@ -243,38 +243,75 @@ export default {
 .feature-card-content {
   position: relative;
   z-index: 1;
-  padding: 4rem 1.25rem 1.5rem;
+  padding: 2.5rem 0.75rem 1rem;
   color: white;
+}
+@media (min-width: 640px) {
+  .feature-card-content {
+    padding: 3.5rem 1.25rem 1.5rem;
+  }
+}
+@media (min-width: 768px) {
+  .feature-card-content {
+    padding: 4rem 1.25rem 1.5rem;
+  }
 }
 .feature-card-title {
   position: absolute;
-  top: -6px;
-  right: -6px;
+  top: -4px;
+  right: -4px;
   z-index: 2;
-  padding: 0.25rem;
-  width: 42%;
-  height: 22%;
+  padding: 0.15rem;
+  width: 40%;
+  height: 20%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+@media (min-width: 640px) {
+  .feature-card-title {
+    top: -6px;
+    right: -6px;
+    padding: 0.25rem;
+    width: 42%;
+    height: 22%;
+  }
 }
 [dir="ltr"] .feature-card-title {
   right: auto;
-  left: -6px;
+  left: -4px;
+}
+@media (min-width: 640px) {
+  [dir="ltr"] .feature-card-title {
+    left: -6px;
+  }
 }
 .feature-card-icon {
   position: absolute;
-  bottom: -6px;
-  left: -6px;
+  bottom: -4px;
+  left: -4px;
   z-index: 2;
-  width: 15%;
-  height: 22%;
+  width: 14%;
+  height: 20%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+@media (min-width: 640px) {
+  .feature-card-icon {
+    bottom: -6px;
+    left: -6px;
+    width: 15%;
+    height: 22%;
+  }
+}
 [dir="ltr"] .feature-card-icon {
   left: auto;
-  right: -6px;
+  right: -4px;
+}
+@media (min-width: 640px) {
+  [dir="ltr"] .feature-card-icon {
+    right: -6px;
+  }
 }
 </style>
