@@ -2,7 +2,7 @@
   <div :style="`padding-left: ${left}%;padding-top: ${top}%;padding-right: ${right}%;padding-bottom: ${bottom}%;`"
     class="relative overflow-hidden mx-auto">
     <div class="absolute bg-surface text-muted-foreground flex justify-center items-center inset-0 w-full h-full">
-      <img src="~/assets/images/logo.png" alt="fallback" class="w-8 h-8 opacity-20 rounded-md" />
+      <img src="~/assets/images/category-placeholder.png" alt="fallback" class="w-full h-full object-cover" :class="{'rounded-full': circleImage}" />
     </div>
     <img
       :alt="alt"

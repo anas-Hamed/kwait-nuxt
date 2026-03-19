@@ -20,7 +20,7 @@ const { data: profileData } = await useAsyncData('profile-data', async () => {
     companies = compRes.data || []
   } catch (e) {}
   return { favorite, companies }
-})
+}, { server: false })
 
 const favorite = computed({
   get: () => profileData.value?.favorite || [],
@@ -79,68 +79,72 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col lg:flex-row gap-6 min-h-[70vh]">
-    <!-- Sidebar -->
-    <aside class="w-full lg:w-64 shrink-0">
-      <div class="bg-white rounded-2xl shadow-soft p-5 lg:sticky lg:top-24">
-        <!-- User Info -->
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
-            {{ userInitials }}
-          </div>
-          <div class="min-w-0">
-            <p class="font-bold text-sm text-primary truncate">{{ authUser?.name }}</p>
-            <p class="text-xs text-muted-foreground truncate">{{ authUser?.email }}</p>
-          </div>
-        </div>
-
-        <!-- Desktop Nav -->
-        <nav class="hidden lg:flex flex-col gap-1">
-          <LLink
-            v-for="item in navItems"
-            :key="item.to"
-            :to="item.to"
-            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-            :class="activeTab === item.to
-              ? 'bg-primary text-white'
-              : 'text-muted-foreground hover:bg-surface hover:text-primary'"
-          >
-            <component :is="item.icon" :size="18" />
-            {{ $t(item.label) }}
-          </LLink>
-
-          <div class="border-t border-border mt-3 pt-3">
-            <button
-              class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/5 transition-all w-full"
-              @click="logout"
-            >
-              <LogOut :size="18" />
-              {{ $t('logout') }}
-            </button>
-          </div>
-        </nav>
-
-        <!-- Mobile Tabs -->
-        <nav class="flex lg:hidden gap-1 overflow-x-auto -mx-2 px-2 pb-1">
-          <LLink
-            v-for="item in navItems"
-            :key="item.to"
-            :to="item.to"
-            class="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all"
-            :class="activeTab === item.to
-              ? 'bg-primary text-white'
-              : 'bg-surface text-muted-foreground'"
-          >
-            <component :is="item.icon" :size="16" />
-            {{ $t(item.label) }}
-          </LLink>
-        </nav>
+  <div>
+    <!-- Mobile Tabs -->
+    <nav class="lg:hidden mb-4 overflow-x-auto scrollbar-hide">
+      <div class="flex gap-2 pb-1">
+        <LLink
+          v-for="item in navItems"
+          :key="item.to"
+          :to="item.to"
+          class="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap border transition-all"
+          :class="activeTab === item.to
+            ? 'bg-primary text-white border-primary'
+            : 'bg-white text-muted-foreground border-border'"
+        >
+          <component :is="item.icon" :size="14" />
+          {{ $t(item.label) }}
+        </LLink>
       </div>
-    </aside>
+    </nav>
 
-    <!-- Content -->
-    <div class="flex-1 min-w-0">
-      <NuxtPage :companies="companies" :favorite="favorite" />
+    <div class="flex flex-col lg:flex-row gap-6 min-h-[70vh]">
+      <!-- Desktop Sidebar -->
+      <aside class="hidden lg:block w-64 shrink-0">
+        <div class="bg-white rounded-2xl shadow-soft p-5 sticky top-24">
+          <!-- User Info -->
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
+              {{ userInitials }}
+            </div>
+            <div class="min-w-0">
+              <p class="font-bold text-sm text-primary truncate">{{ authUser?.name }}</p>
+              <p class="text-xs text-muted-foreground truncate">{{ authUser?.email }}</p>
+            </div>
+          </div>
+
+          <!-- Nav -->
+          <nav class="flex flex-col gap-1">
+            <LLink
+              v-for="item in navItems"
+              :key="item.to"
+              :to="item.to"
+              class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+              :class="activeTab === item.to
+                ? 'bg-primary text-white'
+                : 'text-muted-foreground hover:bg-surface hover:text-primary'"
+            >
+              <component :is="item.icon" :size="18" />
+              {{ $t(item.label) }}
+            </LLink>
+
+            <div class="border-t border-border mt-3 pt-3">
+              <button
+                class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/5 transition-all w-full"
+                @click="logout"
+              >
+                <LogOut :size="18" />
+                {{ $t('logout') }}
+              </button>
+            </div>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Content -->
+      <div class="flex-1 min-w-0">
+        <NuxtPage :companies="companies" :favorite="favorite" />
+      </div>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 export const useApi = () => {
   const config = useRuntimeConfig();
-  const baseURL = config.public.baseUrl;
+  const baseURL = '/api';
 
   const getHeaders = (): Record<string, string> => {
     const headers: Record<string, string> = {
@@ -18,24 +18,23 @@ export const useApi = () => {
     // Add auth token
     const token = useCookie('auth:token');
     if (token.value) {
-      headers.Authorization = `Bearer ${token.value}`;
+      const raw = token.value.replace(/^Bearer\s+/i, '');
+      headers.Authorization = `Bearer ${raw}`;
     }
 
     return headers;
   };
 
   const handleError = (error: any) => {
-    const status = error?.response?.status || error?.statusCode;
+    const status = error?.response?.status || error?.status || error?.statusCode;
     const data = error?.response?._data || error?.data;
-
-    if (status === 401) {
-      const { signOut } = useAuth();
-      signOut();
-    }
 
     if (status === 422 && data?.errors) {
       const validationStore = useValidationStore();
       validationStore.setErrors(data.errors);
+    } else if (status === 401) {
+      const { signOut } = useAuth();
+      signOut();
     }
 
     throw error;

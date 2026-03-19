@@ -13,14 +13,16 @@
         </svg>
         <span class="text-sm font-semibold">+965</span>
       </div>
-      <Input
+      <input
         :id="id"
-        :value="modelValue"
+        ref="phoneInput"
         type="tel"
+        maxlength="8"
         placeholder="xxxxxxxx"
-        class="bg-accent rounded-s-none"
+        class="flex h-10 w-full rounded-md rounded-s-none border border-input bg-accent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         :class="[(errors && errors[error]) ? 'border-destructive focus-visible:ring-destructive' : '']"
-        @input="onInput($event.target.value)"
+        :value="modelValue"
+        @input="onInput"
       />
     </div>
     <InputError v-if="error" :name="error" />
@@ -28,12 +30,11 @@
 </template>
 
 <script>
-import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 
 export default {
   name: 'Phone',
-  components: { Input, Label },
+  components: { Label },
   props: {
     id: { type: String, default: 'phone' },
     label: { type: String, default: 'Phone' },
@@ -43,9 +44,10 @@ export default {
   },
   emits: ['update:modelValue'],
   methods: {
-    onInput(val) {
-      const digits = val.replace(/\D/g, '')
-      this.$emit('update:modelValue', digits ? '+965' + digits : '')
+    onInput(e) {
+      const digits = e.target.value.replace(/\D/g, '')
+      e.target.value = digits
+      this.$emit('update:modelValue', digits)
     }
   }
 }

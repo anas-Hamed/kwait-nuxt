@@ -39,6 +39,9 @@ export default defineNuxtConfig({
         },
       ],
       link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&display=swap' },
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
         {
           rel: 'alternate',
@@ -63,8 +66,12 @@ export default defineNuxtConfig({
     langDir: '../lang/',
   },
 
+  routeRules: {
+    '/api/**': { proxy: 'https://mwaqi3.com/api/**' },
+  },
+
   auth: {
-    baseURL: process.env.BASE_URL || 'https://mwaqi3.com/api',
+    baseURL: '/api',
     provider: {
       type: 'local',
       endpoints: {

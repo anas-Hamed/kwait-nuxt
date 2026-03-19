@@ -1,7 +1,7 @@
 <script setup>
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
-import { ArrowRight } from 'lucide-vue-next'
+import { ArrowRight, Building2, Star, Shield, Search } from 'lucide-vue-next'
 
 const api = useApi()
 const router = useRouter()
@@ -15,80 +15,143 @@ const { data: mainData } = await useAsyncData('main', async () => {
 const ads = computed(() => mainData.value?.ads || [])
 const categories = computed(() => mainData.value?.categories || [])
 const blogs = computed(() => mainData.value?.blogs || [])
+
+const features = [
+  { title: 'feature_search_title', desc: 'feature_search_desc', icon: Search },
+  { title: 'feature_companies_title', desc: 'feature_companies_desc', icon: Building2 },
+  { title: 'feature_reviews_title', desc: 'feature_reviews_desc', icon: Star },
+  { title: 'feature_trusted_title', desc: 'feature_trusted_desc', icon: Shield },
+]
 </script>
 
 <template>
   <div>
+    <!-- Hero Section with clip-path notch -->
+    <svg width="0" height="0" class="absolute">
+      <defs>
+        <clipPath id="heroClipMobile" clipPathUnits="objectBoundingBox">
+          <path d="M 0.000, 0.000 L 0.170, 0.000 C 0.210, 0.000 0.230, 0.000 0.270, 0.080 C 0.295, 0.135 0.315, 0.150 0.360, 0.150 L 0.640, 0.150 C 0.685, 0.150 0.705, 0.135 0.730, 0.080 C 0.770, 0.000 0.790, 0.000 0.830, 0.000 L 1.000, 0.000 L 1.000, 1.000 L 0.000, 1.000 Z" />
+        </clipPath>
+        <clipPath id="heroClipDesktop" clipPathUnits="objectBoundingBox">
+          <path d="M 0.000, 0.000 L 0.340, 0.000 Q 0.360, 0.000 0.370, 0.027 L 0.415, 0.135 Q 0.425, 0.167 0.445, 0.167 L 0.555, 0.167 Q 0.575, 0.167 0.585, 0.135 L 0.630, 0.027 Q 0.640, 0.000 0.660, 0.000 L 1.000, 0.000 L 1.000, 1.000 L 0.000, 1.000 Z" />
+        </clipPath>
+      </defs>
+    </svg>
+    <section class="hero-clipped mb-8 sm:mb-14">
+      <!-- Notch Logo -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 z-20 w-40 h-40 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-56 lg:h-56 -mt-14 sm:-mt-16 md:-mt-18 lg:-mt-20">
+        <img src="~/assets/images/logo-notch.svg" alt="Logo" class="w-full h-full object-contain drop-shadow-md" />
+      </div>
+      <div class="hero-bg hero-clipped-inner">
+        <!-- Decorative corners -->
+        <div class="hero-corner-tl"></div>
+        <div class="hero-corner-br"></div>
+
+        <div class="max-w-screen-md w-full mx-auto text-center relative z-10 flex flex-col items-center justify-center gap-0 pt-12 sm:pt-16">
+          <p class="text-white/60 text-xs sm:text-sm font-medium tracking-widest uppercase mb-2 sm:mb-3">
+            {{ $t('app_name') }}
+          </p>
+
+          <h1 class="font-cairo text-white text-xl sm:text-2xl md:text-3xl font-bold leading-snug">
+            {{ $t('hero_title') || 'Find the best companies & services in Kuwait' }}
+          </h1>
+
+          <p class="text-white/50 text-[11px] sm:text-xs md:text-sm mt-2 sm:mt-3">
+            {{ $t('hero_subtitle') || 'Search for companies, categories, and services' }}
+          </p>
+
+          <form @submit.prevent="searchForResult" class="max-w-lg w-full mt-5 sm:mt-7 px-1">
+            <SearchInput class="mx-auto" :placeholder="$t('search_for_category_company')" v-model="search" />
+          </form>
+        </div>
+      </div>
+    </section>
+
     <!-- Top Categories - Quick Access -->
-    <section class="mb-6" v-if="categories.length >= 8">
-      <div class="flex justify-between">
-        <LLink v-for="category in categories.slice(0, 8)" :key="`top-cat-${category.id}`"
+    <section class="mb-8 sm:mb-14" v-if="categories.length >= 8">
+      <div class="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 sm:gap-3">
+        <LLink v-for="(category, i) in categories.slice(0, 8)" :key="`top-cat-${category.id}`"
+               :class="{ 'hidden sm:flex': i >= 4 }"
                :to="category.parent_id ? { name: 'company', query: { category_id: category.id } } : { name: 'category-id', params: { id: category.id } }"
-               class="flex flex-col items-center gap-2 group flex-1">
-          <div class="w-16 h-16 md:w-[72px] md:h-[72px] rounded-full p-[2px] bg-gradient-to-br from-secondary to-secondary/60
-                      shadow-sm group-hover:shadow-md group-hover:shadow-secondary/20 transition-all duration-300 group-hover:scale-105">
+               class="flex flex-col items-center gap-2 group">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] rounded-full
+                      shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-105">
             <div class="w-full h-full rounded-full overflow-hidden bg-white">
               <ImagePlaceholder :circle-image="true" :image="category.image" class="w-full h-full" />
             </div>
           </div>
-          <span class="text-xs md:text-sm font-semibold text-primary/80 group-hover:text-primary truncate max-w-[100px] md:max-w-[120px] text-center transition-colors">
+          <span class="text-[11px] sm:text-xs md:text-sm font-semibold text-primary/80 group-hover:text-primary truncate max-w-[80px] sm:max-w-[100px] md:max-w-[120px] text-center transition-colors">
             {{ category.name }}
           </span>
         </LLink>
       </div>
     </section>
 
-    <!-- Hero Section -->
-    <section class="hero-gradient rounded-3xl px-6 md:px-10 py-12 md:py-16 mb-14 relative z-0 shadow-card flex items-center justify-center">
-      <div class="max-w-screen-sm w-full mx-auto text-center relative z-10 flex flex-col items-center justify-center gap-0">
-        <img class="max-w-[320px] md:max-w-[400px] w-10/12"
-             src="~/assets/images/logo-white.svg" alt="Kuwait Explorer">
+    <!-- Why Kuwait Explorer -->
+    <section class="mb-10 sm:mb-16">
+      <div class="text-center mb-6 sm:mb-10">
+        <h2 class="font-cairo text-xl sm:text-2xl md:text-3xl font-bold text-primary">{{ $t('why_kuwait_explorer') }}</h2>
+        <div class="hero-divider mt-3"></div>
+        <p class="text-muted-foreground text-xs sm:text-sm mt-3 max-w-md mx-auto">{{ $t('why_kuwait_explorer_desc') }}</p>
+      </div>
 
-        <p class="text-white/55 text-xs md:text-sm max-w-sm leading-6 tracking-wide -mt-7">
-          {{ $t('kuwait_explorer_description') || 'Discover the best companies and services in Kuwait' }}
-        </p>
-
-        <form @submit.prevent="searchForResult" class="max-w-md w-full mt-10">
-          <SearchInput class="mx-auto" :placeholder="$t('search_for_category_company')" v-model="search" />
-        </form>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        <div v-for="(feature, idx) in features" :key="idx" class="feature-card group">
+          <svg class="feature-card-bg" viewBox="0 0 300 200" fill="none" preserveAspectRatio="none">
+            <path d="M16,0 L170,0 Q175,0 175,5 L175,25 Q175,42 192,42 L294,42 Q300,42 300,48 L300,184 Q300,200 284,200 L72,200 Q56,200 56,184 L56,174 Q56,148 30,148 L6,148 Q0,148 0,140 L0,16 Q0,0 16,0 Z" fill="currentColor"/>
+          </svg>
+          <div class="feature-card-content">
+            <p class="text-white/55 text-xs sm:text-sm leading-relaxed">{{ $t(feature.desc) }}</p>
+          </div>
+          <div class="feature-card-title">
+            <div class="bg-secondary rounded-xl px-3 py-2 w-full h-full flex items-center justify-center shadow-sm">
+              <h3 class="font-bold text-xs sm:text-sm text-primary truncate">{{ $t(feature.title) }}</h3>
+            </div>
+          </div>
+          <div class="feature-card-icon">
+            <div class="w-full h-full rounded-full bg-secondary flex items-center justify-center">
+              <component :is="feature.icon" :size="22" class="text-primary" />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Ads Carousel -->
-    <section v-if="ads.length > 0" class="mb-12">
+    <section v-if="ads.length > 0" class="mb-8 sm:mb-12">
       <Ads :ads="ads" :loading="adsLoading" />
     </section>
 
     <!-- Categories Section -->
-    <section class="mb-16" v-if="categories.length > 0">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="section-title">{{ $t('categories') }}</h2>
+    <section class="mb-10 sm:mb-16" v-if="categories.length > 0">
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 class="section-title text-lg sm:text-2xl">{{ $t('categories') }}</h2>
         <LLink v-if="categories.length >= 10" :to="{ name: 'category' }">
-          <Button variant="ghost" class="gap-1.5 text-sm text-muted-foreground hover:text-primary rounded-full">
+          <Button variant="ghost" class="gap-1 sm:gap-1.5 text-xs sm:text-sm text-muted-foreground hover:text-primary rounded-full px-2 sm:px-3">
             {{ $t('show_more') }}
             <ArrowRight :size="14" />
           </Button>
         </LLink>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-0.5">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 sm:gap-1.5">
         <CategoryCard v-for="category in categories" :key="`category-${category.id}`" :category="category" />
       </div>
     </section>
 
     <!-- Blog Section -->
-    <section class="mb-12" v-if="blogs.length > 0">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="section-title">{{ $t('latest_blogs') }}</h2>
+    <section class="mb-8 sm:mb-12" v-if="blogs.length > 0">
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 class="section-title text-lg sm:text-2xl">{{ $t('latest_blogs') }}</h2>
         <LLink v-if="blogs.length >= 3" :to="{ name: 'blog' }">
-          <Button variant="ghost" class="gap-1.5 text-sm text-muted-foreground hover:text-primary rounded-full">
+          <Button variant="ghost" class="gap-1 sm:gap-1.5 text-xs sm:text-sm text-muted-foreground hover:text-primary rounded-full px-2 sm:px-3">
             {{ $t('show_more') }}
             <ArrowRight :size="14" />
           </Button>
         </LLink>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-1">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
         <BlogCard v-for="blog in blogs" :key="`blog-${blog.id}`" :blog="blog" />
       </div>
     </section>
@@ -123,3 +186,95 @@ export default {
   },
 }
 </script>
+
+<style>
+.hero-clipped {
+  position: relative;
+}
+.hero-bg {
+  background: url('~/assets/images/hero-bg.svg') center/cover no-repeat;
+  position: relative;
+}
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 28, 39, 0.6);
+}
+.hero-clipped-inner {
+  clip-path: url(#heroClipMobile);
+  padding: 4.5rem 1.5rem 3rem;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+@media (min-width: 640px) {
+  .hero-clipped-inner {
+    clip-path: url(#heroClipDesktop);
+    padding: 5rem 3rem 4rem;
+    min-height: 380px;
+  }
+}
+@media (min-width: 768px) {
+  .hero-clipped-inner {
+    padding: 5.5rem 4rem 5rem;
+    min-height: 420px;
+  }
+}
+
+/* Feature cards with bottom-end notch */
+.feature-card {
+  position: relative;
+  aspect-ratio: 3/2;
+}
+.feature-card-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--color-primary);
+}
+[dir="ltr"] .feature-card-bg {
+  transform: scaleX(-1);
+}
+.feature-card-content {
+  position: relative;
+  z-index: 1;
+  padding: 4rem 1.25rem 1.5rem;
+  color: white;
+}
+.feature-card-title {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 2;
+  padding: 0.25rem;
+  width: 42%;
+  height: 22%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+[dir="ltr"] .feature-card-title {
+  right: auto;
+  left: -6px;
+}
+.feature-card-icon {
+  position: absolute;
+  bottom: -6px;
+  left: -6px;
+  z-index: 2;
+  width: 15%;
+  height: 22%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+[dir="ltr"] .feature-card-icon {
+  left: auto;
+  right: -6px;
+}
+</style>

@@ -49,7 +49,8 @@ const loading = ref(false)
 async function register() {
   loading.value = true
   try {
-    await api.post('user/register', form.value)
+    const phone = form.value.phone ? '+965' + form.value.phone.replace(/\D/g, '') : ''
+    await api.post('user/register', { ...form.value, phone })
     // Login after register using api.post to avoid CORS
     const loginRes = await api.post('user/login', {
       email: form.value.email,
