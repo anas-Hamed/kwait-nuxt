@@ -40,7 +40,7 @@ const features = [
     <section class="hero-clipped mb-8 sm:mb-14">
       <!-- Notch Logo -->
       <div class="absolute top-0 left-1/2 -translate-x-1/2 z-20 w-40 h-40 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-56 lg:h-56 -mt-14 sm:-mt-16 md:-mt-18 lg:-mt-20">
-        <img src="~/assets/images/logo-notch.svg" alt="Logo" class="w-full h-full object-contain drop-shadow-md" />
+        <img src="~/assets/images/logo-notch.png" alt="Logo" class="w-full h-full object-contain drop-shadow-md" />
       </div>
       <div class="hero-bg hero-clipped-inner">
         <!-- Decorative corners -->
