@@ -1,103 +1,48 @@
 <template>
   <LLink :to="!company.has_paid || !company.is_active ? {} : { name: 'company-id', params: { id: company.slug } }">
-    <Card class="flex m-1 relative overflow-hidden rounded-2xl shadow-soft card-lift border-0"
-          :class="{ 'opacity-50': !company.has_paid || !company.is_active }">
-      <div class="relative shrink-0">
-        <ImagePlaceholder class="w-24 md:w-40 md:h-40 h-32" :image="company.image">
-          <Badge class="absolute top-0 bg-secondary text-primary border-0 rounded-none text-xs font-bold px-3 py-1"
-                 :class="[$i18n.locale === 'ar' ? 'right-0 rounded-bl-xl' : 'left-0 rounded-br-xl']">
-            {{ company.category.name }}
-          </Badge>
-        </ImagePlaceholder>
+    <div class="kc" :class="{ 'opacity-50 pointer-events-none': !company.has_paid || !company.is_active }">
+      <div class="kc-img">
+        <ImagePlaceholder :image="company.image" class="kc-img-inner" />
+        <div class="kc-badge">{{ company.category.name }}</div>
       </div>
-      <Separator orientation="vertical" class="my-3" />
-      <CardContent class="flex-auto px-4 py-3 flex flex-col gap-1">
-        <div class="flex items-center gap-1.5">
-          <p class="text-lg font-bold truncate">{{ $i18n.locale === 'ar' ? company.ar_name : company.en_name }}</p>
-          <img v-if="company.is_trusted" class="w-4 h-4" src="~assets/images/trust.svg" alt="trusted">
+      <div class="kc-info">
+        <div class="kc-top">
+          <h3 class="kc-title">{{ $i18n.locale === 'ar' ? company.ar_name : company.en_name }}</h3>
+          <img v-if="company.is_trusted" class="kc-verified" src="~assets/images/trust.svg" alt="">
         </div>
-
-        <p class="text-xs text-muted-foreground line-clamp-2 flex-auto">{{ about }}</p>
-
-        <div class="flex items-center justify-between pt-1">
-          <div class="flex items-center gap-0.5 text-sm">
-            <span class="font-semibold">{{ company.average_rate }}</span>
-            <Star :size="14" class="text-secondary fill-secondary" />
+        <div class="kc-bottom">
+          <div class="kc-stars">
+            <Star v-for="n in 5" :key="n" :size="10"
+                  :class="n <= Math.round(company.average_rate || 0) ? 'kc-star-on' : 'kc-star-off'" />
+            <span class="kc-rate-val">{{ company.average_rate }}</span>
           </div>
           <client-only>
-            <div v-if="!showControl" class="flex items-center gap-0.5">
-              <Button variant="ghost" size="icon-sm" class="rounded-full hover:bg-surface" @click.prevent="callPhone">
-                <Phone :size="16" />
-              </Button>
-              <Button variant="ghost" size="icon-sm" class="rounded-full text-green-600 hover:bg-green-50" @click.prevent="chatWhatsapp">
-                <span class="w-4 h-4" v-html="socialIcons.whatsapp" />
-              </Button>
-              <Button variant="ghost" size="icon-sm" class="rounded-full" @click.prevent="toggleFavorite"
-                      :class="company.has_favorite ? 'text-red-500 hover:bg-red-50' : 'hover:bg-surface'">
-                <Heart :size="16" :fill="company.has_favorite ? 'currentColor' : 'none'" />
-              </Button>
-            </div>
-            <div v-else class="flex items-center gap-0.5">
-              <Button variant="ghost" size="icon-sm" class="rounded-full text-destructive hover:bg-red-50"
-                      :disabled="!company.has_paid || !company.is_active"
-                      @click.prevent="deleteCompany">
-                <Trash2 :size="16" />
-              </Button>
-              <Button variant="ghost" size="icon-sm" class="rounded-full hover:bg-surface"
-                      :disabled="!company.has_paid || !company.is_active"
-                      @click.prevent="updateCompany">
-                <Pencil :size="16" />
-              </Button>
+            <div v-if="showControl" class="kc-ctrls">
+              <button class="kc-ctrl kc-ctrl--del" :disabled="!company.has_paid || !company.is_active" @click.prevent="deleteCompany">
+                <Trash2 :size="13" />
+              </button>
+              <button class="kc-ctrl" :disabled="!company.has_paid || !company.is_active" @click.prevent="updateCompany">
+                <Pencil :size="13" />
+              </button>
             </div>
           </client-only>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   </LLink>
 </template>
 
 <script>
-import { Star, Phone, Heart, Trash2, Pencil } from 'lucide-vue-next'
-import { Card, CardContent } from '~/components/ui/card'
-import { Badge } from '~/components/ui/badge'
-import { Button } from '~/components/ui/button'
-import { Separator } from '~/components/ui/separator'
-import { socialIcons } from '~/helpers/SocialIcons'
+import { Star, Trash2, Pencil } from 'lucide-vue-next'
 
 export default {
   name: 'CompanyCard',
-  components: { Star, Phone, Heart, Trash2, Pencil, Card, CardContent, Badge, Button, Separator },
+  components: { Star, Trash2, Pencil },
   props: {
     company: { type: Object, required: true },
     showControl: { type: Boolean, required: false },
   },
-  data() {
-    return { socialIcons }
-  },
-  computed: {
-    about() {
-      if (this.company.about != null)
-        return (this.company.about.length <= 85) ? this.company.about : this.company.about.slice(0, 85) + ' .....'
-      return ''
-    },
-  },
   methods: {
-    toggleFavorite() {
-      if (this.checkAuth()) {
-        useApi().post(`company/${this.company.id}/toggle-favorite`).then(({ data }) => {
-          this.company.has_favorite = data.data
-          if (!data.data) {
-            useEventBus().emit('company-un-favorite', this.company.id)
-          }
-        })
-      }
-    },
-    chatWhatsapp() {
-      window.open(`https://wa.me/${this.company.whatsapp}`)
-    },
-    callPhone() {
-      window.open(`tel:${this.company.phone}`)
-    },
     deleteCompany() {
       const self = this
       this.$swal({
@@ -109,35 +54,11 @@ export default {
         cancelButtonText: self.$t('no'),
       }).then((result) => {
         if (result.value) {
-          useApi().delete(`company/${self.company.id}`).then(data => {
-            this.$swal({
-              icon: 'success',
-              text: self.$t('operation_success'),
-              toast: true,
-              position: 'center',
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener('mouseenter', self.$swal.stopTimer)
-                toast.addEventListener('mouseleave', self.$swal.resumeTimer)
-              },
-            })
+          useApi().delete(`company/${self.company.id}`).then(() => {
+            this.$swal({ icon: 'success', text: self.$t('operation_success'), toast: true, position: 'center', showConfirmButton: false, timer: 3000, timerProgressBar: true })
             useEventBus().emit('company-deleted', self.company.id)
-          }).catch(e => {
-            this.$swal({
-              icon: 'error',
-              text: self.$t('operation_failed'),
-              toast: true,
-              position: 'center',
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener('mouseenter', self.$swal.stopTimer)
-                toast.addEventListener('mouseleave', self.$swal.resumeTimer)
-              },
-            })
+          }).catch(() => {
+            this.$swal({ icon: 'error', text: self.$t('operation_failed'), toast: true, position: 'center', showConfirmButton: false, timer: 3000, timerProgressBar: true })
           })
         }
       })
@@ -148,3 +69,33 @@ export default {
   },
 }
 </script>
+
+<style>
+/* Shared .kc styles in CompanyListCard */
+.kc-ctrls {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-inline-start: auto;
+}
+.kc-ctrl {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: transparent;
+  color: var(--color-muted-foreground);
+  transition: all 0.15s ease;
+}
+.kc-ctrl:hover {
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+.kc-ctrl--del { color: #ef4444; }
+.kc-ctrl--del:hover { background: #fef2f2; }
+</style>

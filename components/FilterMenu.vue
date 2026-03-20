@@ -3,17 +3,35 @@
     <!-- Desktop Filter -->
     <div class="hidden lg:block lg:pe-3">
       <div class="fm-card lg:sticky lg:top-24">
-        <h3 class="fm-title">{{ $t('categories') }}</h3>
-        <SearchInput v-model="categorySearch" class="mb-3" :placeholder="$t('search_about_category')" light small />
-        <ScrollArea class="h-[520px] pe-1">
-          <div class="space-y-0.5">
-            <label class="fm-item" :class="{ 'fm-item--active': $route.query.category_id == null }"
-                   @click="setCategory(null)" for="all-companies">
-              <span>{{ $t('all_companies') }}</span>
+        <!-- Header -->
+        <div class="fm-header">
+          <div class="fm-header-icon">
+            <SlidersHorizontal :size="13" class="text-secondary" />
+          </div>
+          <h3 class="fm-header-title">{{ $t('categories') }}</h3>
+        </div>
+
+        <!-- Search -->
+        <div class="fm-search-wrap">
+          <SearchInput v-model="categorySearch" class="w-full" :placeholder="$t('search_about_category')" light small />
+        </div>
+
+        <!-- All Companies pill -->
+        <div class="fm-pill-wrap">
+          <label class="fm-pill" :class="{ 'fm-pill--active': $route.query.category_id == null }"
+                 @click="setCategory(null)" for="all-companies">
+            <span>{{ $t('all_companies') }}</span>
+            <div class="fm-pill-radio" :class="{ 'fm-pill-radio--active': $route.query.category_id == null }">
               <input id="all-companies" :checked="$route.query.category_id == null" :value="null"
-                     class="accent-secondary w-4 h-4" type="radio" name="category_id">
-            </label>
-            <Separator class="!my-1.5" />
+                     class="sr-only" type="radio" name="category_id">
+              <div class="fm-pill-dot" :class="{ 'fm-pill-dot--active': $route.query.category_id == null }"></div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Categories list -->
+        <ScrollArea class="fm-scroll">
+          <div class="fm-list">
             <CategoryGroup v-for="category in filteredCategories" :key="`category-group-${category.id}`"
                            :category="category" @setCategory="setCategory" />
           </div>
@@ -26,26 +44,40 @@
       <Sheet v-model:open="opened">
         <SheetTrigger as-child>
           <button class="fm-mobile-trigger">
-            <SlidersHorizontal :size="16" />
+            <SlidersHorizontal :size="14" />
             <span>{{ $t('categories') }}</span>
           </button>
         </SheetTrigger>
-        <SheetContent :side="sheetSide" class="w-[300px] p-0">
-          <SheetHeader class="p-4 pb-2 border-b border-border">
-            <SheetTitle class="text-primary font-bold">{{ $t('categories') }}</SheetTitle>
-          </SheetHeader>
-          <div class="px-4 pt-3 pb-2">
-            <SearchInput v-model="categorySearch" :placeholder="$t('search_about_category')" small />
+        <SheetContent :side="sheetSide" class="w-[280px] p-0 border-0 bg-white">
+          <!-- Header -->
+          <div class="fm-header">
+            <div class="fm-header-icon">
+              <SlidersHorizontal :size="13" class="text-secondary" />
+            </div>
+            <span class="fm-header-title">{{ $t('categories') }}</span>
           </div>
-          <ScrollArea class="h-[calc(100vh-140px)] px-4">
-            <div class="space-y-0.5 py-2">
-              <label class="fm-item" :class="{ 'fm-item--active': $route.query.category_id == null }"
-                     @click="setCategory(null)" for="all-companies-mobile">
-                <span>{{ $t('all_companies') }}</span>
+
+          <!-- Search -->
+          <div class="fm-search-wrap">
+            <SearchInput v-model="categorySearch" :placeholder="$t('search_about_category')" light small />
+          </div>
+
+          <!-- All Companies pill -->
+          <div class="fm-pill-wrap">
+            <label class="fm-pill" :class="{ 'fm-pill--active': $route.query.category_id == null }"
+                   @click="setCategory(null)" for="all-companies-mobile">
+              <span>{{ $t('all_companies') }}</span>
+              <div class="fm-pill-radio" :class="{ 'fm-pill-radio--active': $route.query.category_id == null }">
                 <input id="all-companies-mobile" :checked="$route.query.category_id == null" :value="null"
-                       class="accent-secondary w-4 h-4" type="radio" name="category_id">
-              </label>
-              <Separator class="!my-1.5" />
+                       class="sr-only" type="radio" name="category_id">
+                <div class="fm-pill-dot" :class="{ 'fm-pill-dot--active': $route.query.category_id == null }"></div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Categories list -->
+          <ScrollArea class="h-[calc(100vh-220px)]">
+            <div class="fm-list">
               <CategoryGroup v-for="category in filteredCategories" :key="`category-group-m-${category.id}`"
                              :category="category" @setCategory="setCategory" />
             </div>
@@ -58,14 +90,12 @@
 
 <script>
 import { SlidersHorizontal } from 'lucide-vue-next'
-import { Button } from '~/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet'
 import { ScrollArea } from '~/components/ui/scroll-area'
-import { Separator } from '~/components/ui/separator'
 
 export default {
   name: 'FilterMenu',
-  components: { SlidersHorizontal, Button, Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, ScrollArea, Separator },
+  components: { SlidersHorizontal, Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, ScrollArea },
   props: {
     categories: { type: Array, default: () => [] },
   },
@@ -101,15 +131,186 @@ export default {
 /* ── Filter Card ── */
 .fm-card {
   background: white;
-  border-radius: 1.25rem;
-  box-shadow: var(--shadow-soft);
-  padding: 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
-.fm-title {
+
+/* ── Header ── */
+.fm-header {
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fm-header-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 201, 9, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.fm-header-title {
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--color-primary);
-  margin-bottom: 0.75rem;
+}
+
+/* ── Search ── */
+.fm-search-wrap {
+  padding: 0.75rem 0.75rem 0.75rem;
+}
+
+/* ── Pill Wrapper ── */
+.fm-pill-wrap {
+  padding: 0 0.75rem 0.5rem;
+}
+
+/* ── All Companies Pill ── */
+.fm-pill {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-card-foreground);
+  background: var(--color-surface);
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.fm-pill:hover {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.fm-pill--active {
+  background: rgba(255, 201, 9, 0.08);
+  border-color: var(--color-secondary);
+  color: var(--color-primary);
+  font-weight: 700;
+  box-shadow: 0 0 0 1px rgba(255, 201, 9, 0.1);
+}
+
+/* ── Radio Dot ── */
+.fm-pill-radio {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.fm-pill-radio--active,
+.fm-pill--active .fm-pill-radio {
+  border-color: var(--color-secondary);
+}
+
+.fm-pill-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  transition: background 0.15s ease;
+}
+
+.fm-pill-dot--active {
+  background: var(--color-secondary);
+}
+
+/* ── Scroll area ── */
+.fm-scroll {
+  height: 460px;
+  padding: 0 0.25rem;
+}
+
+/* ── Category list ── */
+.fm-list {
+  padding: 0.25rem 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+/* ── Mobile Trigger ── */
+.fm-mobile-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border);
+  background: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.2s ease;
+}
+
+.fm-mobile-trigger:hover {
+  border-color: var(--color-secondary);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-1px);
+}
+
+.fm-mobile-trigger:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ── Category Group Trigger ── */
+.fm-group-trigger {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+.fm-group-trigger:hover {
+  background: var(--color-surface);
+}
+
+.fm-group-trigger[data-state="open"] {
+  background: var(--color-surface);
+}
+
+/* ── Group Chevron ── */
+.fm-group-chevron {
+  color: var(--color-muted-foreground);
+  transition: transform 0.2s ease;
+}
+
+.fm-group-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ── Group Content ── */
+.fm-group-content {
+  padding: 0.15rem 0 0.15rem 0.5rem;
 }
 
 /* ── Filter Item ── */
@@ -118,39 +319,28 @@ export default {
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0.65rem;
-  border-radius: 0.6rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.5rem;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 500;
   color: var(--color-card-foreground);
-  transition: background-color 0.15s ease;
+  border-inline-start: 2px solid transparent;
+  transition: all 0.15s ease;
 }
+
 .fm-item:hover {
   background: var(--color-surface);
 }
+
 .fm-item--active {
-  background: var(--color-surface);
+  background: rgba(255, 201, 9, 0.06);
   color: var(--color-primary);
   font-weight: 700;
+  border-inline-start-color: var(--color-secondary);
 }
 
-/* ── Mobile Trigger ── */
-.fm-mobile-trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 0.85rem;
-  border-radius: 0.6rem;
-  border: 1px solid var(--color-border);
-  background: white;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.fm-mobile-trigger:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 2px 8px rgba(27, 44, 59, 0.06);
+.fm-item--active .fm-pill-radio {
+  border-color: var(--color-secondary);
 }
 </style>
