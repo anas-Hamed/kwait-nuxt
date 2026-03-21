@@ -75,6 +75,95 @@
   50% { transform: scale(1.05); opacity: 0.9; }
 }
 
+/* ===== Shared Hero with Bottom Notch ===== */
+.co-hero-wrap {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.co-hero-section {
+  background: url('~/assets/images/hero-bg.svg') center/cover no-repeat;
+  border-radius: 1.25rem;
+  padding: 2.5rem 1.5rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.co-hero-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 28, 39, 0.6);
+}
+
+.co-hero-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+/* Logo positioned inside the bottom notch */
+.au-notch-logo-wrap {
+  position: absolute;
+  bottom: -5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 46%;
+  min-width: 160px;
+  max-width: 220px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .au-notch-logo-wrap {
+    width: 30%;
+    min-width: 200px;
+    max-width: 360px;
+    bottom: -5.5rem;
+  }
+}
+
+.au-notch-logo {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(27, 44, 59, 0.2));
+}
+
+@media (min-width: 640px) {
+  .au-notch-logo {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+/* Under Maintenance shared */
+.au-maintenance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 1rem;
+  text-align: center;
+}
+
+.au-maintenance-title {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-top: 1rem;
+}
+
+.au-maintenance-sub {
+  font-size: 0.85rem;
+  color: var(--color-muted-foreground);
+  margin-top: 0.35rem;
+}
+
 /* ===== Hero Gradient ===== */
 .hero-gradient {
   background: linear-gradient(160deg, #1e3448 0%, #0f1c27 50%, #152332 100%);

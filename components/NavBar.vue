@@ -13,6 +13,7 @@
           <LLink :to="{ name: 'category' }" class="nav-pill">{{ $t('categories') }}</LLink>
           <LLink :to="{ name: 'company' }" class="nav-pill">{{ $t('companies') }}</LLink>
           <LLink :to="{ name: 'blog' }" class="nav-pill">{{ $t('blog') }}</LLink>
+          <LLink :to="{ name: 'plans' }" class="nav-pill">{{ $t('plans') }}</LLink>
           <LLink :to="{ name: 'about-us' }" class="nav-pill">{{ $t('about_us') }}</LLink>
         </nav>
 

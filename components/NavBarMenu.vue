@@ -98,7 +98,7 @@
 </template>
 
 <script setup>
-import { Menu, X, User, LogOut, Heart, Bell, Plus, Home, Grid3X3, Building2, FileText, Info, LayoutDashboard } from 'lucide-vue-next'
+import { Menu, X, User, LogOut, Heart, Bell, Plus, Home, Grid3X3, Building2, FileText, CreditCard, Info, LayoutDashboard } from 'lucide-vue-next'
 import { Button } from '~/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet'
 import { Separator } from '~/components/ui/separator'
@@ -123,6 +123,7 @@ const navLinks = [
   { name: 'category', label: 'categories', icon: Grid3X3 },
   { name: 'company', label: 'companies', icon: Building2 },
   { name: 'blog', label: 'blog', icon: FileText },
+  { name: 'plans', label: 'plans', icon: CreditCard },
   { name: 'about-us', label: 'about_us', icon: Info },
 ]
 

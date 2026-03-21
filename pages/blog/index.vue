@@ -70,7 +70,7 @@ onUnmounted(() => {
 <template>
   <div>
     <!-- Hero -->
-    <section class="bl-hero-wrap">
+    <section class="co-hero-wrap">
       <svg width="0" height="0" class="absolute">
         <defs>
           <clipPath id="blHeroClip" clipPathUnits="objectBoundingBox">
@@ -82,10 +82,10 @@ onUnmounted(() => {
         </defs>
       </svg>
 
-      <div class="bl-hero-section">
+      <div class="co-hero-section bl-hero-clip">
         <div class="hero-corner-tl"></div>
         <div class="hero-corner-br"></div>
-        <div class="bl-hero-inner">
+        <div class="co-hero-inner">
           <h1 class="font-cairo text-white text-2xl sm:text-3xl font-bold">{{ $t('blog') }}</h1>
         </div>
       </div>
@@ -133,38 +133,14 @@ export default {
 </script>
 
 <style>
-/* ── Hero ── */
-.bl-hero-wrap {
-  position: relative;
-  margin-bottom: 1.5rem;
-}
-
-.bl-hero-section {
-  background: url('~/assets/images/hero-bg.svg') center/cover no-repeat;
-  border-radius: 1.25rem;
-  padding: 2.5rem 1.5rem 5rem;
-  position: relative;
-  overflow: hidden;
+/* ── Blog Hero clip-path ── */
+.bl-hero-clip {
   clip-path: url(#blHeroClipMobile);
 }
-
 @media (min-width: 640px) {
-  .bl-hero-section {
+  .bl-hero-clip {
     clip-path: url(#blHeroClip);
   }
-}
-
-.bl-hero-section::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 28, 39, 0.6);
-}
-
-.bl-hero-inner {
-  position: relative;
-  z-index: 1;
-  text-align: center;
 }
 
 /* ── Search notch ── */

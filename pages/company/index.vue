@@ -132,7 +132,7 @@ onUnmounted(() => {
         </defs>
       </svg>
 
-      <div class="co-hero-section">
+      <div class="co-hero-section co-hero-clip">
         <div class="hero-corner-tl"></div>
         <div class="hero-corner-br"></div>
 
@@ -195,37 +195,14 @@ export default {
 </script>
 
 <style>
-/* ── Premium Hero Header ── */
-.co-hero-wrap {
-  position: relative;
-  margin-bottom: 1.5rem;
-}
-
-.co-hero-section {
-  background: url('~/assets/images/hero-bg.svg') center/cover no-repeat;
-  border-radius: 1.25rem;
-  padding: 2.5rem 1.5rem 5rem;
-  position: relative;
-  overflow: hidden;
+/* ── Company Hero clip-path ── */
+.co-hero-clip {
   clip-path: url(#coHeroClipMobile);
 }
-
 @media (min-width: 640px) {
-  .co-hero-section {
+  .co-hero-clip {
     clip-path: url(#coHeroClip);
   }
-}
-.co-hero-section::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 28, 39, 0.6);
-}
-
-.co-hero-inner {
-  position: relative;
-  z-index: 1;
-  text-align: center;
 }
 
 /* Search bar positioned in the bottom notch */
