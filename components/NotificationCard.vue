@@ -1,37 +1,25 @@
 <template>
-  <div class="mx-auto p-1.5">
-    <Card class="transition-colors"
-          :class="[(notification.read_at != null || read) ? 'bg-accent' : 'bg-blue-50 border-blue-200']">
-      <CardContent class="flex items-center gap-3 p-4">
-        <div class="shrink-0 w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
-          <Bell :size="20" class="text-secondary" />
-        </div>
-        <div class="flex-auto min-w-0">
-          <h4 class="text-lg font-bold text-primary truncate">{{ notification.data.title }}</h4>
-          <p class="text-sm text-muted-foreground mt-0.5">{{ notification.data.body }}</p>
-          <div class="flex justify-end w-full mt-1">
-            <client-only>
-              <small class="text-xs text-muted-foreground">{{ $dayjs(notification.created_at).format('YYYY-MM-DD H:m') }}</small>
-            </client-only>
-          </div>
-        </div>
-        <div class="shrink-0">
-          <button v-if="notification.read_at == null && !read"
-                  class="w-3 h-3 rounded-full bg-blue-500 hover:bg-blue-600 cursor-pointer transition-colors"
-                  title="Mark as read" @click="markAsRead" />
-        </div>
-      </CardContent>
-    </Card>
+  <div class="nc" :class="{ 'nc--unread': notification.read_at == null && !read }">
+    <div class="nc-icon">
+      <Bell :size="18" />
+      <div class="nc-dot" v-if="notification.read_at == null && !read" @click="markAsRead"></div>
+    </div>
+    <div class="nc-body">
+      <h4 class="nc-title">{{ notification.data.title }}</h4>
+      <p class="nc-text">{{ notification.data.body }}</p>
+    </div>
+    <client-only>
+      <span class="nc-time">{{ $dayjs(notification.created_at).fromNow() }}</span>
+    </client-only>
   </div>
 </template>
 
 <script>
 import { Bell } from 'lucide-vue-next'
-import { Card, CardContent } from '~/components/ui/card'
 
 export default {
   name: 'NotificationCard',
-  components: { Bell, Card, CardContent },
+  components: { Bell },
   props: {
     notification: { type: Object, required: true },
   },
@@ -41,7 +29,7 @@ export default {
   methods: {
     markAsRead() {
       const appStore = useAppStore()
-      useApi().post(`notifications/makeAsRead/${this.notification.id}`).then(data => {
+      useApi().post(`notifications/makeAsRead/${this.notification.id}`).then(() => {
         this.read = true
         appStore.decreaseNotificationsCount()
       })
@@ -49,3 +37,78 @@ export default {
   },
 }
 </script>
+
+<style>
+.nc {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.15s ease;
+}
+.nc:last-child {
+  border-bottom: none;
+}
+.nc--unread {
+  background: rgba(59, 130, 246, 0.04);
+  margin: 0 -0.75rem;
+  padding-inline: 0.75rem;
+  border-radius: 0.5rem;
+  border-bottom-color: transparent;
+}
+
+.nc-icon {
+  position: relative;
+  width: 3.25rem;
+  height: 3.25rem;
+  min-width: 3.25rem;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nc-dot {
+  position: absolute;
+  top: -2px;
+  inset-inline-end: -2px;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 2px solid #fff;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.nc-dot:hover {
+  transform: scale(1.4);
+}
+
+.nc-body {
+  flex: 1;
+  min-width: 0;
+}
+.nc-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1.4;
+}
+.nc-text {
+  font-size: 1rem;
+  color: var(--color-muted-foreground);
+  line-height: 1.5;
+  margin-top: 0.15rem;
+}
+
+.nc-time {
+  font-size: 0.85rem;
+  color: var(--color-muted-foreground);
+  white-space: nowrap;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+</style>

@@ -2,6 +2,8 @@ export default {
   app_name: 'Kuwait Explorer',
   all_companies: 'All Companies',
   about_us: 'About Us',
+  under_maintenance: 'Under Maintenance',
+  under_maintenance_desc: 'This page is currently being updated, please try again later',
   favorite: 'Favorite',
   send: 'Send',
   phone: 'Phone',

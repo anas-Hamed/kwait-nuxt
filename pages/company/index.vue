@@ -179,10 +179,6 @@ onUnmounted(() => {
             <p>{{ $t('no_result') }}</p>
           </div>
 
-          <!-- End of list -->
-          <div v-if="allLoaded && companies.length > 0" class="text-center py-4 text-sm text-muted-foreground">
-            {{ $t('no_more') }}
-          </div>
         </client-only>
       </div>
     </div>
