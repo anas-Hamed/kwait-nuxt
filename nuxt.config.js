@@ -1,3 +1,10 @@
+// Fix webpack 4 + Node 17+ OpenSSL compatibility
+const crypto = require('crypto')
+const origCreateHash = crypto.createHash
+crypto.createHash = (algorithm, options) => {
+  return origCreateHash(algorithm === 'md4' ? 'md5' : algorithm, options)
+}
+
 export default {
   loading:{
     color: '#ffc909',
