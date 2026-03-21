@@ -87,7 +87,14 @@ export default {
       }
     }
   },
-  build: {},
+  build: {
+    transpile: [
+      'vue-screen',
+      'vue-rate',
+      'vue-select',
+      'hooper'
+    ]
+  },
   i18n: {
     locales: [
       {
