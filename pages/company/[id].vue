@@ -2,10 +2,10 @@
 import { Badge } from '~/components/ui/badge'
 import { Separator } from '~/components/ui/separator'
 import { Heart, Star, Phone, Mail, Clock, MapPin, Globe, MessageCircle } from 'lucide-vue-next'
+import { toast } from 'vue-sonner'
 
 const api = useApi()
 const route = useRoute()
-const { $toast } = useNuxtApp()
 const { t } = useI18n()
 const { status } = useAuth()
 
@@ -22,10 +22,26 @@ const { data: company } = await useAsyncData(`company-${route.params.id}`, async
 })
 
 const hoverRating = ref(0)
+const { $i18n } = useNuxtApp()
+
+function toggleFavorite() {
+  if (status.value !== 'authenticated') {
+    toast.error('يجب تسجيل الدخول')
+    return
+  }
+  api.post(`company/${company.value.id}/toggle-favorite`).then((data) => {
+    company.value.has_favorite = data.data
+    if (data.data) {
+      toast.success(t('favorite_added'))
+    } else {
+      toast.success(t('favorite_removed'))
+    }
+  })
+}
 
 function submitRating(star) {
   if (status.value !== 'authenticated') {
-    $toast.error('يجب تسجيل الدخول')
+    toast.error('يجب تسجيل الدخول')
     return
   }
   api.post('company/rate', {
@@ -33,9 +49,9 @@ function submitRating(star) {
     rate: star,
   }).then((res) => {
     company.value.average_rate = res?.data ?? star
-    $toast.success(t('rate'))
+    toast.success(t('rate'))
   }).catch(() => {
-    $toast.error(t('operation_failed'))
+    toast.error(t('operation_failed'))
   })
 }
 </script>
@@ -208,19 +224,6 @@ export default {
     this.adsLoading = false;
   },
   methods: {
-    toggleFavorite() {
-      if (this.checkAuth()) {
-        const api = useApi();
-        api.post(`company/${this.company.id}/toggle-favorite`).then((data) => {
-          this.company.has_favorite = data.data;
-          if (data.data) {
-            this.$toast.success(this.$t('favorite_added'));
-          } else {
-            this.$toast.success(this.$t('favorite_removed'));
-          }
-        });
-      }
-    }
   }
 };
 </script>

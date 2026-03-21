@@ -124,10 +124,10 @@ onUnmounted(() => {
       <svg width="0" height="0" class="absolute">
         <defs>
           <clipPath id="coHeroClip" clipPathUnits="objectBoundingBox">
-            <path d="M 0,0 L 1,0 L 1,1 L 0.750,1 Q 0.720,1 0.700,0.850 Q 0.680,0.650 0.650,0.650 L 0.350,0.650 Q 0.320,0.650 0.300,0.850 Q 0.280,1 0.250,1 L 0,1 Z" />
+            <path d="M 0,0 L 1,0 L 1,1 L 0.720,1 Q 0.690,1 0.670,0.850 Q 0.650,0.650 0.620,0.650 L 0.380,0.650 Q 0.350,0.650 0.330,0.850 Q 0.310,1 0.280,1 L 0,1 Z" />
           </clipPath>
           <clipPath id="coHeroClipMobile" clipPathUnits="objectBoundingBox">
-            <path d="M 0,0 L 1,0 L 1,1 L 0.880,1 Q 0.820,1 0.790,0.850 Q 0.760,0.680 0.720,0.680 L 0.280,0.680 Q 0.240,0.680 0.210,0.850 Q 0.180,1 0.120,1 L 0,1 Z" />
+            <path d="M 0,0 L 1,0 L 1,1 L 0.920,1 Q 0.870,1 0.840,0.850 Q 0.810,0.680 0.770,0.680 L 0.230,0.680 Q 0.190,0.680 0.160,0.850 Q 0.130,1 0.080,1 L 0,1 Z" />
           </clipPath>
         </defs>
       </svg>
@@ -238,17 +238,17 @@ export default {
   bottom: -0.25rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 34%;
-  min-width: 260px;
-  max-width: 400px;
+  width: 30%;
+  min-width: 200px;
+  max-width: 360px;
   z-index: 10;
 }
 
 @media (max-width: 639px) {
   .co-hero-notch-search {
-    width: 50%;
-    min-width: 220px;
-    max-width: 280px;
+    width: 46%;
+    min-width: 160px;
+    max-width: 220px;
   }
 }
 
