@@ -1,9 +1,17 @@
 {
   "version": 2,
+  "functions": {
+    "**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "builds": [
     {
       "src": "nuxt.config.js",
-      "use": "@nuxtjs/vercel-builder"
+      "use": "@nuxtjs/vercel-builder",
+      "config": {
+        "nodeVersion": "18"
+      }
     }
   ]
 }
