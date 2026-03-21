@@ -11,6 +11,8 @@ export default {
     height: '3px',
     continuous: true
   },
+  target: 'static',
+  ssr: false,
   server:{
     port: process.env.PORT || 3000,
     host: '0.0.0.0'
