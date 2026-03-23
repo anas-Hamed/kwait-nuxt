@@ -7,6 +7,7 @@
     </main>
     <AppDownload />
     <BFooter />
+    <FaqChatBubble />
   </div>
 </template>
 

@@ -212,4 +212,15 @@ export default {
   plans_cta_desc: 'انضم إلى آلاف الشركات في دليل الكويت واحصل على المزيد من العملاء',
   start_now: 'ابدأ الآن',
 
+  // FAQ Chat Bot
+  faq_chat_title: 'المساعدة والأسئلة الشائعة',
+  faq_chat_welcome: 'مرحباً! كيف يمكنني مساعدتك؟ اختر موضوعاً من الأسفل.',
+  faq_chat_pick_category: 'اختر موضوعاً للبدء.',
+  faq_chat_pick_question: 'اختيار رائع! ماذا تريد أن تعرف؟',
+  faq_chat_another_question: 'هل لديك سؤال آخر في هذا القسم؟',
+  faq_chat_yes: 'نعم',
+  faq_chat_no: 'لا',
+  faq_chat_error: 'حدث خطأ ما، يرجى المحاولة مرة أخرى.',
+  faq_chat_close: 'إغلاق المحادثة',
+
 }

@@ -212,4 +212,15 @@ export default {
   plans_cta_desc: 'Join thousands of businesses on Kuwait Explorer and reach more customers',
   start_now: 'Start Now',
 
+  // FAQ Chat Bot
+  faq_chat_title: 'Help & FAQ',
+  faq_chat_welcome: 'Hello! How can I help you? Choose a topic below.',
+  faq_chat_pick_category: 'Choose a topic to get started.',
+  faq_chat_pick_question: 'Great choice! What would you like to know?',
+  faq_chat_another_question: 'Do you have another question in this category?',
+  faq_chat_yes: 'Yes',
+  faq_chat_no: 'No',
+  faq_chat_error: 'Something went wrong. Please try again.',
+  faq_chat_close: 'Close chat',
+
 }
