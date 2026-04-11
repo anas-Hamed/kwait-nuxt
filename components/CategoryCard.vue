@@ -4,7 +4,7 @@
          class="block p-1.5 group">
     <div class="category-card">
       <svg class="category-card-bg" viewBox="0 0 200 200" fill="none" preserveAspectRatio="none">
-        <path d="M8,0 L192,0 Q200,0 200,8 L200,150 Q200,158 194,158 L174,158 Q152,158 152,178 L152,192 Q152,200 144,200 L8,200 Q0,200 0,192 L0,8 Q0,0 8,0 Z" fill="currentColor" stroke="#e2e8f0" stroke-width="1"/>
+        <path d="M8,0 L192,0 Q200,0 200,8 L200,150 Q200,158 194,158 L174,158 Q152,158 152,178 L152,192 Q152,200 144,200 L8,200 Q0,200 0,192 L0,8 Q0,0 8,0 Z" fill="currentColor"/>
       </svg>
 
       <div class="category-card-content">
@@ -16,7 +16,7 @@
             <ImagePlaceholder :circle-image="true" :image="category.image" class="w-full h-full" />
           </div>
         </div>
-        <p class="mt-3 text-sm font-bold text-primary truncate">{{ category.name }}</p>
+        <p class="mt-3 text-sm font-bold text-foreground truncate">{{ category.name }}</p>
       </div>
 
       <!-- Arrow in notch -->
@@ -47,6 +47,11 @@ export default {
 .category-card {
   position: relative;
   aspect-ratio: 1/1;
+  filter: drop-shadow(0 2px 10px rgba(54, 32, 97, 0.05));
+  transition: filter 250ms ease-out;
+}
+.category-card:hover {
+  filter: drop-shadow(0 8px 22px rgba(107, 77, 209, 0.14));
 }
 .category-card-bg {
   position: absolute;

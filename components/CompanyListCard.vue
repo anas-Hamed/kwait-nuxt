@@ -1,7 +1,7 @@
 <template>
-  <LLink :to="!company.has_paid || !company.is_active ? {} : { name: 'company-id', params: { id: company.slug } }"
+  <LLink :to="company.has_paid === false || company.is_active === false ? {} : { name: 'company-id', params: { id: company.slug } }"
          class="block">
-    <div class="kc" :class="{ 'opacity-50 pointer-events-none': !company.has_paid || !company.is_active }">
+    <div class="kc" :class="{ 'opacity-50 pointer-events-none': company.has_paid === false || company.is_active === false }">
       <div class="kc-img">
         <ImagePlaceholder :image="company.image" class="kc-img-inner" />
         <div class="kc-badge">{{ company.category.name }}</div>
@@ -46,7 +46,7 @@ export default {
 }
 .kc:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(27, 44, 59, 0.1);
+  box-shadow: 0 8px 24px rgba(54, 32, 97, 0.12);
 }
 
 /* Image */
@@ -106,7 +106,7 @@ export default {
 .kc-title {
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

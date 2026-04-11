@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-2xl font-bold text-primary mb-1">{{ $t('welcome_back') }}</h1>
+    <h1 class="text-2xl font-bold text-foreground mb-1">{{ $t('welcome_back') }}</h1>
     <p class="text-muted-foreground text-sm mb-8">{{ $t('login_subtitle') }}</p>
 
     <form @submit.prevent="login">

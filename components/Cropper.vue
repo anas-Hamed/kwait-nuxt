@@ -1,5 +1,5 @@
 <template>
-  <div class=" border img-wrapper ">
+  <div class="img-wrapper">
     <img ref="image" width="100%"  :src="src">
   </div>
 </template>
@@ -74,8 +74,12 @@
 </script>
 
 <style scoped>
-.img-wrapper{
+.img-wrapper {
   height: 240px;
   width: 240px;
+  border-radius: 0.875rem;
+  overflow: hidden;
+  background: #f9fafb;
+  max-width: 100%;
 }
 </style>

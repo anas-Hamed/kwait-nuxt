@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white rounded-2xl shadow-soft p-6">
     <div class="flex items-center justify-between mb-5">
-      <h3 class="text-lg font-bold text-primary">{{ $t('favorite') }}</h3>
+      <h3 class="text-lg font-bold text-foreground">{{ $t('favorite') }}</h3>
       <LLink :to="{ name: 'favorite' }">
         <Button variant="outline" size="sm" class="rounded-full text-xs">{{ $t('show_all') }}</Button>
       </LLink>

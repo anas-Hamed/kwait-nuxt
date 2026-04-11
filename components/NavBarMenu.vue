@@ -16,7 +16,7 @@
                 {{ userInitials }}
               </div>
               <div class="min-w-0">
-                <p class="font-bold text-sm text-primary truncate">{{ authUser?.name }}</p>
+                <p class="font-bold text-sm text-foreground truncate">{{ authUser?.name }}</p>
                 <p class="text-xs text-muted-foreground truncate">{{ authUser?.email }}</p>
               </div>
             </LLink>
@@ -27,7 +27,7 @@
                 <User :size="18" class="text-muted-foreground" />
               </div>
               <div>
-                <p class="font-bold text-sm text-primary">{{ $t('login') }}</p>
+                <p class="font-bold text-sm text-foreground">{{ $t('login') }}</p>
                 <p class="text-xs text-muted-foreground">{{ $t('login') }} / {{ $t('register') }}</p>
               </div>
             </LLink>

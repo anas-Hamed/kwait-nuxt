@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="my-4 rounded-md bg-accent w-full py-8 flex flex-wrap p-2" :class="[(errors && errors['images']) ? 'border border-destructive' : '']">
+    <div class="my-4 rounded-md bg-muted w-full py-8 flex flex-wrap p-2" :class="[(errors && errors['images']) ? 'border border-destructive' : '']">
       <div class="w-full md:w-2/6 flex items-center justify-center p-1">
         <template v-for="(src, index) in initialImages" :key="`Image___${index}`">
           <Cropper v-if="index === active" :index="index" :src="src" class="w-4/6 mx-auto"
@@ -31,8 +31,8 @@
       <input id="files" ref="files" hidden accept="image/*" type="file" multiple name="files" @change="selectFiles">
     </div>
 
-    <div v-if="currentImages.length" class="my-4 rounded-md bg-accent w-full p-4">
-      <h3 class="text-primary text-xl font-bold mb-4">{{ $t('current_images') }}</h3>
+    <div v-if="currentImages.length" class="my-4 rounded-md bg-muted w-full p-4">
+      <h3 class="text-foreground text-xl font-bold mb-4">{{ $t('current_images') }}</h3>
       <HorizontalSlider v-if="currentImages.length > 0">
         <div v-for="(img, index) in currentImages" :key="index" class="relative p-1 h-24">
           <button type="button" class="absolute left-0 -top-2 rounded-full bg-destructive text-white w-6 h-6 flex items-center justify-center"

@@ -166,8 +166,8 @@ export default {
 .bl-notch-input input {
   background: white !important;
   border: 1.5px solid var(--color-border) !important;
-  box-shadow: 0 2px 8px rgba(27, 44, 59, 0.08);
-  color: var(--color-primary) !important;
+  box-shadow: 0 2px 8px rgba(54, 32, 97, 0.1);
+  color: var(--color-foreground) !important;
 }
 .bl-notch-input input::placeholder {
   color: var(--color-muted-foreground) !important;

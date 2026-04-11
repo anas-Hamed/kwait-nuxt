@@ -76,7 +76,7 @@ function submitRating(star) {
 
       <!-- Name + Trust -->
       <div class="flex items-center gap-2 mt-1">
-        <h1 class="text-2xl font-bold text-primary" style="font-family: 'Cairo', sans-serif;">
+        <h1 class="text-2xl font-bold text-foreground" style="font-family: 'Poppins', 'Alexandria', sans-serif;">
           {{ $i18n.locale === 'ar' ? company?.ar_name : company?.en_name }}
         </h1>
         <img v-if="company?.is_trusted" class="w-5 h-5 shrink-0" src="~/assets/images/trust.svg" alt="trusted" />
@@ -128,27 +128,27 @@ function submitRating(star) {
 
     <!-- Contact Details -->
     <section>
-      <h2 class="text-base font-semibold text-primary mb-4">{{ $t('contacts') }}</h2>
+      <h2 class="text-base font-semibold text-foreground mb-4">{{ $t('contacts') }}</h2>
       <div class="space-y-3">
         <div v-if="company?.phone" class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-full bg-primary/5 flex items-center justify-center shrink-0">
             <Phone :size="16" class="text-primary" />
           </div>
-          <span class="text-sm text-primary flex-1" dir="ltr">{{ company.phone }}</span>
+          <span class="text-sm text-foreground flex-1" dir="ltr">{{ company.phone }}</span>
           <a :href="`tel:${company.phone}`" class="text-xs text-muted-foreground underline hover:text-primary">{{ $t('call') }}</a>
         </div>
         <div v-if="company?.whatsapp" class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center shrink-0">
             <MessageCircle :size="16" class="text-green-600" />
           </div>
-          <span class="text-sm text-primary flex-1" dir="ltr">{{ company.whatsapp }}</span>
+          <span class="text-sm text-foreground flex-1" dir="ltr">{{ company.whatsapp }}</span>
           <a :href="`https://wa.me/${company.whatsapp}`" target="_blank" class="text-xs text-muted-foreground underline hover:text-primary">{{ $t('messaging') }}</a>
         </div>
         <div v-if="company?.email" class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
             <Mail :size="16" class="text-blue-600" />
           </div>
-          <span class="text-sm text-primary flex-1" dir="ltr">{{ company.email }}</span>
+          <span class="text-sm text-foreground flex-1" dir="ltr">{{ company.email }}</span>
           <a :href="`mailto:${company.email}`" target="_blank" class="text-xs text-muted-foreground underline hover:text-primary">{{ $t('messaging') }}</a>
         </div>
       </div>
@@ -185,7 +185,7 @@ function submitRating(star) {
     <section>
       <div class="flex items-center gap-2 mb-4">
         <Clock :size="16" class="text-muted-foreground" />
-        <h2 class="text-base font-semibold text-primary">{{ $t('work_times') }}</h2>
+        <h2 class="text-base font-semibold text-foreground">{{ $t('work_times') }}</h2>
       </div>
       <WorkTimes :days="company?.work_times" :read-only="true" />
     </section>
@@ -196,7 +196,7 @@ function submitRating(star) {
       <section>
         <div class="flex items-center gap-2 mb-4">
           <MapPin :size="16" class="text-muted-foreground" />
-          <h2 class="text-base font-semibold text-primary">{{ $t('location') }}</h2>
+          <h2 class="text-base font-semibold text-foreground">{{ $t('location') }}</h2>
         </div>
         <div class="rounded-xl overflow-hidden border border-border">
           <client-only>
@@ -252,7 +252,7 @@ export default {
   font-weight: 500;
   text-decoration: none;
   border: 1px solid var(--color-border);
-  color: var(--color-primary);
+  color: var(--color-foreground);
   background: white;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -287,7 +287,7 @@ export default {
   text-decoration: none;
 }
 .cd-social:hover {
-  color: var(--color-primary);
+  color: var(--color-foreground);
   background: var(--color-border);
 }
 </style>

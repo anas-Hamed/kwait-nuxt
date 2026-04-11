@@ -72,7 +72,7 @@ defineProps({
 .bc-title {
   font-size: 1rem;
   font-weight: 800;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 2;

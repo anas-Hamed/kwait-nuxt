@@ -65,7 +65,7 @@ export default {
   min-width: 3.25rem;
   border-radius: 50%;
   background: var(--color-secondary);
-  color: var(--color-primary);
+  color: var(--color-foreground);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +94,7 @@ export default {
 .nc-title {
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   line-height: 1.4;
 }
 .nc-text {

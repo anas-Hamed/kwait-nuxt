@@ -5,7 +5,7 @@
          class="sticky top-0 z-50 transition-all duration-300 lg:block hidden">
       <div class="max-w-screen-xl mx-auto flex items-center justify-between py-3 px-4">
         <LLink :to="{ name: 'index' }" class="shrink-0 transition-transform hover:scale-[1.02]">
-          <img alt="Kuwait Explorer" class="w-36" src="~/assets/images/h_logo.png">
+          <img alt="Mawaqi3" class="w-44" src="~/assets/images/h_logo.svg">
         </LLink>
 
         <nav class="flex items-center gap-1">
@@ -79,7 +79,7 @@
          class="sticky top-0 z-50 transition-all duration-300 py-3 px-4 lg:hidden flex justify-between items-center">
       <NavBarMenu />
       <LLink :to="{ name: 'index' }">
-        <img alt="Kuwait Explorer" class="w-32" src="~/assets/images/h_logo.png">
+        <img alt="Mawaqi3" class="w-40" src="~/assets/images/h_logo.svg">
       </LLink>
       <LLink :to="{ name: 'notification' }">
         <Button variant="ghost" size="icon" class="rounded-full relative">

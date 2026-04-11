@@ -29,7 +29,7 @@
 
 <style>
   .carousel__pagination-button--active .carousel__pagination-button__icon {
-    background-color: #ffc909;
+    background-color: #FFD71D;
   }
   .carousel__pagination-button__icon {
     background-color: white;

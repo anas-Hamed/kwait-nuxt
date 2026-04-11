@@ -33,8 +33,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         const { t } = useI18n();
         const url = route.fullPath;
         const _title = title
-          ? 'Kuwait Explorer | ' + title
-          : 'Kuwait Explorer';
+          ? 'Mawaqi3 | ' + title
+          : 'Mawaqi3';
         const _description = description ?? t('kuwait_explorer_description');
         const _image = image ?? '/logo.png';
         return {

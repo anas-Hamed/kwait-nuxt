@@ -1,5 +1,5 @@
 <script setup>
-import { Check, ChevronDown } from 'lucide-vue-next'
+import { Check, ChevronDown, X } from 'lucide-vue-next'
 import {
   Combobox,
   ComboboxAnchor,
@@ -14,6 +14,7 @@ const props = defineProps({
   options: { type: Array, default: () => [] },
   placeholder: { type: String, default: '' },
   modelValue: { default: null },
+  disabled: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -24,6 +25,12 @@ const open = ref(false)
 const selectedLabel = computed(() => {
   const found = props.options.find(o => o.value === props.modelValue)
   return found ? found.label : ''
+})
+
+// When the dropdown closes without a new selection, clear the search term
+// so the trigger shows the stored selected label again, not the stale query
+watch(open, (isOpen) => {
+  if (!isOpen) searchTerm.value = ''
 })
 
 const filteredOptions = computed(() => {
@@ -37,19 +44,44 @@ function onSelect(val) {
   open.value = false
   searchTerm.value = ''
 }
+
+function clearSelection(e) {
+  e.stopPropagation()
+  emit('update:modelValue', null)
+  searchTerm.value = ''
+  open.value = false
+}
 </script>
 
 <template>
   <Combobox v-model="searchTerm" :open="open" @update:open="open = $event">
-    <ComboboxAnchor class="cs-anchor">
+    <ComboboxAnchor class="cs-anchor" :class="{ 'cs-anchor--disabled': disabled }">
       <ComboboxInput
-        :placeholder="selectedLabel || placeholder"
-        :class="['cs-input', selectedLabel ? 'text-foreground' : 'text-muted-foreground']"
+        :value="open ? searchTerm : selectedLabel"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        class="cs-input"
         @focus="open = true"
         @input="searchTerm = $event.target.value"
       />
-      <ComboboxTrigger class="cs-trigger" @click="open = !open">
-        <ChevronDown :size="16" class="text-muted-foreground transition-transform duration-200" :class="open ? 'rotate-180' : ''" />
+
+      <!-- Clear button: only when something is selected and not disabled -->
+      <button
+        v-if="modelValue !== null && modelValue !== undefined && !disabled"
+        type="button"
+        class="cs-clear"
+        :aria-label="$t('remove')"
+        @click="clearSelection"
+      >
+        <X :size="14" />
+      </button>
+
+      <ComboboxTrigger class="cs-trigger" :disabled="disabled" @click="!disabled && (open = !open)">
+        <ChevronDown
+          :size="16"
+          class="cs-chevron"
+          :class="{ 'cs-chevron--open': open }"
+        />
       </ComboboxTrigger>
     </ComboboxAnchor>
 
@@ -72,20 +104,34 @@ function onSelect(val) {
 </template>
 
 <style>
-/* Anchor / trigger box */
+/* Anchor / trigger box — matches Input.vue base styling */
 .cs-anchor {
   display: flex;
   align-items: center;
   width: 100% !important;
-  height: 2.5rem;
+  height: 2.75rem;
   border-radius: 0.75rem;
   border: 1px solid var(--color-input);
-  background: var(--color-accent);
-  padding: 0 0.5rem 0 0.75rem;
-  transition: all 0.15s;
+  background: #ffffff;
+  padding: 0 0.5rem 0 1rem;
+  gap: 0.25rem;
+  box-shadow: 0 1px 2px 0 rgba(17, 24, 39, 0.04);
+  transition: all 200ms ease-out;
+}
+.cs-anchor:hover {
+  border-color: #cbd5e1;
 }
 .cs-anchor:focus-within {
-  box-shadow: 0 0 0 2px var(--color-ring);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(107, 77, 209, 0.2);
+}
+.cs-anchor--disabled {
+  background: #f9fafb;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.cs-anchor--disabled:hover {
+  border-color: var(--color-input);
 }
 
 /* Input field inside anchor */
@@ -98,13 +144,56 @@ function onSelect(val) {
   font-size: 0.875rem;
   padding: 0 !important;
   box-shadow: none !important;
+  color: var(--color-foreground);
+  min-width: 0;
+}
+.cs-input::placeholder {
+  color: #9ca3af;
+}
+.cs-input:disabled {
+  cursor: not-allowed;
 }
 
+/* Clear button */
+.cs-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  border: none;
+  background: #f3f4f6;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  transition: all 150ms ease-out;
+  flex-shrink: 0;
+}
+.cs-clear:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+/* Chevron trigger */
 .cs-trigger {
-  padding: 0.25rem;
+  padding: 0.25rem 0.35rem;
   cursor: pointer;
   display: flex;
   align-items: center;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+}
+.cs-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.cs-chevron {
+  transition: transform 200ms ease-out;
+}
+.cs-chevron--open {
+  transform: rotate(180deg);
 }
 
 /* Dropdown panel — override shadcn defaults */
@@ -116,7 +205,7 @@ function onSelect(val) {
   border-radius: 0.75rem !important;
   border: none !important;
   background: white !important;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 8px 30px rgba(17, 24, 39, 0.1), 0 2px 8px rgba(17, 24, 39, 0.06) !important;
 }
 
 /* Each option item */
@@ -125,15 +214,16 @@ function onSelect(val) {
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.55rem 0.75rem;
   border-radius: 0.5rem;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: background 0.1s;
+  transition: background 120ms ease-out;
   color: var(--color-foreground);
 }
 .cs-item[data-highlighted] {
-  background: var(--color-accent);
+  background: #F3ECFF;
+  color: var(--color-primary);
 }
 
 /* Empty state */

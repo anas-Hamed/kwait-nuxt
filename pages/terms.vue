@@ -27,7 +27,7 @@ import { Wrench } from 'lucide-vue-next'
       </div>
 
       <div class="au-notch-logo-wrap">
-        <img src="~/assets/images/logo-notch.png" alt="Logo" class="au-notch-logo" />
+        <img src="~/assets/images/h_logo.svg" alt="Logo" class="au-notch-logo" />
       </div>
     </section>
 

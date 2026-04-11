@@ -164,7 +164,7 @@ async function sendRequest() {
 .tc-title {
   font-size: 1.1rem;
   font-weight: 800;
-  color: var(--color-primary);
+  color: var(--color-foreground);
 }
 .tc-desc {
   font-size: 0.8rem;
@@ -180,7 +180,7 @@ async function sendRequest() {
   display: block;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   margin-bottom: 0.4rem;
 }
 
@@ -221,7 +221,7 @@ async function sendRequest() {
 .tc-preview-name {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   line-clamp: 1;
   overflow: hidden;
   text-overflow: ellipsis;

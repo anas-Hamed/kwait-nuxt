@@ -120,10 +120,10 @@ export default {
   border-bottom: 1px solid var(--color-border);
 }
 .fv-title {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Poppins', 'Alexandria', sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--color-primary);
+  color: var(--color-foreground);
 }
 
 /* Grid */

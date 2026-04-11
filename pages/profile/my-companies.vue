@@ -2,7 +2,7 @@
   <div class="bg-white rounded-2xl shadow-soft p-6">
     <div class="flex items-center justify-between mb-5">
       <div>
-        <h3 class="text-lg font-bold text-primary">{{ $t('my_companies') }}</h3>
+        <h3 class="text-lg font-bold text-foreground">{{ $t('my_companies') }}</h3>
         <p class="text-sm text-muted-foreground mt-0.5">{{ $t('hidden_companies') }}</p>
       </div>
     </div>

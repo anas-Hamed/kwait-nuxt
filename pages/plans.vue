@@ -57,7 +57,7 @@ const faqItems = ['faq_q1', 'faq_q2', 'faq_q3', 'faq_q4']
 
       <!-- Logo in the notch -->
       <div class="au-notch-logo-wrap">
-        <img src="~/assets/images/logo-notch.png" alt="Logo" class="au-notch-logo" />
+        <img src="~/assets/images/h_logo.svg" alt="Logo" class="au-notch-logo" />
       </div>
     </section>
 
@@ -144,7 +144,7 @@ const faqItems = ['faq_q1', 'faq_q2', 'faq_q3', 'faq_q4']
     <!-- FAQ -->
     <section class="pl-faq">
       <div class="text-center mb-5 sm:mb-8">
-        <h2 class="font-cairo text-lg sm:text-2xl font-bold text-primary">{{ $t('faq') }}</h2>
+        <h2 class="font-cairo text-lg sm:text-2xl font-bold text-foreground">{{ $t('faq') }}</h2>
         <div class="hero-divider mt-2.5"></div>
       </div>
 
@@ -256,7 +256,7 @@ export default {
 }
 .pl-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(27, 44, 59, 0.1);
+  box-shadow: 0 8px 24px rgba(54, 32, 97, 0.12);
 }
 @media (min-width: 640px) {
   .pl-card {
@@ -293,10 +293,10 @@ export default {
 
 /* ── Name ── */
 .pl-name {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Poppins', 'Alexandria', sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   line-height: 1.3;
 }
 @media (min-width: 640px) {
@@ -320,10 +320,10 @@ export default {
 }
 
 .pl-currency {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Poppins', 'Alexandria', sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   opacity: 0.4;
 }
 @media (min-width: 640px) {
@@ -333,10 +333,10 @@ export default {
 }
 
 .pl-price {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Poppins', 'Alexandria', sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   line-height: 1;
 }
 @media (min-width: 640px) {
@@ -362,7 +362,7 @@ export default {
   border-radius: 9999px;
   font-size: 0.65rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   background: var(--color-surface);
   border: 1.5px solid var(--color-border);
   transition: all 0.2s ease;
@@ -384,8 +384,8 @@ export default {
   border-color: var(--color-primary);
 }
 .pl-cta--primary:hover {
-  background: #243a4d;
-  border-color: #243a4d;
+  background: #362061;
+  border-color: #362061;
 }
 
 /* ── Skeleton ── */
@@ -445,8 +445,8 @@ export default {
 .pl-desc ul { padding-inline-start: 1rem; margin-bottom: 0.35rem; list-style: disc; }
 .pl-desc ol { padding-inline-start: 1rem; margin-bottom: 0.35rem; list-style: decimal; }
 .pl-desc li { margin-bottom: 0.15rem; display: list-item; }
-.pl-desc strong { font-weight: 700; color: var(--color-primary); }
-.pl-desc a { color: var(--color-primary); text-decoration: underline; }
+.pl-desc strong { font-weight: 700; color: var(--color-foreground); }
+.pl-desc a { color: var(--color-foreground); text-decoration: underline; }
 .pl-desc img { border-radius: 0.5rem; max-width: 100%; margin: 0.35rem 0; }
 
 /* Show more/less toggle */
@@ -457,7 +457,7 @@ export default {
   margin-top: 0.4rem;
   font-size: 0.55rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   background: none;
   border: none;
   opacity: 0.6;
@@ -511,7 +511,7 @@ export default {
   transition: box-shadow 0.2s ease;
 }
 .pl-faq-item--open {
-  box-shadow: 0 4px 16px rgba(27, 44, 59, 0.06);
+  box-shadow: 0 4px 16px rgba(54, 32, 97, 0.08);
 }
 
 .pl-faq-q {
@@ -525,7 +525,7 @@ export default {
   text-align: start;
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   transition: background 0.15s ease;
 }
 .pl-faq-q:hover {
@@ -606,16 +606,16 @@ export default {
   padding: 0.7rem 2.5rem;
   border-radius: 9999px;
   background: var(--color-secondary);
-  color: var(--color-primary);
+  color: var(--color-foreground);
   font-size: 0.9rem;
   font-weight: 700;
   white-space: nowrap;
   border: none;
-  box-shadow: 0 2px 8px rgba(255, 201, 9, 0.25);
+  box-shadow: 0 2px 8px rgba(255, 215, 29, 0.3);
   transition: all 0.2s ease;
 }
 .pl-bottom-btn:hover {
-  box-shadow: 0 4px 16px rgba(255, 201, 9, 0.35);
+  box-shadow: 0 4px 16px rgba(255, 215, 29, 0.4);
   transform: translateY(-1px);
 }
 @media (min-width: 640px) {

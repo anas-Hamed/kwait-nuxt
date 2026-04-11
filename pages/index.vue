@@ -39,8 +39,8 @@ const features = [
     </svg>
     <section class="hero-clipped mb-8 sm:mb-14">
       <!-- Notch Logo -->
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 z-20 w-40 h-40 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-56 lg:h-56 -mt-14 sm:-mt-16 md:-mt-18 lg:-mt-20">
-        <img src="~/assets/images/logo-notch.png" alt="Logo" class="w-full h-full object-contain drop-shadow-md" />
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 z-20 w-48 h-48 sm:w-52 sm:h-52 md:w-60 md:h-60 lg:w-64 lg:h-64 -mt-14 sm:-mt-16 md:-mt-18 lg:-mt-22">
+        <img src="~/assets/images/h_logo.svg" alt="Logo" class="w-full h-full object-contain drop-shadow-md" />
       </div>
       <div class="hero-bg hero-clipped-inner">
         <!-- Decorative corners -->
@@ -48,12 +48,12 @@ const features = [
         <div class="hero-corner-br"></div>
 
         <div class="max-w-screen-md w-full mx-auto text-center relative z-10 flex flex-col items-center justify-center gap-0 pt-12 sm:pt-16">
-          <p class="text-white/60 text-xs sm:text-sm font-medium tracking-widest uppercase mb-2 sm:mb-3">
-            {{ $t('app_name') }}
+          <p class="text-secondary text-xs sm:text-sm font-medium tracking-wide mb-2 sm:mb-3">
+            {{ $t('tagline') }}
           </p>
 
           <h1 class="font-cairo text-white text-xl sm:text-2xl md:text-3xl font-bold leading-snug">
-            {{ $t('hero_title') || 'Find the best companies & services in Kuwait' }}
+            {{ $t('hero_title') || 'Discover Places Around You' }}
           </h1>
 
           <p class="text-white/50 text-[11px] sm:text-xs md:text-sm mt-2 sm:mt-3">
@@ -80,17 +80,17 @@ const features = [
               <ImagePlaceholder :circle-image="true" :image="category.image" class="w-full h-full" />
             </div>
           </div>
-          <span class="text-[11px] sm:text-xs md:text-sm font-semibold text-primary/80 group-hover:text-primary truncate max-w-[80px] sm:max-w-[100px] md:max-w-[120px] text-center transition-colors">
+          <span class="text-[11px] sm:text-xs md:text-sm font-semibold text-foreground/80 group-hover:text-foreground truncate max-w-[80px] sm:max-w-[100px] md:max-w-[120px] text-center transition-colors">
             {{ category.name }}
           </span>
         </LLink>
       </div>
     </section>
 
-    <!-- Why Kuwait Explorer -->
+    <!-- Why Mawaqi3 -->
     <section class="mb-10 sm:mb-16">
       <div class="text-center mb-6 sm:mb-10">
-        <h2 class="font-cairo text-xl sm:text-2xl md:text-3xl font-bold text-primary">{{ $t('why_kuwait_explorer') }}</h2>
+        <h2 class="font-cairo text-xl sm:text-2xl md:text-3xl font-bold text-foreground">{{ $t('why_kuwait_explorer') }}</h2>
         <div class="hero-divider mt-3"></div>
         <p class="text-muted-foreground text-xs sm:text-sm mt-3 max-w-md mx-auto">{{ $t('why_kuwait_explorer_desc') }}</p>
       </div>
@@ -105,7 +105,7 @@ const features = [
           </div>
           <div class="feature-card-title">
             <div class="bg-secondary rounded-lg sm:rounded-xl px-1.5 sm:px-3 py-1 sm:py-2 w-full h-full flex items-center justify-center shadow-sm">
-              <h3 class="font-bold text-[9px] sm:text-xs md:text-sm text-primary truncate">{{ $t(feature.title) }}</h3>
+              <h3 class="font-bold text-[9px] sm:text-xs md:text-sm text-foreground truncate">{{ $t(feature.title) }}</h3>
             </div>
           </div>
           <div class="feature-card-icon">
@@ -199,7 +199,7 @@ export default {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(15, 28, 39, 0.6);
+  background: rgba(54, 32, 97, 0.65);
 }
 .hero-clipped-inner {
   clip-path: url(#heroClipMobile);
@@ -235,7 +235,7 @@ export default {
   inset: 0;
   width: 100%;
   height: 100%;
-  color: var(--color-primary);
+  color: var(--color-foreground);
 }
 [dir="ltr"] .feature-card-bg {
   transform: scaleX(-1);

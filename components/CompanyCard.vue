@@ -1,6 +1,6 @@
 <template>
-  <LLink :to="!company.has_paid || !company.is_active ? {} : { name: 'company-id', params: { id: company.slug } }">
-    <div class="kc" :class="{ 'opacity-50 pointer-events-none': !company.has_paid || !company.is_active }">
+  <LLink :to="company.has_paid === false || company.is_active === false ? {} : { name: 'company-id', params: { id: company.slug } }">
+    <div class="kc" :class="{ 'opacity-50 pointer-events-none': company.has_paid === false || company.is_active === false }">
       <div class="kc-img">
         <ImagePlaceholder :image="company.image" class="kc-img-inner" />
         <div class="kc-badge">{{ company.category.name }}</div>
@@ -94,7 +94,7 @@ export default {
 }
 .kc-ctrl:hover {
   background: var(--color-surface);
-  color: var(--color-primary);
+  color: var(--color-foreground);
 }
 .kc-ctrl--del { color: #ef4444; }
 .kc-ctrl--del:hover { background: #fef2f2; }

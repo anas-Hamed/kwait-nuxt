@@ -31,14 +31,14 @@ const company = computed(() => asyncResult.value?.company || {})
 
 <template>
   <div>
-    <h3 class="text-primary text-4xl mb-4 font-bold">{{$t('update_company')}}</h3>
+    <h3 class="text-foreground text-4xl mb-4 font-bold">{{$t('update_company')}}</h3>
     <Card>
       <CardContent class="p-6">
-        <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('base_info')}}</h3>
+        <h3 class="text-foreground text-xl mb-4 font-bold mb-2">{{$t('base_info')}}</h3>
         <div class="px-2 md:px-12">
           <Cropper :index="0" :ratio="1" :src="logo_image_init" @cropped="setLogoImage" class="mb-2"
                    v-if="logo_image_init" />
-          <div class="rounded-sm w-32 h-32 mb-2 bg-accent flex items-center justify-center" v-else>{{$t('logo')}}</div>
+          <div class="rounded-sm w-32 h-32 mb-2 bg-muted flex items-center justify-center" v-else>{{$t('logo')}}</div>
           <input @change="selectLogoImage" accept="image/*" hidden ref="logo_image" type="file">
           <Button variant="secondary" @click="$refs.logo_image.click()" class="w-32">{{$t('choose_image')}}</Button>
           <InputError name="image" />
@@ -70,7 +70,7 @@ const company = computed(() => asyncResult.value?.company || {})
             </div>
             <div class="mb-3">
               <label for="about">{{$t('about_company')}}</label>
-              <textarea class="w-full bg-accent rounded-sm focus:outline focus:outline-accent-secondary p-2 mt-1" id="about" rows="4"
+              <textarea class="w-full bg-white rounded-sm border border-input focus:outline focus:outline-accent-secondary p-2 mt-1" id="about" rows="4"
                         v-model="form.about"></textarea>
               <InputError name="about" />
             </div>
@@ -119,7 +119,7 @@ const company = computed(() => asyncResult.value?.company || {})
     </Card>
     <Card class="mt-2">
       <CardContent class="p-6">
-        <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('contacts')}}</h3>
+        <h3 class="text-foreground text-xl mb-4 font-bold mb-2">{{$t('contacts')}}</h3>
         <div class="flex flex-wrap px-2 md:px-12">
           <div class="w-full md:w-2/6 p-3">
             <Phone :label="$t('phone')" error="phone" id="phone" input-dir="ltr" v-model="form.phone" :required="true" />
@@ -155,7 +155,7 @@ const company = computed(() => asyncResult.value?.company || {})
     </Card>
     <Card class="mt-2">
       <CardContent class="p-6">
-        <h3 class="text-primary text-xl mb-4 font-bold mb-2">{{$t('images_and_location')}}</h3>
+        <h3 class="text-foreground text-xl mb-4 font-bold mb-2">{{$t('images_and_location')}}</h3>
         <MultiImageCropper :current-images="current_images" @changed="setImages" @delete-image="deleteImage" />
         <InputError name="images" />
         <CreateMap v-model="form.location" />

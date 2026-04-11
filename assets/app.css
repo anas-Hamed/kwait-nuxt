@@ -2,34 +2,40 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-primary: #1b2c3b;
-  --color-secondary: #ffc909;
-  --color-accent: #ececec;
-  --color-accent-secondary: #464646;
-  --color-surface: #f5f6f8;
+  --color-primary: #6B4DD1;
+  --color-primary-dark: #362061;
+  --color-foreground: #111827;
+  --color-secondary: #FFD71D;
+  --color-accent: #FFD71D;
+  --color-accent-secondary: #6B4DD1;
+  --color-surface: #FFF9F1;
+  --color-bg: #FFF9F1;
+  --color-bg-soft: #E1C3FF;
+  --color-text-main: #111827;
+  --color-text-light: #4b5563;
   --color-facebook: #3b5998;
   --color-twitter: #1da1f2;
-  --color-rate: #ffc909;
+  --color-rate: #FFD71D;
   --color-destructive: #ef4444;
-  --color-muted: #f1f5f9;
-  --color-muted-foreground: #64748b;
-  --color-border: #e2e8f0;
+  --color-muted: #F3ECFF;
+  --color-muted-foreground: #6b7280;
+  --color-border: #E1C3FF;
   --color-input: #e2e8f0;
-  --color-ring: #1b2c3b;
+  --color-ring: #6B4DD1;
   --color-card: #ffffff;
-  --color-card-foreground: #1b2c3b;
+  --color-card-foreground: #111827;
   --color-popover: #ffffff;
-  --color-popover-foreground: #1b2c3b;
+  --color-popover-foreground: #111827;
   --color-primary-foreground: #ffffff;
-  --color-secondary-foreground: #1b2c3b;
-  --color-accent-foreground: #1b2c3b;
+  --color-secondary-foreground: #111827;
+  --color-accent-foreground: #111827;
   --color-destructive-foreground: #ffffff;
   --radius: 0.75rem;
 
-  --shadow-soft: 0 2px 12px 0 rgba(27, 44, 59, 0.06);
-  --shadow-card: 0 4px 24px 0 rgba(27, 44, 59, 0.08);
-  --shadow-card-hover: 0 8px 32px 0 rgba(27, 44, 59, 0.12);
-  --shadow-navbar: 0 1px 12px 0 rgba(27, 44, 59, 0.08);
+  --shadow-soft: 0 2px 12px 0 rgba(54, 32, 97, 0.06);
+  --shadow-card: 0 4px 24px 0 rgba(54, 32, 97, 0.08);
+  --shadow-card-hover: 0 8px 32px 0 rgba(54, 32, 97, 0.12);
+  --shadow-navbar: 0 1px 12px 0 rgba(54, 32, 97, 0.08);
 
   --animate-fade-in: fade-in 0.5s ease-out;
   --animate-slide-up: slide-up 0.5s ease-out;
@@ -37,25 +43,33 @@
 }
 
 :root {
-  --background: 220 14% 96%;
-  --foreground: 207 37% 17%;
+  --color-primary: #6B4DD1;
+  --color-primary-dark: #362061;
+  --color-accent: #FFD71D;
+  --color-bg: #FFF9F1;
+  --color-bg-soft: #E1C3FF;
+  --color-text-main: #111827;
+  --color-text-light: #4b5563;
+
+  --background: 34 100% 97%;
+  --foreground: 220 39% 11%;
   --card: 0 0% 100%;
-  --card-foreground: 207 37% 17%;
+  --card-foreground: 220 39% 11%;
   --popover: 0 0% 100%;
-  --popover-foreground: 207 37% 17%;
-  --primary: 207 37% 17%;
+  --popover-foreground: 220 39% 11%;
+  --primary: 254 58% 56%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 45 100% 52%;
-  --secondary-foreground: 207 37% 17%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 220 14% 96%;
-  --accent-foreground: 207 37% 17%;
+  --secondary: 50 100% 56%;
+  --secondary-foreground: 220 39% 11%;
+  --muted: 268 100% 95%;
+  --muted-foreground: 220 9% 46%;
+  --accent: 270 100% 88%;
+  --accent-foreground: 220 39% 11%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border: 214 32% 91%;
+  --border: 270 100% 88%;
   --input: 214 32% 91%;
-  --ring: 207 37% 17%;
+  --ring: 254 58% 56%;
   --radius: 0.75rem;
 }
 
@@ -93,7 +107,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(15, 28, 39, 0.6);
+  background: rgba(54, 32, 97, 0.65);
 }
 
 .co-hero-inner {
@@ -130,7 +144,7 @@
   width: 160px;
   height: 160px;
   object-fit: contain;
-  filter: drop-shadow(0 4px 12px rgba(27, 44, 59, 0.2));
+  filter: drop-shadow(0 4px 12px rgba(54, 32, 97, 0.2));
 }
 
 @media (min-width: 640px) {
@@ -151,10 +165,10 @@
 }
 
 .au-maintenance-title {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Poppins', 'Alexandria', sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   margin-top: 1rem;
 }
 
@@ -166,7 +180,7 @@
 
 /* ===== Hero Gradient ===== */
 .hero-gradient {
-  background: linear-gradient(160deg, #1e3448 0%, #0f1c27 50%, #152332 100%);
+  background: linear-gradient(160deg, #6B4DD1 0%, #362061 50%, #2A1849 100%);
   position: relative;
   overflow: hidden;
 }
@@ -186,16 +200,16 @@
 .hero-corner-tl {
   top: 24px;
   left: 24px;
-  border-top: 2px solid #ffc909;
-  border-left: 2px solid #ffc909;
+  border-top: 2px solid #FFD71D;
+  border-left: 2px solid #FFD71D;
   border-top-left-radius: 20px;
 }
 
 .hero-corner-br {
   bottom: 24px;
   right: 24px;
-  border-bottom: 2px solid #ffc909;
-  border-right: 2px solid #ffc909;
+  border-bottom: 2px solid #FFD71D;
+  border-right: 2px solid #FFD71D;
   border-bottom-right-radius: 20px;
 }
 
@@ -217,13 +231,13 @@
   width: 48px;
   height: 3px;
   border-radius: 2px;
-  background: linear-gradient(90deg, transparent, #ffc909, transparent);
+  background: linear-gradient(90deg, transparent, #FFD71D, transparent);
   margin: 0 auto;
 }
 
 /* ===== Auth Brand Panel ===== */
 .auth-brand-panel {
-  background: linear-gradient(160deg, #1e3448 0%, #0f1c27 50%, #152332 100%);
+  background: linear-gradient(160deg, #6B4DD1 0%, #362061 50%, #2A1849 100%);
   position: relative;
   overflow: hidden;
 }
@@ -232,21 +246,21 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 80%, rgba(255, 201, 9, 0.03) 0%, transparent 60%);
+  background: radial-gradient(ellipse at 50% 80%, rgba(255, 215, 29, 0.05) 0%, transparent 60%);
   pointer-events: none;
 }
 
 /* ===== Gold Gradient Button ===== */
 .btn-gold {
-  background: linear-gradient(135deg, #ffc909 0%, #f0b800 100%);
-  color: #1b2c3b;
+  background: linear-gradient(135deg, #FFD71D 0%, #E6BC00 100%);
+  color: #111827;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(255, 201, 9, 0.3);
+  box-shadow: 0 2px 8px rgba(255, 215, 29, 0.35);
   transition: all 0.2s ease;
 }
 
 .btn-gold:hover {
-  box-shadow: 0 4px 16px rgba(255, 201, 9, 0.4);
+  box-shadow: 0 4px 16px rgba(255, 215, 29, 0.45);
   transform: translateY(-1px);
 }
 
@@ -502,18 +516,28 @@ input.vti__input:focus {
   opacity: 0;
 }
 
-/* ===== Typography ===== */
-@font-face {
-  font-family: 'tajawal';
-  src: url('~/assets/fonts/tajawal.ttf');
+/* ===== Typography — Mawaqi3 brand typefaces ===== */
+/* Poppins for Latin, Alexandria for Arabic. Loaded via Google Fonts in nuxt.config.ts. */
+
+:root {
+  font-family: 'Poppins', system-ui, -apple-system, sans-serif;
 }
 
-.font-cairo {
-  font-family: 'Cairo', sans-serif;
+:lang(ar),
+[dir="rtl"] {
+  font-family: 'Alexandria', system-ui, -apple-system, sans-serif;
 }
 
-* {
-  font-family: 'tajawal';
+.font-cairo,
+.font-brand {
+  font-family: 'Poppins', 'Alexandria', system-ui, sans-serif;
+}
+
+:lang(ar) .font-cairo,
+:lang(ar) .font-brand,
+[dir="rtl"] .font-cairo,
+[dir="rtl"] .font-brand {
+  font-family: 'Alexandria', system-ui, sans-serif;
 }
 
 button,
@@ -550,4 +574,54 @@ label[for] {
   width: 20px;
   height: 20px;
   font-size: 18px;
+}
+
+/* ===== Cropperjs — brand theme overrides ===== */
+.cropper-container {
+  border-radius: 0.875rem;
+  overflow: hidden;
+}
+/* Crop selection box outline — brand purple */
+.cropper-view-box {
+  outline: 2px solid #6B4DD1;
+  outline-color: rgba(107, 77, 209, 0.95);
+  border-radius: 0.25rem;
+}
+/* Modal (darkened area outside crop box) */
+.cropper-modal {
+  background-color: #362061;
+  opacity: 0.55;
+}
+/* Edge lines of the crop box */
+.cropper-line {
+  background-color: #6B4DD1;
+}
+/* Corner + edge resize handles */
+.cropper-point {
+  background-color: #6B4DD1;
+  opacity: 1;
+  width: 8px;
+  height: 8px;
+}
+.cropper-point.point-se {
+  width: 10px;
+  height: 10px;
+}
+/* Dashed rule-of-thirds grid */
+.cropper-dashed {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+/* Center cross */
+.cropper-center::before,
+.cropper-center::after {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+/* Checkerboard bg behind transparent images */
+.cropper-bg {
+  background-image: linear-gradient(45deg, #f3f4f6 25%, transparent 25%),
+    linear-gradient(-45deg, #f3f4f6 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f3f4f6 75%),
+    linear-gradient(-45deg, transparent 75%, #f3f4f6 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
 }

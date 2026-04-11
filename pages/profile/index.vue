@@ -168,7 +168,6 @@ const formattedDate = computed(() => {
   flex-shrink: 0;
   width: 130px;
   background: white;
-  border: 1px solid var(--color-border);
   border-radius: 1.25rem;
   padding: 1.25rem;
   display: flex;
@@ -177,12 +176,13 @@ const formattedDate = computed(() => {
   justify-content: center;
   gap: 0.25rem;
   text-align: center;
-  color: var(--color-primary);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  color: var(--color-foreground);
+  box-shadow: 0 2px 10px rgba(54, 32, 97, 0.05);
+  transition: all 250ms ease-out;
 }
 .db-hero-stat:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 16px rgba(27, 44, 59, 0.08);
+  box-shadow: 0 8px 24px rgba(107, 77, 209, 0.14);
+  transform: translateY(-2px);
 }
 .db-hero-stat-num {
   font-size: 2.2rem;
@@ -205,17 +205,17 @@ const formattedDate = computed(() => {
 }
 .db-mini {
   background: white;
-  border: 1px solid var(--color-border);
   border-radius: 1rem;
-  padding: 0.9rem 1rem;
+  padding: 0.95rem 1rem;
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 10px rgba(54, 32, 97, 0.05);
+  transition: all 250ms ease-out;
 }
 .db-mini:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 2px 10px rgba(27, 44, 59, 0.06);
+  box-shadow: 0 8px 24px rgba(107, 77, 209, 0.14);
+  transform: translateY(-2px);
 }
 .db-mini-dot {
   width: 8px;
@@ -228,7 +228,7 @@ const formattedDate = computed(() => {
 .db-mini-num {
   font-size: 1.1rem;
   font-weight: 800;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
@@ -238,18 +238,17 @@ const formattedDate = computed(() => {
   font-weight: 500;
 }
 .db-mini--cta {
-  border-color: var(--color-secondary);
-  border-style: dashed;
-  background: rgba(255, 201, 9, 0.04);
-  color: var(--color-primary);
+  background: #FFD71D;
+  color: #362061;
   justify-content: center;
   gap: 0.4rem;
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(255, 215, 29, 0.3);
 }
 .db-mini--cta:hover {
-  border-color: var(--color-secondary);
-  background: rgba(255, 201, 9, 0.1);
-  box-shadow: none;
+  background: #E6BC00;
+  box-shadow: 0 8px 24px rgba(255, 215, 29, 0.4);
+  transform: translateY(-2px);
 }
 
 /* ── Panel ── */
@@ -269,7 +268,7 @@ const formattedDate = computed(() => {
 .db-panel-head h2 {
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
 }
 .db-see-all {
   font-size: 0.75rem;
@@ -281,8 +280,15 @@ const formattedDate = computed(() => {
 
 .db-company-list {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .db-company-list {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
 }
 
 .db-empty {
@@ -308,17 +314,17 @@ const formattedDate = computed(() => {
 }
 .db-act {
   background: white;
-  border: 1px solid var(--color-border);
   border-radius: 1rem;
   padding: 1.1rem;
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 10px rgba(54, 32, 97, 0.05);
+  transition: all 250ms ease-out;
 }
 .db-act:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 2px 10px rgba(27, 44, 59, 0.06);
+  box-shadow: 0 8px 24px rgba(107, 77, 209, 0.14);
+  transform: translateY(-2px);
 }
 .db-act-icon {
   width: 2.25rem;
@@ -328,14 +334,14 @@ const formattedDate = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   flex-shrink: 0;
 }
 .db-act-title {
   display: block;
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
 }
 .db-act-desc {
   display: block;

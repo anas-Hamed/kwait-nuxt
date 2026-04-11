@@ -64,7 +64,7 @@ export default {
 .cat-title {
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   position: relative;
   display: inline-block;
 }
@@ -86,7 +86,7 @@ export default {
 .cat-count {
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 2rem;

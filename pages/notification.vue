@@ -135,10 +135,10 @@ export default {
   border-bottom: 1px solid var(--color-border);
 }
 .nt-title {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Poppins', 'Alexandria', sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--color-primary);
+  color: var(--color-foreground);
 }
 .nt-read-all {
   display: inline-flex;
@@ -156,7 +156,7 @@ export default {
 }
 .nt-read-all:hover {
   background: var(--color-surface);
-  color: var(--color-primary);
+  color: var(--color-foreground);
 }
 
 /* List */

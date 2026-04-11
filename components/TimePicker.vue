@@ -10,6 +10,21 @@ const emit = defineEmits(['update:modelValue'])
 
 const open = ref(false)
 const pickerRef = ref(null)
+const openUpward = ref(false)
+
+function togglePicker() {
+  if (props.disabled) return
+  if (!open.value) {
+    // Decide which direction to open based on space available
+    const rect = pickerRef.value?.getBoundingClientRect()
+    if (rect) {
+      const spaceBelow = window.innerHeight - rect.bottom
+      const dropdownHeight = 260 // approx height of the dropdown
+      openUpward.value = spaceBelow < dropdownHeight && rect.top > dropdownHeight
+    }
+  }
+  open.value = !open.value
+}
 
 const hours = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'))
 const minutes = ['00', '15', '30', '45']
@@ -48,14 +63,14 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
       class="tp-trigger"
       :class="{ 'tp-disabled': disabled }"
       :disabled="disabled"
-      @click="open = !open"
+      @click="togglePicker"
     >
       <span class="tp-value">{{ modelValue }}</span>
       <Clock :size="14" class="tp-icon" />
     </button>
 
     <Transition name="tp-fade">
-      <div v-if="open && !disabled" class="tp-dropdown">
+      <div v-if="open && !disabled" class="tp-dropdown" :class="{ 'tp-dropdown--up': openUpward }">
         <div class="tp-columns">
           <!-- Hours -->
           <div class="tp-col">
@@ -117,7 +132,7 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
   background: #f8f9fa;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: #1b2c3b;
+  color: #111827;
   cursor: pointer;
   transition: border-color 0.15s;
   text-align: center;
@@ -125,12 +140,12 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
 }
 
 .tp-trigger:hover {
-  border-color: #1b2c3b;
+  border-color: #362061;
 }
 
 .tp-trigger:focus {
   outline: none;
-  border-color: #1b2c3b;
+  border-color: #362061;
 }
 
 .tp-disabled {
@@ -163,6 +178,11 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 0.5rem;
   min-width: 140px;
+}
+
+.tp-dropdown--up {
+  top: auto;
+  bottom: calc(100% + 4px);
 }
 
 .tp-columns {
@@ -223,7 +243,7 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
 }
 
 .tp-selected {
-  background: #1b2c3b !important;
+  background: #362061 !important;
   color: white !important;
   font-weight: 600;
 }
@@ -238,7 +258,7 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside))
   background: #f3f4f6;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #1b2c3b;
+  color: #111827;
   cursor: pointer;
   transition: background 0.1s;
 }

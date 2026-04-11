@@ -3,7 +3,7 @@
     <!-- Gold accent line -->
     <div class="h-1 bg-gradient-to-r from-transparent via-secondary to-transparent" />
 
-    <footer class="bg-gradient-to-b from-primary to-[#0f1c27] px-4 pt-14 pb-6 text-white">
+    <footer class="bg-gradient-to-b from-primary to-[#362061] px-4 pt-14 pb-6 text-white">
       <div class="max-w-screen-xl mx-auto">
 
         <!-- Footer Grid -->
@@ -11,7 +11,7 @@
 
           <!-- Brand Column -->
           <div class="sm:col-span-2 lg:col-span-1">
-            <img src="~/assets/images/h_logo.png" alt="Kuwait Explorer" class="w-36 mb-4 brightness-0 invert opacity-90">
+            <img src="~/assets/images/h_logo.svg" alt="Mawaqi3" class="w-36 mb-4 brightness-0 invert opacity-90">
             <p class="text-sm text-white/50 leading-relaxed max-w-xs">
               {{ $t('kuwait_explorer_description') }}
             </p>

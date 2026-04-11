@@ -7,7 +7,7 @@
       <Phone id="phone" v-model="form.phone" :label="$t('phone')" error="phone" />
       <div class="mb-3">
         <label for="message">{{$t('message')}}</label>
-        <textarea id="message" v-model="form.message" class="w-full bg-accent rounded-sm border p-2 mt-1" :class="[(errors && errors['message']) ? 'border border-destructive' : '']"
+        <textarea id="message" v-model="form.message" class="w-full bg-white rounded-sm border border-input p-2 mt-1" :class="[(errors && errors['message']) ? 'border-destructive' : '']"
                   placeholder="-----"
                   rows="4" ></textarea>
         <InputError name="message" />

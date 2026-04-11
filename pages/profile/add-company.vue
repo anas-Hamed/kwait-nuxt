@@ -1,6 +1,6 @@
 <script setup>
 import { Button } from '~/components/ui/button'
-import { Check, ChevronLeft, ChevronRight, Upload, Phone, MessageCircle, Mail, Globe, Facebook, Twitter, Instagram, Linkedin, Camera, MapPin, Tag, Clock, Images, Navigation, FileCheck, ExternalLink } from 'lucide-vue-next'
+import { Check, ChevronLeft, ChevronRight, Upload, Phone, MessageCircle, Mail, Globe, Facebook, Twitter, Instagram, Linkedin, Camera, MapPin, Tag, Clock, Images, Navigation, FileCheck, ExternalLink, RotateCw, X } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { toast } from 'vue-sonner'
 
@@ -89,10 +89,11 @@ function validateStep(step) {
   }
 
   if (step === 3) {
+    const kwPhoneRe = /^[124569]\d{7}$/
     if (!form.phone?.trim()) { fieldErrors.phone = t('field_required'); valid = false }
-    else if (!/^\d{4,16}$/.test(form.phone.trim())) { fieldErrors.phone = t('phone_digits'); valid = false }
+    else if (!kwPhoneRe.test(form.phone.trim())) { fieldErrors.phone = t('phone_kw_invalid'); valid = false }
     if (!form.whatsapp?.trim()) { fieldErrors.whatsapp = t('field_required'); valid = false }
-    else if (!/^\d{4,16}$/.test(form.whatsapp.trim())) { fieldErrors.whatsapp = t('phone_digits'); valid = false }
+    else if (!kwPhoneRe.test(form.whatsapp.trim())) { fieldErrors.whatsapp = t('phone_kw_invalid'); valid = false }
     if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) { fieldErrors.email = t('invalid_email'); valid = false }
     if (form.website && !/^https?:\/\/.+/.test(form.website.trim())) { fieldErrors.website = t('invalid_url'); valid = false }
   }
@@ -197,13 +198,52 @@ function validateAndSubmit() {
 
 function setImages(imgs) { images.value = imgs }
 
-function selectLogoImage() {
+const isDraggingLogo = ref(false)
+const logoError = ref('')
+const MAX_LOGO_SIZE = 2 * 1024 * 1024 // 2MB
+
+function processLogoFile(file) {
+  logoError.value = ''
+  if (!file) return
+  if (!file.type.startsWith('image/')) {
+    logoError.value = t('invalid_image')
+    return
+  }
+  if (file.size > MAX_LOGO_SIZE) {
+    logoError.value = t('file_too_large')
+    return
+  }
   const reader = new FileReader()
   reader.onload = e => { logo_image_init.value = e.target.result }
-  reader.readAsDataURL(logo_image_ref.value.files[0])
+  reader.readAsDataURL(file)
+}
+
+function onLogoInputChange(e) {
+  processLogoFile(e.target.files?.[0])
+}
+
+function onLogoDrop(e) {
+  isDraggingLogo.value = false
+  processLogoFile(e.dataTransfer?.files?.[0])
+}
+
+function removeLogoImage() {
+  logo_image_init.value = ''
+  logo_image.value = null
+  logoError.value = ''
+  if (logo_image_ref.value) logo_image_ref.value.value = ''
 }
 
 function setLogoImage(cropped) { logo_image.value = cropped.image }
+
+// Auto-reset child category whenever the parent changes (including clear)
+watch(parent_id, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    form.category_id = null
+    delete fieldErrors.parent_id
+    delete fieldErrors.category_id
+  }
+})
 
 function setAllDays() {
   form.work_times.forEach(el => {
@@ -220,7 +260,7 @@ function setAllDays() {
   <div class="bg-white rounded-2xl shadow-soft p-6">
     <!-- Header -->
     <div class="mb-6">
-      <h2 class="text-xl font-bold text-primary">{{ $t('add_company') }}</h2>
+      <h2 class="text-xl font-bold text-foreground">{{ $t('add_company') }}</h2>
       <p class="text-sm text-muted-foreground mt-1">{{ $t('fill_company_info') || 'Fill in your company information below' }}</p>
     </div>
 
@@ -244,7 +284,7 @@ function setAllDays() {
           </div>
           <span
             class="stepper-label"
-            :class="currentStep === step.number ? 'text-primary font-semibold' : 'text-muted-foreground'"
+            :class="currentStep === step.number ? 'text-foreground font-semibold' : 'text-muted-foreground'"
           >
             {{ $t(step.label) }}
           </span>
@@ -270,18 +310,49 @@ function setAllDays() {
           <Upload :size="16" class="text-primary" />
           <span>{{ $t('logo') }}</span>
         </div>
-        <div class="flex items-center gap-5">
-          <Cropper v-if="logo_image_init" :index="0" :ratio="1" :src="logo_image_init" @cropped="setLogoImage" />
-          <div v-else class="w-20 h-20 rounded-2xl bg-accent flex items-center justify-center text-muted-foreground border-2 border-dashed border-border shrink-0">
-            <Camera :size="24" class="text-muted-foreground/50" />
+
+        <input type="file" accept="image/*" hidden ref="logo_image_ref" @change="onLogoInputChange" />
+
+        <!-- Empty state: minimal drag-drop zone -->
+        <div
+          v-if="!logo_image_init"
+          class="logo-dropzone"
+          :class="{ 'logo-dropzone--dragging': isDraggingLogo }"
+          role="button"
+          tabindex="0"
+          :aria-label="$t('click_or_drag')"
+          @click="logo_image_ref?.click()"
+          @keydown.enter.prevent="logo_image_ref?.click()"
+          @keydown.space.prevent="logo_image_ref?.click()"
+          @dragenter.prevent="isDraggingLogo = true"
+          @dragover.prevent="isDraggingLogo = true"
+          @dragleave.prevent="isDraggingLogo = false"
+          @drop.prevent="onLogoDrop"
+        >
+          <Upload :size="22" :stroke-width="1.6" class="logo-dropzone-icon" />
+          <p class="logo-dropzone-title">{{ $t('click_or_drag') }}</p>
+          <p class="logo-dropzone-hint">{{ $t('logo_size_hint') }}</p>
+        </div>
+
+        <!-- Filled state: cropper + actions -->
+        <div v-else class="logo-uploaded">
+          <div class="logo-cropper-frame">
+            <Cropper :index="0" :ratio="1" :src="logo_image_init" @cropped="setLogoImage" />
           </div>
-          <div>
-            <input @change="selectLogoImage" accept="image/*" hidden ref="logo_image_ref" type="file">
-            <Button variant="outline" size="sm" class="rounded-xl" @click="logo_image_ref.click()">{{ $t('choose_image') }}</Button>
-            <p class="text-xs text-muted-foreground mt-1.5">PNG, JPG (max 2MB)</p>
-            <InputError name="image" />
+          <div class="logo-actions">
+            <Button type="button" variant="outline" size="sm" class="gap-1.5" @click="logo_image_ref?.click()">
+              <RotateCw :size="14" />
+              {{ $t('replace_image') }}
+            </Button>
+            <Button type="button" variant="ghost" size="sm" class="gap-1.5 !text-destructive hover:!bg-red-50" @click="removeLogoImage">
+              <X :size="14" />
+              {{ $t('remove') }}
+            </Button>
           </div>
         </div>
+
+        <p v-if="logoError" class="logo-error">{{ logoError }}</p>
+        <InputError name="image" />
       </div>
 
       <!-- Company Name -->
@@ -304,6 +375,7 @@ function setAllDays() {
       <!-- Category -->
       <div class="section-block">
         <div class="section-header">
+          <Tag :size="16" class="text-primary" />
           <span>{{ $t('category') }}</span>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -314,7 +386,7 @@ function setAllDays() {
           </div>
           <div>
             <label for="category_id" class="text-sm font-medium mb-1 block">{{ $t('category') }} <span class="text-destructive">*</span></label>
-            <CategorySelect :options="childrenCategories" :placeholder="$t('choose_category')" v-model="form.category_id" />
+            <CategorySelect :options="childrenCategories" :placeholder="$t('choose_category')" v-model="form.category_id" :disabled="!parent_id" />
             <InputError name="category_id" />
             <span v-if="fieldErrors.category_id" class="text-xs text-destructive mt-1 block">{{ fieldErrors.category_id }}</span>
           </div>
@@ -329,7 +401,7 @@ function setAllDays() {
         <textarea
           :class="[fieldErrors.about || (errors && errors['about']) ? 'border-destructive' : '']"
           :placeholder="$t('enter_some_words_about_company')"
-          class="w-full bg-accent rounded-xl border border-input p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+          class="w-full bg-white rounded-xl border border-input p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
           id="about" rows="4" v-model="form.about"
         />
         <div class="flex justify-between items-center mt-1">
@@ -378,7 +450,7 @@ function setAllDays() {
             <div class="edit-all-header">
               <Clock :size="18" class="text-primary" />
               <div>
-                <h4 class="text-sm font-bold text-primary">{{ $t('edit_all') }}</h4>
+                <h4 class="text-sm font-bold text-foreground">{{ $t('edit_all') }}</h4>
                 <p class="text-xs text-muted-foreground mt-0.5">{{ $t('all_days') }}</p>
               </div>
             </div>
@@ -595,13 +667,13 @@ function setAllDays() {
 }
 
 .stepper-active {
-  background: linear-gradient(135deg, #ffc909 0%, #f0b800 100%);
-  color: #1b2c3b;
-  box-shadow: 0 3px 12px rgba(255, 201, 9, 0.4);
+  background: linear-gradient(135deg, #FFD71D 0%, #E6BC00 100%);
+  color: #111827;
+  box-shadow: 0 3px 12px rgba(255, 215, 29, 0.4);
 }
 
 .stepper-done {
-  background: #1b2c3b;
+  background: #362061;
   color: white;
 }
 
@@ -636,13 +708,126 @@ function setAllDays() {
 }
 
 .stepper-connector-done {
-  background: #1b2c3b;
+  background: #362061;
 }
 
 /* ── Step Content ── */
 .step-content {
   /* container for sections */
 }
+
+/* ── Logo Dropzone — minimal, professional ── */
+.logo-dropzone {
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 1 / 1;
+  border: 1px dashed #e5e7eb;
+  border-radius: 0.875rem;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 1.5rem 1rem;
+  cursor: pointer;
+  text-align: center;
+  outline: none;
+  transition: border-color 200ms ease-out, background-color 200ms ease-out;
+}
+
+.logo-dropzone:hover {
+  border-color: #9ca3af;
+}
+.logo-dropzone:hover .logo-dropzone-icon {
+  color: #4b5563;
+}
+.logo-dropzone:hover .logo-dropzone-title {
+  color: #111827;
+}
+
+.logo-dropzone:focus-visible {
+  border-color: #6B4DD1;
+  box-shadow: 0 0 0 3px rgba(107, 77, 209, 0.15);
+}
+
+.logo-dropzone--dragging,
+.logo-dropzone--dragging:hover {
+  border-color: #6B4DD1;
+  background: #faf7ff;
+}
+.logo-dropzone--dragging .logo-dropzone-icon {
+  color: #6B4DD1;
+}
+
+.logo-dropzone-icon {
+  color: #9ca3af;
+  transition: color 200ms ease-out;
+}
+
+.logo-dropzone-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+  line-height: 1.35;
+  max-width: 180px;
+  transition: color 200ms ease-out;
+}
+
+.logo-dropzone-hint {
+  font-size: 0.68rem;
+  color: #9ca3af;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* ── Logo Uploaded State ── */
+.logo-uploaded {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+  width: fit-content;
+  max-width: 260px;
+}
+
+.logo-cropper-frame {
+  border-radius: 1rem;
+  background: #ffffff;
+  padding: 0.5rem;
+  box-shadow: 0 4px 16px rgba(17, 24, 39, 0.06);
+  animation: logo-crop-in 280ms ease-out both;
+}
+
+.logo-cropper-frame .img-wrapper {
+  border-radius: 0.75rem !important;
+}
+
+.logo-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+@keyframes logo-crop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.logo-error {
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  color: #ef4444;
+  font-weight: 500;
+}
+
 
 .section-block {
   padding-bottom: 1.25rem;
@@ -662,7 +847,7 @@ function setAllDays() {
   gap: 0.5rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1b2c3b;
+  color: #111827;
   margin-bottom: 0.875rem;
 }
 
@@ -714,15 +899,15 @@ function setAllDays() {
   background: #f8f9fa;
   font-size: 1rem;
   font-weight: 600;
-  color: #1b2c3b;
+  color: #111827;
   text-align: center;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .edit-all-time-input:focus {
-  border-color: #1b2c3b;
-  box-shadow: 0 0 0 2px rgba(27, 44, 59, 0.1);
+  border-color: #362061;
+  box-shadow: 0 0 0 2px rgba(54, 32, 97, 0.1);
 }
 
 .edit-all-actions {
@@ -737,7 +922,7 @@ function setAllDays() {
   border: 1px solid #f0f0f0;
 }
 
-.s4-gallery-wrap .bg-accent {
+.s4-gallery-wrap .bg-muted {
   margin: 0 !important;
   border-radius: 0 !important;
   border: none !important;
@@ -772,7 +957,7 @@ function setAllDays() {
   gap: 0.5rem;
   padding: 0.625rem 1.5rem;
   margin: 0;
-  background: #1b2c3b;
+  background: #362061;
   color: white;
   border: none;
   border-top: 1px solid #e5e7eb;
@@ -786,7 +971,7 @@ function setAllDays() {
 }
 
 .s4-map-wrap .text-blue-500:hover {
-  background: #263d4f;
+  background: #362061;
 }
 
 /* Remove default margin from map parent */
@@ -816,15 +1001,15 @@ function setAllDays() {
 }
 
 .s4-terms-link {
-  color: #1b2c3b;
+  color: #111827;
   font-weight: 700;
   text-decoration: none;
-  border-bottom: 1.5px solid #ffc909;
+  border-bottom: 1.5px solid #FFD71D;
   transition: border-color 0.15s;
 }
 
 .s4-terms-link:hover {
-  border-color: #1b2c3b;
+  border-color: #362061;
 }
 
 /* ── Validation Error ── */

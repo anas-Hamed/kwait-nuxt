@@ -150,7 +150,7 @@ export default {
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 0.5rem;
-  background: rgba(255, 201, 9, 0.1);
+  background: rgba(255, 215, 29, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -160,7 +160,7 @@ export default {
 .fm-header-title {
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
 }
 
 /* ── Search ── */
@@ -196,11 +196,11 @@ export default {
 }
 
 .fm-pill--active {
-  background: rgba(255, 201, 9, 0.08);
+  background: rgba(255, 215, 29, 0.1);
   border-color: var(--color-secondary);
-  color: var(--color-primary);
+  color: var(--color-foreground);
   font-weight: 700;
-  box-shadow: 0 0 0 1px rgba(255, 201, 9, 0.1);
+  box-shadow: 0 0 0 1px rgba(255, 215, 29, 0.12);
 }
 
 /* ── Radio Dot ── */
@@ -257,7 +257,7 @@ export default {
   background: white;
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   box-shadow: var(--shadow-soft);
   transition: all 0.2s ease;
 }
@@ -282,7 +282,7 @@ export default {
   padding: 0.5rem 0.65rem;
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   cursor: pointer;
   border-radius: 0.5rem;
   transition: all 0.15s ease;
@@ -334,8 +334,8 @@ export default {
 }
 
 .fm-item--active {
-  background: rgba(255, 201, 9, 0.06);
-  color: var(--color-primary);
+  background: rgba(255, 215, 29, 0.08);
+  color: var(--color-foreground);
   font-weight: 700;
   border-inline-start-color: var(--color-secondary);
 }

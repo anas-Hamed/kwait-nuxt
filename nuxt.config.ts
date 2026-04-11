@@ -28,27 +28,27 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Kuwait Explorer',
+      title: 'Mawaqi3',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
         { charset: 'utf-8' },
         {
           name: 'keywords',
           content:
-            'kuwait,explorer,kuwait explorer,companies,دليل الكويت,شركات الكويت,الكويت,اكسبلورر',
+            'mawaqi3,mwaqi3,companies,business directory,places,مواقع,شركات,دليل شركات,أماكن',
         },
       ],
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&display=swap' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap' },
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
         {
           rel: 'alternate',
           hreflang: 'x-default',
-          href: 'https://kuwaitexplorer.com',
+          href: 'https://mwaqi3.com',
         },
-        { rel: 'canonical', href: 'https://kuwaitexplorer.com' },
+        { rel: 'canonical', href: 'https://mwaqi3.com' },
       ],
     },
     pageTransition: { name: 'page', mode: 'out-in' },

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-gradient-to-r from-primary via-primary to-[#162535] text-white border-b border-white/10">
+  <div class="w-full bg-gradient-to-r from-primary via-primary to-[#362061] text-white border-b border-white/10">
     <div class="max-w-screen-xl mx-auto flex items-center justify-between px-4 py-1">
       <div class="flex items-center gap-2">
         <div class="flex items-center gap-0.5">

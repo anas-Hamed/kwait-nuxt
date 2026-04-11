@@ -4,7 +4,7 @@
       {{ label }} <span v-if="required" class="text-destructive">*</span>
     </Label>
     <div :dir="inputDir" class="flex w-full items-center mt-1">
-      <div v-if="prefix" class="h-10 px-3 flex items-center justify-center font-bold bg-accent rounded-s-md border border-e-0 border-input text-sm">
+      <div v-if="prefix" class="h-11 px-3.5 flex items-center justify-center font-semibold bg-[#f9fafb] rounded-s-xl border border-e-0 border-input text-sm text-foreground">
         {{ prefix }}
       </div>
       <Input
@@ -15,9 +15,8 @@
         :placeholder="placeholder"
         :class="[
           prefix ? 'rounded-s-none' : '',
-          (errors && errors[error]) ? 'border-destructive focus-visible:ring-destructive' : ''
+          (errors && errors[error]) ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20' : ''
         ]"
-        class="bg-accent"
         @update:model-value="$emit('update:modelValue', $event)"
       />
     </div>

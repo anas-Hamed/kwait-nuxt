@@ -2,7 +2,7 @@
   <div class="space-y-6">
     <!-- Personal Info -->
     <div class="bg-white rounded-2xl shadow-soft p-6">
-      <h3 class="text-lg font-bold text-primary mb-5">{{ $t('update_personal_info') }}</h3>
+      <h3 class="text-lg font-bold text-foreground mb-5">{{ $t('update_personal_info') }}</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
         <MyInput :label="$t('name')" error="name" id="name" v-model="user.name" :placeholder="$t('account_name')" />
         <MyInput :label="$t('email')" error="email" id="email" input-dir="ltr" v-model="user.email" placeholder="example@example.com" />
@@ -16,7 +16,7 @@
 
     <!-- Change Password -->
     <div class="bg-white rounded-2xl shadow-soft p-6">
-      <h3 class="text-lg font-bold text-primary mb-5">{{ $t('change_password') }}</h3>
+      <h3 class="text-lg font-bold text-foreground mb-5">{{ $t('change_password') }}</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
         <MyInput :label="$t('old_password')" error="old_password" id="old_password" type="password"
                  v-model="form.old_password" placeholder="••••••••" />
@@ -53,7 +53,7 @@ export default {
     const { data } = useAuth();
     // Strip +965 prefix for display in Phone input
     const rawPhone = (data.value?.phone || '').replace(/\D/g, '').replace(/^965/, '')
-    // Kuwait numbers are 8 digits — if invalid length, clear so user can re-enter
+    // Local numbers are 8 digits — if invalid length, clear so user can re-enter
     const phone = rawPhone.length === 8 ? rawPhone : ''
     this.user = { ...data.value, phone };
   },

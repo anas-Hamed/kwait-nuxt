@@ -77,7 +77,7 @@ export default {
   transition: color 0.15s ease;
 }
 .bd-back:hover {
-  color: var(--color-primary);
+  color: var(--color-foreground);
 }
 [dir="rtl"] .bd-back svg {
   transform: scaleX(-1);
@@ -112,10 +112,10 @@ export default {
 }
 
 .bd-title {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Poppins', 'Alexandria', sans-serif;
   font-size: 1.6rem;
   font-weight: 800;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   line-height: 1.25;
 }
 @media (min-width: 768px) {
@@ -168,7 +168,7 @@ export default {
 .bd-article {
   flex: 1;
   min-width: 0;
-  color: var(--color-primary);
+  color: var(--color-foreground);
   font-size: 1rem;
   line-height: 1.85;
 }
@@ -182,7 +182,7 @@ export default {
   margin-bottom: 1.25rem;
 }
 .bd-article :deep(h2) {
-  font-family: 'Cairo', sans-serif;
+  font-family: 'Poppins', 'Alexandria', sans-serif;
   font-size: 1.3rem;
   font-weight: 700;
   margin-top: 2rem;
