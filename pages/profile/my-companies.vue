@@ -23,7 +23,7 @@ import { Building2 } from 'lucide-vue-next'
 
 export default {
   name: 'MyCompanies',
-  components: { Button, Plus, Building2 },
+  components: { Building2 },
   props: {
     companies: { type: Array, default: () => [] }
   },

@@ -171,15 +171,60 @@ async function submit() {
     form.tags.forEach(el => { formData.append('tags[]', el) })
     if (form.location) formData.append('location', JSON.stringify(form.location))
     for (const key in form) {
-      let value = form[key]
-      if (typeof value === 'string' || typeof value === 'number') formData.append(key, value)
+      const value = form[key]
+      if (typeof value === 'string' || typeof value === 'number') {
+        formData.append(key, value)
+      } else if (typeof value === 'boolean') {
+        // Laravel expects 1/0 for boolean fields in multipart/form-data
+        formData.append(key, value ? 1 : 0)
+      }
     }
-    await api.post('company', formData)
+
+    // ─── DEBUG: log full request payload ───
+    console.group('[AddCompany] Submit → POST /company')
+    console.log('form state:', JSON.parse(JSON.stringify(form)))
+    console.log('tags:', tags.value.map(el => el.text))
+    console.log('logo_image (Blob):', logo_image.value)
+    console.log('images count:', images.value.length)
+    images.value.forEach((img, i) => {
+      console.log(`  image[${i}]:`, img instanceof Blob
+        ? `Blob(${img.size} bytes, type=${img.type || 'unknown'})`
+        : img)
+    })
+    console.log('FormData entries:')
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof Blob) {
+        console.log(`  ${key}: Blob(${value.size} bytes, type=${value.type || 'unknown'})`)
+      } else {
+        console.log(`  ${key}:`, value)
+      }
+    }
+    console.groupEnd()
+
+    const res = await api.post('company', formData)
+
+    // ─── DEBUG: log successful response ───
+    console.group('[AddCompany] ✓ Response OK')
+    console.log('raw response:', res)
+    console.log('data:', res?.data)
+    console.log('status:', res?.status)
+    console.groupEnd()
+
     router.push(localePath({ name: 'profile' }))
     toast.success(t('operation_success'))
   } catch (e) {
     const response = e?.response?._data || e?.data
     const status = e?.response?.status || e?.statusCode
+
+    // ─── DEBUG: log failed response ───
+    console.group('[AddCompany] ✕ Response FAILED')
+    console.error('error object:', e)
+    console.log('status:', status)
+    console.log('response body:', response)
+    console.log('validation errors:', response?.errors)
+    console.log('message:', response?.message)
+    console.groupEnd()
+
     if (status === 422) {
       setErrors(response?.errors)
       toast.error(t('entries_error'))
@@ -915,19 +960,7 @@ function setAllDays() {
   gap: 0.75rem;
 }
 
-/* ── Step 4: Gallery ── */
-.s4-gallery-wrap {
-  border-radius: 0.75rem;
-  overflow: hidden;
-  border: 1px solid #f0f0f0;
-}
-
-.s4-gallery-wrap .bg-muted {
-  margin: 0 !important;
-  border-radius: 0 !important;
-  border: none !important;
-  background: #fafbfc !important;
-}
+/* ── Step 4: Gallery (MultiImageCropper supplies its own styling) ── */
 
 /* ── Step 4: Map ── */
 .s4-map-wrap {

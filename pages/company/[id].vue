@@ -81,6 +81,14 @@ function submitRating(star) {
         </h1>
         <img v-if="company?.is_trusted" class="w-5 h-5 shrink-0" src="~/assets/images/trust.svg" alt="trusted" />
       </div>
+      <p
+        v-if="($i18n.locale === 'ar' ? company?.en_name : company?.ar_name)"
+        class="text-sm text-muted-foreground mt-0.5"
+        :dir="$i18n.locale === 'ar' ? 'ltr' : 'rtl'"
+        style="font-family: 'Poppins', 'Alexandria', sans-serif;"
+      >
+        {{ $i18n.locale === 'ar' ? company?.en_name : company?.ar_name }}
+      </p>
 
       <!-- Rating -->
       <div class="flex items-center gap-2 mt-2" @mouseleave="hoverRating = 0">
@@ -116,7 +124,7 @@ function submitRating(star) {
       </a>
       <a v-if="company?.email" :href="`mailto:${company.email}`" target="_blank" class="cd-action">
         <Mail :size="15" />
-        {{ $t('messaging') }}
+        {{ $t('send_email') }}
       </a>
       <button class="cd-action" :class="{ 'cd-action--fav': company?.has_favorite }" @click="toggleFavorite">
         <Heart :size="15" :class="company?.has_favorite ? 'fill-current' : ''" />
@@ -149,7 +157,7 @@ function submitRating(star) {
             <Mail :size="16" class="text-blue-600" />
           </div>
           <span class="text-sm text-foreground flex-1" dir="ltr">{{ company.email }}</span>
-          <a :href="`mailto:${company.email}`" target="_blank" class="text-xs text-muted-foreground underline hover:text-primary">{{ $t('messaging') }}</a>
+          <a :href="`mailto:${company.email}`" target="_blank" class="text-xs text-muted-foreground underline hover:text-primary">{{ $t('send_email') }}</a>
         </div>
       </div>
     </section>

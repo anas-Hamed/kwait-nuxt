@@ -2,7 +2,16 @@
   <LLink :to="company.has_paid === false || company.is_active === false ? {} : { name: 'company-id', params: { id: company.slug } }">
     <div class="kc" :class="{ 'opacity-50 pointer-events-none': company.has_paid === false || company.is_active === false }">
       <div class="kc-img">
-        <ImagePlaceholder :image="company.image" class="kc-img-inner" />
+        <img
+          v-if="company.image"
+          :src="company.image"
+          class="kc-img-inner"
+          alt=""
+          @error="$event.target.closest('.kc-img').classList.add('kc-img--broken')"
+        />
+        <div class="kc-img-fallback">
+          <span class="kc-img-initial">{{ $i18n.locale === 'ar' ? company.ar_name?.charAt(0) : company.en_name?.charAt(0)?.toUpperCase() || '?' }}</span>
+        </div>
         <div class="kc-badge">{{ company.category.name }}</div>
       </div>
       <div class="kc-info">
