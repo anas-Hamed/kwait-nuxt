@@ -1,6 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from '@tailwindcss/vite';
 
+// All backend / frontend URLs are sourced from .env so we can swap domains
+// without code changes. The fallbacks below only kick in if the env is missing.
+const API_BASE = (process.env.BASE_URL || 'https://mwaqi3.com/api').replace(/\/+$/, '');
+const SITE_URL = (process.env.SITE_URL || 'https://mwaqi3.com').replace(/\/+$/, '');
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
 
@@ -18,7 +23,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      baseUrl: process.env.BASE_URL || 'https://mwaqi3.com/api',
+      baseUrl: API_BASE,
+      siteUrl: SITE_URL,
       mapKey: process.env.MAP_KEY || '',
       phonePrefix: process.env.PHONE_PREFIX || '+965',
       debug: process.env.DEBUG || 'false',
@@ -46,9 +52,9 @@ export default defineNuxtConfig({
         {
           rel: 'alternate',
           hreflang: 'x-default',
-          href: 'https://mwaqi3.com',
+          href: SITE_URL,
         },
-        { rel: 'canonical', href: 'https://mwaqi3.com' },
+        { rel: 'canonical', href: SITE_URL },
       ],
     },
     pageTransition: { name: 'page', mode: 'out-in' },
@@ -67,7 +73,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/api/**': { proxy: 'https://mwaqi3.com/api/**' },
+    '/api/**': { proxy: `${API_BASE}/**` },
   },
 
   auth: {
