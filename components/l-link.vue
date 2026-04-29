@@ -1,20 +1,14 @@
 <template>
-  <nuxt-link v-bind="$attrs"   :to="localeRoute(to)" ><slot></slot></nuxt-link>
+  <NuxtLink v-bind="$attrs" :to="localeRoute(to)"><slot></slot></NuxtLink>
 </template>
 
-<script>
-export default {
-  name: 'LLink',
-  inheritAttrs: false,
-  props:{
-    to:{
-      type:  [Object,String],
-      required: true
-    },
-  }
-};
+<script setup>
+defineOptions({ inheritAttrs: false });
+const localeRoute = useLocaleRoute();
+const props = defineProps({
+  to: {
+    type: [Object, String],
+    required: true,
+  },
+});
 </script>
-
-<style scoped>
-
-</style>

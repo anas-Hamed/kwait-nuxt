@@ -1,40 +1,32 @@
 <template>
-  <div class=" flex-centred  py-1 mx-1 ">
-    <nuxt-link v-if="$i18n.locale === 'en'" class=" text-sm"
-               :to="switchLocalePath('ar')">
-      <div class="flex-centred">
-        <icon name="world" size-class="w-4"></icon>
-        <div class="-mb-1 md:mb-0" >AR</div>
-      </div>
-
-    </nuxt-link>
-    <nuxt-link v-else class="text-sm"
-               :to="switchLocalePath('en')">
-      <div class="flex-centred">
-        <icon name="world" size-class="w-4"></icon>
-        <div  class="-mb-1 md:mb-0">EN</div>
-      </div>
-    </nuxt-link>
-  </div>
+  <NuxtLink v-if="locale === 'en'" class="text-sm" :to="switchLocalePath('ar')">
+    <Button variant="ghost" size="sm" class="text-white hover:bg-white/10 hover:text-white gap-1 px-2 h-7">
+      <Globe :size="14" />
+      <span>AR</span>
+    </Button>
+  </NuxtLink>
+  <NuxtLink v-else class="text-sm" :to="switchLocalePath('en')">
+    <Button variant="ghost" size="sm" class="text-white hover:bg-white/10 hover:text-white gap-1 px-2 h-7">
+      <Globe :size="14" />
+      <span>EN</span>
+    </Button>
+  </NuxtLink>
 </template>
 
-<script>
-  import Icon from './Icon';
+<script setup>
+import { Globe } from 'lucide-vue-next'
+import { Button } from '~/components/ui/button'
 
-  export default {
-    name: 'LangSwitch',
-    components: { Icon },
-    mounted() {
-      this.$i18n.onLanguageSwitched = (oldLocale, newLocale) => {
-        this.$moment.locale(newLocale);
-        this.$axios.get('setting').then(data => {
-          this.$store.dispatch('setSetting', data.data.data);
-        });
-      };
-    }
-  };
+const { locale } = useI18n()
+const switchLocalePath = useSwitchLocalePath()
+const appStore = useAppStore()
+const { $dayjs } = useNuxtApp()
+const api = useApi()
+
+watch(locale, (newLocale) => {
+  $dayjs.locale(newLocale)
+  api.get('setting').then((data) => {
+    appStore.setSetting(data.data)
+  })
+})
 </script>
-
-<style scoped>
-
-</style>

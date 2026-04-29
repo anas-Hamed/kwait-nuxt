@@ -1,86 +1,139 @@
 <template>
-  <div class="">
-    <button @click="opened = true" class="relative" :class="{'flipped-menu': $i18n.locale === 'en'}">
-      <Icon name="menu" size-class="w-8" />
-      <div class="rounded-full w-3 h-3 inset-0 absolute bg-red-600" v-if="unread_notifications"></div>
-    </button>
-
-    <transition name="slide">
-      <div @click.self="opened = false" class="fixed w-full h-full bg-black bg-opacity-50 z-50 inset-0" v-if="opened">
-        <div class="bg-white overflow-y-scroll h-screen py-5  px-4 absolute inset-0 w-3/4 max-w-[250px]">
-          <div class="flex flex-col">
-            <div class="w-full flex justify-end">
-              <button @click="opened = false" class="rounded-full ">
-                <icon name="close" size-class="w-8"/>
-              </button>
-            </div>
-            <div class="my-2">
-              <LLink :to="{name:'login'}" class="flex items-center    p-2 rounded mx-2" v-if="!$auth.loggedIn">
-                <span class=" text-blue-500 flex-centred">{{$t('login')}}</span>
-                <div class="w-1"></div>
-                <Icon name="account"></Icon>
-              </LLink>
-              <template v-else>
-                <LLink :to="{name:'profile'}" class="flex items-center    p-2 rounded mx-2">
-                  <span class="text-2xl font-bold">{{$auth.user.name}}</span>
-                  <div class="w-1"></div>
-                  <icon name="account"></icon>
-                </LLink>
-                <button @click="$auth.logout()" class="text-blue-500 flex-centred" title="logout">
-                  <icon name="login"/>
-                  <span class="w-1"></span><span>{{$t('logout')}}</span></button>
-              </template>
-
-            </div>
-            <div class="w-full border-t border-accentSecondary opacity-50 mb-4"></div>
-            <l-link :to="{name: 'index'}" class=" mb-3 font-bold">{{$t('home')}}</l-link>
-            <l-link :to="{name: 'category'}" class=" mb-3 font-bold">{{$t('categories')}}</l-link>
-            <l-link :to="{name: 'company'}" class=" mb-3 font-bold">{{$t('companies')}}</l-link>
-            <l-link :to="{name: 'blog'}" class=" mb-3 font-bold">{{$t('blog')}}</l-link>
-            <l-link :to="{name: 'about-us'}" class=" mb-3 font-bold">{{$t('about_us')}}</l-link>
-            <LLink :to="{name:'favorite'}" class=" mb-3 font-bold">{{$t('favorite')}}</LLink>
-            <LLink :to="{name:'notification'}" class=" mb-3 font-bold">
-              <span>{{$t('notifications')}}    </span>
-              <span class="w-4 h-4 bg-red-700 absolute top-1 left-1 rounded-full flex-centred text-white text-xs"
-                    v-if="unread_notifications">{{unread_notifications}}</span></LLink>
-
-            <LLink :to="{name:'company-create'}"
-                   class="flex items-center justify-center space-x-1   py-2  rounded-full bg-secondary text-white ">
-              <span class=" font-bold">{{$t('add_company')}}</span>
+  <div>
+    <Sheet v-model:open="opened">
+      <SheetTrigger as-child>
+        <Button variant="ghost" size="icon" class="relative rounded-full">
+          <Menu :size="24" />
+          <span v-if="unread_notifications" class="absolute top-1 end-1 w-2 h-2 bg-red-500 rounded-full animate-pulse-soft" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent :side="sheetSide" class="w-[280px] p-0 border-0 flex flex-col bg-white [&>button:last-of-type]:hidden">
+        <!-- Header -->
+        <div class="p-5 pb-4 flex items-center justify-between">
+          <template v-if="isAuthenticated">
+            <LLink :to="{ name: 'profile' }" class="flex items-center gap-3 min-w-0 flex-1" @click="opened = false">
+              <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm shrink-0">
+                {{ userInitials }}
+              </div>
+              <div class="min-w-0">
+                <p class="font-bold text-sm text-foreground truncate">{{ authUser?.name }}</p>
+                <p class="text-xs text-muted-foreground truncate">{{ authUser?.email }}</p>
+              </div>
             </LLink>
-          </div>
-
+          </template>
+          <template v-else>
+            <LLink :to="{ name: 'login' }" class="flex items-center gap-3 min-w-0 flex-1" @click="opened = false">
+              <div class="w-10 h-10 rounded-full bg-surface flex items-center justify-center shrink-0">
+                <User :size="18" class="text-muted-foreground" />
+              </div>
+              <div>
+                <p class="font-bold text-sm text-foreground">{{ $t('login') }}</p>
+                <p class="text-xs text-muted-foreground">{{ $t('login') }} / {{ $t('register') }}</p>
+              </div>
+            </LLink>
+          </template>
+          <button @click="opened = false" class="w-8 h-8 rounded-full bg-surface flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors shrink-0">
+            <X :size="16" />
+          </button>
         </div>
-      </div>
-    </transition>
 
+        <Separator />
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto p-2">
+          <LLink v-for="link in navLinks" :key="link.name" :to="{ name: link.name }" @click="opened = false"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-foreground hover:bg-surface transition-colors">
+            <component :is="link.icon" :size="18" class="text-muted-foreground" />
+            {{ $t(link.label) }}
+          </LLink>
+
+          <Separator class="my-2" />
+
+          <LLink :to="{ name: 'favorite' }" @click="opened = false"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-foreground hover:bg-surface transition-colors">
+            <Heart :size="18" class="text-muted-foreground" />
+            {{ $t('favorite') }}
+          </LLink>
+
+          <LLink :to="{ name: 'notification' }" @click="opened = false"
+                 class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-foreground hover:bg-surface transition-colors">
+            <span class="flex items-center gap-3">
+              <Bell :size="18" class="text-muted-foreground" />
+              {{ $t('notifications') }}
+            </span>
+            <span v-if="unread_notifications" class="bg-red-500 text-white text-[10px] font-bold h-5 min-w-5 rounded-full flex items-center justify-center px-1.5">
+              {{ unread_notifications }}
+            </span>
+          </LLink>
+
+          <template v-if="isAuthenticated">
+            <Separator class="my-2" />
+
+            <LLink :to="{ name: 'profile' }" @click="opened = false"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-foreground hover:bg-surface transition-colors">
+              <LayoutDashboard :size="18" class="text-muted-foreground" />
+              {{ $t('dashboard') }}
+            </LLink>
+          </template>
+        </nav>
+
+        <!-- Footer -->
+        <div class="p-3 border-t border-border space-y-2">
+          <LLink :to="{ name: 'company-create' }" @click="opened = false">
+            <button class="btn-gold w-full rounded-lg py-2.5 text-sm flex items-center justify-center gap-2 font-semibold">
+              <Plus :size="16" />
+              {{ $t('add_company') }}
+            </button>
+          </LLink>
+
+          <button v-if="isAuthenticated" @click="logout"
+                  class="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/5 transition-colors">
+            <LogOut :size="16" />
+            {{ $t('logout') }}
+          </button>
+        </div>
+      </SheetContent>
+    </Sheet>
   </div>
 </template>
 
-<script>
-  import Icon from './Icon';
+<script setup>
+import { Menu, X, User, LogOut, Heart, Bell, Plus, Home, Grid3X3, Building2, FileText, CreditCard, Info, LayoutDashboard } from 'lucide-vue-next'
+import { Button } from '~/components/ui/button'
+import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet'
+import { Separator } from '~/components/ui/separator'
 
-  export default {
-    name: 'NavBarMenu',
-    components: { Icon },
-    data() {
-      return {
-        opened: false
-      };
-    },
-    mounted() {
-      this.opened = false;
-    },
-    watch: {
-      '$route': {
-        handler() {
-          this.opened = false;
-        }
-      }
-    }
-  };
+const { locale } = useI18n()
+const { status, data, signOut } = useAuth()
+const localePath = useLocalePath()
+const route = useRoute()
+
+const opened = ref(false)
+const sheetSide = computed(() => locale.value === 'ar' ? 'right' : 'left')
+const isAuthenticated = computed(() => status.value === 'authenticated')
+const authUser = computed(() => data.value)
+
+const userInitials = computed(() => {
+  const name = authUser.value?.name || ''
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+})
+
+const navLinks = [
+  { name: 'index', label: 'home', icon: Home },
+  { name: 'category', label: 'categories', icon: Grid3X3 },
+  { name: 'company', label: 'companies', icon: Building2 },
+  { name: 'blog', label: 'blog', icon: FileText },
+  { name: 'plans', label: 'plans', icon: CreditCard },
+  { name: 'about-us', label: 'about_us', icon: Info },
+]
+
+watch(() => route.fullPath, () => {
+  opened.value = false
+})
+
+async function logout() {
+  useCookie('auth:token').value = null
+  await signOut({ redirect: false })
+  await navigateTo(localePath({ name: 'login' }), { external: true })
+}
 </script>
-
-<style scoped>
-
-</style>

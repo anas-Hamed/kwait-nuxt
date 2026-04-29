@@ -1,82 +1,70 @@
 <template>
-  <div class=" flex flex-col justify-center items-center py-2 ">
-    <div class="rounded bg-white shadow border px-4 py-2 max-w-screen-md w-full">
-      <div class="flex  px-2">
-        <LLink class=" my-1 nav-item mx-3" :to="{name: 'login'}"> {{$t('login')}}</LLink>
-        <LLink class=" my-1 nav-item mx-3" :to="{name: 'register'}"> {{$t('register')}}</LLink>
-      </div>
-      <div class="flex flex-row-reverse flex-wrap p-8">
-        <div class="w-full md:w-2/4 flex items-center justify-center">
-          <img src="~assets/images/h_logo.png" class="w-64" />
-        </div>
-        <div class="w-full md:w-2/4">
-          <form @submit.prevent="register">
-            <MyInput id="name" v-model="form.name" :label="$t('name')" :placeholder="$t('account_name')" type="name"
-                     error="name" />
-            <MyInput id="email" v-model="form.email" :label="$t('email')" placeholder="example@example.com" type="email"
-                     input-dir="ltr"
-                     error="email" />
-            <Phone id="phone" v-model="form.phone" :label="$t('phone')" placeholder="+965xxxxxxx" type="tel"
-                   input-dir="ltr"
-                   error="phone" />
-            <MyInput id="password" v-model="form.password" :label="$t('password')" placeholder="******" type="password"
-                     input-dir="ltr"
-                     error="password" />
-            <MyInput id="password_confirmation" v-model="form.password_confirmation"
-                     :label="$t('password_confirmation')" input-dir="ltr"
-                     placeholder="******" type="password" error="password_confirmation" />
-            <button class="rounded bg-primary text-white mt-4 w-full p-2 ">
-              <LoadingCircle :loading="loading">{{$t('register')}}</LoadingCircle>
-            </button>
-          </form>
-        </div>
+  <div>
+    <h1 class="text-2xl font-bold text-foreground mb-1">{{ $t('new_account') }}</h1>
+    <p class="text-muted-foreground text-sm mb-8">{{ $t('register_subtitle') }}</p>
 
-      </div>
-    </div>
+    <form @submit.prevent="register">
+      <MyInput id="name" v-model="form.name" :label="$t('name')" :placeholder="$t('account_name')" type="name" error="name" />
+      <MyInput id="email" v-model="form.email" :label="$t('email')" placeholder="example@example.com" type="email"
+               input-dir="ltr" error="email" />
+      <Phone id="phone" v-model="form.phone" :label="$t('phone')" placeholder="+965xxxxxxx" type="tel"
+             input-dir="ltr" error="phone" />
+      <MyInput id="password" v-model="form.password" :label="$t('password')" placeholder="••••••••" type="password"
+               input-dir="ltr" error="password" />
+      <MyInput id="password_confirmation" v-model="form.password_confirmation"
+               :label="$t('password_confirmation')" input-dir="ltr"
+               placeholder="••••••••" type="password" error="password_confirmation" />
+
+      <Button type="submit" class="w-full h-11 rounded-xl mt-4" size="lg">
+        <LoadingCircle :loading="loading">{{ $t('register') }}</LoadingCircle>
+      </Button>
+    </form>
+
+    <p class="text-center text-sm text-muted-foreground mt-6">
+      {{ $t('have_account') }}
+      <LLink :to="{ name: 'login' }" class="text-primary font-bold hover:underline">{{ $t('login') }}</LLink>
+    </p>
   </div>
 </template>
 
-<script>
-  import LLink from '~/components/l-link';
-  import MyInput from '~/components/MyInput';
-  import LoadingCircle from '~/components/loading-circle';
+<script setup>
+import { Button } from '~/components/ui/button'
+import { toast } from 'vue-sonner'
 
-  export default {
-    name: 'Register',
-    components: { LoadingCircle, MyInput, LLink },
-    middleware: 'auth',
-    auth: 'guest',
-    head() {
-      return this.metaBuilder(this.$t('register'));
-    },
-    data() {
-      return {
-        form: {
-          name: '',
-          email: '',
-          phone: '',
-          password: '',
-          password_confirmation: ''
-        },
-        loading: false
-      };
-    },
-    methods: {
-      async register() {
-        this.loading = true;
-        try {
-          await this.$axios.post('user/register', this.form);
-          await this.$auth.loginWith('local', { data: this.form });
-        } catch ({ response }) {
+definePageMeta({ layout: 'auth' })
 
-        } finally {
-          this.loading = false;
-        }
-      }
-    }
-  };
+const api = useApi()
+const { getSession } = useAuth()
+const localePath = useLocalePath()
+
+const form = ref({
+  name: '',
+  email: '',
+  phone: '',
+  password: '',
+  password_confirmation: ''
+})
+const loading = ref(false)
+
+async function register() {
+  loading.value = true
+  try {
+    const phone = form.value.phone ? '+965' + form.value.phone.replace(/\D/g, '') : ''
+    await api.post('user/register', { ...form.value, phone })
+    // Login after register using api.post to avoid CORS
+    const loginRes = await api.post('user/login', {
+      email: form.value.email,
+      password: form.value.password
+    })
+    // Set raw token in cookie (nuxt-auth adds "Bearer " prefix automatically)
+    useCookie('auth:token', { maxAge: 2592000 }).value = loginRes.data.token
+    await getSession()
+    toast.success('تم إنشاء الحساب بنجاح')
+    await navigateTo(localePath({ name: 'index' }), { external: true })
+  } catch (e) {
+    toast.error('تأكد من صحة البيانات')
+  } finally {
+    loading.value = false
+  }
+}
 </script>
-
-<style scoped>
-
-</style>

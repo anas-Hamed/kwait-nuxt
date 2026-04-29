@@ -1,77 +1,67 @@
 <template>
-  <div class=" flex flex-col justify-center items-center py-2 ">
-    <div class="rounded bg-white shadow border px-4 py-2 max-w-screen-md w-full">
-      <div class="flex  px-2">
-        <LLink class=" my-1 nav-item mx-3" :to="{name: 'login'}"> {{$t('login')}}</LLink>
-        <LLink class=" my-1 nav-item mx-3" :to="{name: 'register'}"> {{$t('register')}}</LLink>
-      </div>
-      <div class="flex flex-row-reverse flex-wrap p-8">
-        <div class="w-full md:w-2/4 flex items-center justify-center">
-          <img src="~assets/images/h_logo.png" class="w-64" />
-        </div>
-        <div class="w-full md:w-2/4">
-          <form @submit.prevent="login">
-            <MyInput id="email" v-model="form.email" placeholder="example@example.com" :label="$t('email')"
-                     error="email" input-dir="ltr" />
-            <MyInput id="password" v-model="form.password" placeholder="******" type="password" :label="$t('password')"
-                     error="password" input-dir="ltr" />
+  <div>
+    <h1 class="text-2xl font-bold text-foreground mb-1">{{ $t('welcome_back') }}</h1>
+    <p class="text-muted-foreground text-sm mb-8">{{ $t('login_subtitle') }}</p>
 
-            <button class="rounded bg-primary text-white mt-4 w-full p-2 ">
-              <LoadingCircle :loading="loading">{{$t('login')}}</LoadingCircle>
-            </button>
-          </form>
-          <div class="text-center py-2">
-              <l-link class="text-blue-600 my-1" :to="{name: 'forget-password'}">{{$t('forget_password')}}</l-link>
-          </div>
-        </div>
+    <form @submit.prevent="login">
+      <MyInput id="email" v-model="form.email" placeholder="example@example.com" :label="$t('email')"
+               error="email" input-dir="ltr" />
+      <MyInput id="password" v-model="form.password" placeholder="••••••••" type="password" :label="$t('password')"
+               error="password" input-dir="ltr" />
 
+      <div class="flex justify-end mb-5">
+        <LLink class="text-xs text-muted-foreground hover:text-primary transition-colors"
+               :to="{ name: 'forget-password' }">
+          {{ $t('forget_password') }}
+        </LLink>
       </div>
-    </div>
+
+      <Button type="submit" class="w-full h-11 rounded-xl" size="lg">
+        <LoadingCircle :loading="loading">{{ $t('login') }}</LoadingCircle>
+      </Button>
+    </form>
+
+    <p class="text-center text-sm text-muted-foreground mt-6">
+      {{ $t('no_account') }}
+      <LLink :to="{ name: 'register' }" class="text-primary font-bold hover:underline">{{ $t('register') }}</LLink>
+    </p>
   </div>
 </template>
 
-<script>
-  import LLink from '~/components/l-link';
-  import MyInput from '~/components/MyInput';
+<script setup>
+import { Button } from '~/components/ui/button'
+import { toast } from 'vue-sonner'
 
-  export default {
-    name: 'Login',
-    components: { MyInput, LLink },
-    middleware: 'auth',
-    auth: 'guest',
-    data() {
-      return {
-        form: {
-          email: '',
-          password: ''
-        },
-        loading: false
-      };
-    },
-    head() {
-      return this.metaBuilder(this.$t('login'));
-    },
-    methods: {
-      async login() {
-        this.loading = true;
-        try {
-          await this.$auth.loginWith('local', { data: this.form });
-          const count = ((await this.$axios.get('notifications/numberUnread')).data.data);
-          this.$store.dispatch('setNotificationsCount',count);
-        } catch ({ response }) {
-          if(response.status === 401){
-            this.$store.dispatch('validations/setErrors',{'password': ['تأكد من صحة البيانات']});
-          }
+definePageMeta({ layout: 'auth' })
 
-        } finally {
-          this.loading = false;
-        }
+const { getSession } = useAuth()
+const api = useApi()
+const appStore = useAppStore()
+const validationStore = useValidationStore()
+const localePath = useLocalePath()
 
-      }
-    }
-  };
+const form = ref({ email: '', password: '' })
+const loading = ref(false)
+
+async function login() {
+  loading.value = true
+  try {
+    const res = await api.post('user/login', form.value)
+    // Set raw token in cookie (nuxt-auth adds "Bearer " prefix automatically)
+    useCookie('auth:token', { maxAge: 2592000 }).value = res.data.token
+    // Refresh session — nuxt-auth now reads from the correct cookie
+    await getSession()
+    try {
+      const countRes = await api.get('notifications/numberUnread')
+      appStore.setNotificationsCount(countRes.data)
+    } catch (_) {}
+    toast.success('تم تسجيل الدخول بنجاح')
+    await navigateTo(localePath({ name: 'profile' }), { external: true })
+  } catch (e) {
+    validationStore.setErrors({ 'password': ['تأكد من صحة البيانات'] })
+    toast.error('تأكد من صحة البيانات')
+  } finally {
+    loading.value = false
+  }
+}
 </script>
-
-<style scoped>
-
-</style>

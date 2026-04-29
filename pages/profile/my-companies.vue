@@ -1,46 +1,31 @@
 <template>
-  <div class="card ">
-    <h3 class="text-2xl mb-1 ">{{$t('my_companies')}}</h3>
-    <p class="text-sm text-accentSecondary">
-      {{$t('hidden_companies')}}
-    </p>
-    <div class="w-full border-b my-4"></div>
-    <div class="flex flex-wrap">
-      <div v-for="company in companies" :key="`company-${company.id}`" class="w-full md:w-2/4 p-1">
-        <CompanyCard :show-control="true" :company="company" class=""  />
+  <div class="bg-white rounded-2xl shadow-soft p-6">
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <h3 class="text-lg font-bold text-foreground">{{ $t('my_companies') }}</h3>
+        <p class="text-sm text-muted-foreground mt-0.5">{{ $t('hidden_companies') }}</p>
       </div>
     </div>
-    <span v-if="companies && companies.length === 0">{{$t('no_companies_added')}}</span>
-    <LLink :to="{name: 'company-create'}" class="mt-8 flex items-center">
-      <span class="rounded-full w-8 h-8 bg-secondary flex items-center justify-center text-white"><Icon name="plus" /></span>
-      <div class="w-1"></div>
-      <b>{{$t('add_company')}}</b>
-    </LLink>
+
+    <div v-if="companies && companies.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <CompanyCard v-for="company in companies" :key="company.id" :show-control="true" :company="company" />
+    </div>
+
+    <div v-else class="text-center py-12">
+      <Building2 :size="48" class="mx-auto text-muted-foreground/30 mb-3" />
+      <p class="text-muted-foreground text-sm">{{ $t('no_companies_added') }}</p>
+    </div>
   </div>
 </template>
 
 <script>
-  import Modal from '../../components/Modal';
-  export default {
-    name: 'MyCompanies',
-    components: { Modal },
-    props: {
-      companies: {
-        type: Array,
-        default: () => []
-      }
-    },
-    data() {
-      return {
-        modal:true
-      };
-    },
-    mounted() {
+import { Building2 } from 'lucide-vue-next'
 
-    }
-  };
+export default {
+  name: 'MyCompanies',
+  components: { Building2 },
+  props: {
+    companies: { type: Array, default: () => [] }
+  },
+};
 </script>
-
-<style scoped>
-
-</style>
