@@ -143,6 +143,7 @@ export default {
   terms_subtitle: 'قواعد استخدام خدمتنا',
   danger_zone: 'منطقة الخطر',
   delete_account: 'حذف الحساب',
+  delete_account_subtitle: 'كيف تتم عملية حذف الحساب',
   delete_account_warning: 'بمجرد حذف حسابك، لا يمكن التراجع عن هذا الإجراء. الحذف نهائي ولا يمكن استرجاعه.',
   delete_account_consequence_1: 'سيتم حذف ملفك الشخصي واسمك وبريدك الإلكتروني ورقم هاتفك بشكل نهائي.',
   delete_account_consequence_2: 'سيتم حذف شركاتك وإعلاناتك والوسائط التي قمت برفعها.',
