@@ -1,5 +1,5 @@
 <script setup>
-import { ShieldCheck, FileText, Lock, ArrowUp, ListOrdered } from 'lucide-vue-next'
+import { ShieldCheck, FileText, Lock, ArrowUp } from 'lucide-vue-next'
 import { Skeleton } from '~/components/ui/skeleton'
 
 const api = useApi()
@@ -22,52 +22,10 @@ const updatedLabel = computed(() => {
   })
 })
 
-// ─── TOC: auto-build from rendered H2 headings ───
-const proseRef = ref(null)
-const headings = ref([])
-const activeId = ref('')
-let observer = null
+const showToTop = ref(false)
 let scrollHandler = null
 
-function slugify(text, fallback) {
-  const base = (text || '').toString().trim().toLowerCase()
-    .replace(/[^\p{L}\p{N}\s-]/gu, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .slice(0, 60)
-  return base || `section-${fallback}`
-}
-
-async function buildToc() {
-  await nextTick()
-  if (!proseRef.value) return
-  const nodes = proseRef.value.querySelectorAll('h2')
-  const items = []
-  nodes.forEach((node, i) => {
-    if (!node.id) node.id = slugify(node.textContent, i)
-    items.push({ id: node.id, text: node.textContent || '', el: node })
-  })
-  headings.value = items.map(({ id, text }) => ({ id, text }))
-
-  if (observer) observer.disconnect()
-  if (items.length && typeof IntersectionObserver !== 'undefined') {
-    observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.target.offsetTop - b.target.offsetTop)
-        if (visible[0]) activeId.value = visible[0].target.id
-      },
-      { rootMargin: '-20% 0px -65% 0px', threshold: 0 }
-    )
-    items.forEach(({ el }) => observer.observe(el))
-  }
-}
-
-const showToTop = ref(false)
-
 onMounted(() => {
-  buildToc()
   scrollHandler = () => {
     showToTop.value = window.scrollY > 400
   }
@@ -75,22 +33,8 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if (observer) observer.disconnect()
   if (scrollHandler) window.removeEventListener('scroll', scrollHandler)
 })
-
-watch(content, () => {
-  buildToc()
-})
-
-function scrollToHeading(id, e) {
-  e?.preventDefault()
-  const el = document.getElementById(id)
-  if (!el) return
-  const top = el.getBoundingClientRect().top + window.scrollY - 90
-  window.scrollTo({ top, behavior: 'smooth' })
-  activeId.value = id
-}
 
 function backToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -117,33 +61,8 @@ function backToTop() {
       </div>
     </header>
 
-    <!-- ── Body: TOC + Content ── -->
+    <!-- ── Content ── -->
     <main class="pv-main">
-
-      <!-- TOC Sidebar (desktop) -->
-      <aside v-if="!pending && headings.length" class="pv-toc">
-        <div class="pv-toc-sticky">
-          <div class="pv-toc-head">
-            <ListOrdered :size="14" />
-            <span>{{ $t('table_of_contents') }}</span>
-          </div>
-          <nav class="pv-toc-list">
-            <a
-              v-for="(h, idx) in headings"
-              :key="h.id"
-              :href="`#${h.id}`"
-              class="pv-toc-link"
-              :class="{ 'pv-toc-link--active': activeId === h.id }"
-              @click="scrollToHeading(h.id, $event)"
-            >
-              <span class="pv-toc-num">{{ String(idx + 1).padStart(2, '0') }}</span>
-              <span class="pv-toc-text">{{ h.text }}</span>
-            </a>
-          </nav>
-        </div>
-      </aside>
-
-      <!-- Content -->
       <article class="pv-doc">
         <div v-if="pending" class="pv-skeletons">
           <Skeleton class="h-5 w-40 rounded" />
@@ -166,13 +85,11 @@ function backToTop() {
 
         <div
           v-else
-          ref="proseRef"
           class="pv-prose"
           :dir="$i18n.locale === 'ar' ? 'rtl' : 'ltr'"
           v-html="content"
         />
 
-        <!-- Footer signature -->
         <footer v-if="!pending && content" class="pv-doc-foot">
           <div class="pv-doc-foot-line"></div>
           <p class="pv-doc-foot-text">
@@ -293,114 +210,21 @@ export default {
   border-radius: 9999px;
 }
 
-/* ── Main grid: TOC + content ── */
+/* ── Main ── */
 .pv-main {
-  max-width: 1320px;
+  max-width: 880px;
   margin: 0 auto;
   padding: 2.25rem 1rem 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
 }
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .pv-main {
-    grid-template-columns: 240px minmax(0, 1fr);
-    gap: 2.5rem;
     padding: 3rem 2rem 0;
   }
 }
 
-/* ── TOC ── */
-.pv-toc {
-  display: none;
-}
-@media (min-width: 1024px) {
-  .pv-toc {
-    display: block;
-    order: -1;
-  }
-}
-.pv-toc-sticky {
-  position: sticky;
-  top: 6rem;
-}
-.pv-toc-head {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-muted-foreground);
-  padding: 0 0.65rem 0.75rem;
-  margin-bottom: 0.4rem;
-  border-bottom: 1px solid var(--color-border);
-}
-.pv-toc-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.05rem;
-}
-.pv-toc-link {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
-  padding: 0.5rem 0.65rem;
-  border-radius: 0.45rem;
-  font-size: 0.78rem;
-  line-height: 1.45;
-  color: var(--color-muted-foreground);
-  text-decoration: none;
-  transition: all 0.15s ease;
-  position: relative;
-  overflow: hidden;
-}
-.pv-toc-link:hover {
-  color: var(--color-foreground);
-  background: rgba(107, 77, 209, 0.04);
-}
-.pv-toc-link--active {
-  color: var(--color-primary);
-  font-weight: 600;
-  background: rgba(107, 77, 209, 0.06);
-}
-.pv-toc-link--active::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 60%;
-  background: var(--color-primary);
-  border-radius: 9999px 0 0 9999px;
-}
-.pv-toc-num {
-  font-family: 'Poppins', 'Alexandria', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  opacity: 0.55;
-  flex-shrink: 0;
-  padding-top: 0.1rem;
-}
-.pv-toc-link--active .pv-toc-num {
-  opacity: 1;
-  color: var(--color-primary);
-}
-.pv-toc-text {
-  flex: 1;
-  word-break: break-word;
-}
-
 /* ── Document body ── */
 .pv-doc {
-  max-width: 100%;
-  margin: 0 auto;
-  width: 100%;
   background: #fff;
-  border: none;
   border-radius: 1.25rem;
   padding: 1.5rem 1.25rem;
   box-shadow: 0 1px 0 rgba(17, 24, 39, 0.02);
@@ -411,15 +235,9 @@ export default {
     border-radius: 1.5rem;
   }
 }
-@media (min-width: 1024px) {
-  .pv-doc {
-    margin: 0;
-  }
-}
 
-/* ── Prose typography (legal document) ── */
+/* ── Prose typography ── */
 .pv-prose {
-  counter-reset: pv-section;
   font-size: 0.92rem;
   line-height: 1.85;
   color: #2a3142;
@@ -449,43 +267,18 @@ export default {
 }
 
 .pv-prose h2 {
-  counter-increment: pv-section;
   font-family: 'Poppins', 'Alexandria', sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-foreground);
   margin-top: 2.25rem;
   margin-bottom: 0.85rem;
-  padding-top: 0.5rem;
-  scroll-margin-top: 6rem;
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
   letter-spacing: -0.005em;
-}
-.pv-prose h2::before {
-  content: counter(pv-section, decimal-leading-zero);
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  background: rgba(107, 77, 209, 0.1);
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.35rem;
-  line-height: 1;
-  flex-shrink: 0;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.05em;
-  align-self: center;
 }
 @media (min-width: 768px) {
   .pv-prose h2 {
     font-size: 1.4rem;
     margin-top: 2.75rem;
-    gap: 0.75rem;
-  }
-  .pv-prose h2::before {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.55rem;
   }
 }
 
@@ -496,7 +289,6 @@ export default {
   color: var(--color-foreground);
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  scroll-margin-top: 6rem;
 }
 @media (min-width: 768px) {
   .pv-prose h3 {
@@ -618,7 +410,7 @@ export default {
   color: var(--color-foreground);
 }
 
-/* ── Doc footer (signature line) ── */
+/* ── Doc footer ── */
 .pv-doc-foot {
   margin-top: 2.5rem;
   padding-top: 1.25rem;
