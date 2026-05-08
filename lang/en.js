@@ -144,6 +144,7 @@ export default {
   danger_zone: 'Danger Zone',
   delete_account: 'Delete Account',
   delete_account_subtitle: 'How account deletion works',
+  support_subtitle: 'How we can help you',
   delete_account_warning: 'Once you delete your account, there is no going back. This action is permanent and irreversible.',
   delete_account_consequence_1: 'Your profile, name, email, and phone will be permanently removed.',
   delete_account_consequence_2: 'Your companies, listings, and uploaded media will be deleted.',

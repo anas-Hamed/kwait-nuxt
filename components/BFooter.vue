@@ -45,6 +45,7 @@
               <li><LLink :to="{ name: 'privacy' }" class="text-sm text-white/50 hover:text-secondary transition-colors">{{ $t('privacy') }}</LLink></li>
               <li><LLink :to="{ name: 'terms' }" class="text-sm text-white/50 hover:text-secondary transition-colors">{{ $t('terms') }}</LLink></li>
               <li><LLink :to="{ name: 'delete-account' }" class="text-sm text-white/50 hover:text-secondary transition-colors">{{ $t('delete_account') }}</LLink></li>
+              <li><LLink :to="{ name: 'support' }" class="text-sm text-white/50 hover:text-secondary transition-colors">{{ $t('support') }}</LLink></li>
               <li><LLink :to="{ name: 'contact-us' }" class="text-sm text-white/50 hover:text-secondary transition-colors">{{ $t('contact_us') }}</LLink></li>
             </ul>
           </div>
