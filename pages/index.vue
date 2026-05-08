@@ -117,11 +117,6 @@ const features = [
       </div>
     </section>
 
-    <!-- Ads Carousel -->
-    <section v-if="ads.length > 0" class="mb-8 sm:mb-12">
-      <Ads :ads="ads" :loading="adsLoading" />
-    </section>
-
     <!-- Categories Section -->
     <section class="mb-10 sm:mb-16" v-if="categories.length > 0">
       <div class="flex items-center justify-between mb-4 sm:mb-6">
